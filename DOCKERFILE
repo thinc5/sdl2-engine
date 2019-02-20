@@ -1,0 +1,4 @@
+FROM scratch
+ADD rootfs.tar.xz /
+RUN apt-get install -y gcc make mingw-w64 libsdl2-dev libsdl2-image-dev
+CMD ["bash"]

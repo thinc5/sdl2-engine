@@ -1,0 +1,6 @@
+verison: '3'
+services:
+  builder:
+    build: .
+    volumes:
+      - .:/dir
