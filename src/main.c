@@ -2,12 +2,12 @@
 #include <SDL2/SDL_image.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
 
 #include "../include/config.h"
-
-SDL_Surface* loadSurface( char* path );
+#include "../include/texturemanager.h"
 
 /**
  * Entry point for Engine.
@@ -34,11 +34,18 @@ int WinMain(int argc, char* argv[])
 
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
-    // Load haha
-    SDL_Surface* alexS;
-    alexS = loadSurface("res/alex.jpg");
-    SDL_Texture* alexT = SDL_CreateTextureFromSurface(renderer, alexS);
-    SDL_FreeSurface(alexS);
+    // TextureRegistry
+    TextureRegistry tr;
+    tr.currentSize = 10;
+    tr.registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture) * tr.currentSize);
+    tr.totalSize = 10;
+
+    // Load a test texture.
+    if (!loadTexture(renderer, "./res/alex.jpg", &tr)) {
+        printf("Failed to load texture..");
+        SDL_Quit();
+        return 2;
+    }
 
 
     // Main game loop
@@ -50,13 +57,15 @@ int WinMain(int argc, char* argv[])
             if (event.type == SDL_QUIT) {
                 // Clean up memory here and break main game loop
                 printf("Caught SDL_QUIT, exiting now...\n");
-                SDL_DestroyTexture(alexT);
+                freeTextures(&tr);
                 game = false;
             }
 
             // Draw
             SDL_RenderClear(renderer);
-            SDL_RenderCopy(renderer, alexT, NULL, NULL);
+            if (SDL_RenderCopy(renderer, (&tr)->registry[0].texture, NULL, NULL) == -1) {
+                printf("Failed to render texture..");
+            }
             SDL_RenderPresent(renderer);
 
         }
@@ -64,32 +73,4 @@ int WinMain(int argc, char* argv[])
 
     SDL_Quit();
     return 0;
-}
-
-SDL_Surface* loadSurface( char* path )
-{
-    printf("loading %s\n..", path);
-    //The final optimized image
-    SDL_Surface* optimizedSurface = NULL;
-
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( path );
-    if( loadedSurface == NULL )
-    {
-        printf( "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError() );
-    }
-    else
-    {
-        //Convert surface to screen format
-        optimizedSurface = SDL_ConvertSurface( loadedSurface, loadedSurface->format, 0 );
-        if( optimizedSurface == NULL )
-        {
-            printf( "Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError() );
-        }
-
-        //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
-    }
-
-    return optimizedSurface;
 }
