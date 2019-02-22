@@ -34,17 +34,17 @@ int main(int argc, char* argv[]) {
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
     // TextureRegistry
-    TextureRegistry tr;
-    tr.currentSize = 10;
-    tr.registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture) * tr.currentSize);
-    tr.totalSize = 10;
+    // TextureRegistry tr;
+    // tr.currentSize = 10;
+    // tr.registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture) * tr.currentSize);
+    // tr.totalSize = 10;
 
-    // Load a test texture.
-    if (!loadTexture(renderer, "./res/alex.jpg", &tr)) {
-        printf("Failed to load texture..");
-        SDL_Quit();
-        return 2;
-    }
+    // // Load a test texture.
+    // if (!loadTexture(renderer, "./res/alex.jpg", &tr)) {
+    //     printf("Failed to load texture..");
+    //     SDL_Quit();
+    //     return 2;
+    // }
 
 
     // Main game loop
@@ -56,15 +56,15 @@ int main(int argc, char* argv[]) {
             if (event.type == SDL_QUIT) {
                 // Clean up memory here and break main game loop
                 printf("Caught SDL_QUIT, exiting now...\n");
-                freeTextures(&tr);
+                //freeTextures(&tr);
                 game = false;
             }
 
             // Draw
             SDL_RenderClear(renderer);
-            if (SDL_RenderCopy(renderer, (&tr)->registry[0].texture, NULL, NULL) == -1) {
-                printf("Failed to render texture..");
-            }
+            // if (SDL_RenderCopy(renderer, (&tr)->registry[0].texture, NULL, NULL) == -1) {
+            //     printf("Failed to render texture..");
+            // }
             SDL_RenderPresent(renderer);
 
         }
