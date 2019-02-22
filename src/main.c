@@ -12,8 +12,7 @@
 /**
  * Entry point for Engine.
  */
-int WinMain(int argc, char* argv[])
-{
+int main(int argc, char* argv[]) {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;

@@ -1,6 +1,9 @@
-verison: '3'
+version: '3'
 services:
   builder:
-    build: .
+    build:
+      context: .
+      dockerfile: Dockerfile
     volumes:
       - .:/dir
+    

@@ -2,15 +2,15 @@
 # remember where but not original makefile
 
 # executable name
-TARGET   = output
+TARGET   = output.exe
 
 # compiler to use
-CC       = gcc
+CC       = x86_64-w64-mingw32-gcc
 
 # compiler flags here
-CFLAGS   = -std=c99 -Wall -g
+CFLAGS   = -std=c99 -Wall
 
-LINKER   = gcc
+LINKER   = x86_64-w64-mingw32-gcc
 
 # linking flags here
 LFLAGS   = -Isrc/include -lSDL2 -lSDL2_image
