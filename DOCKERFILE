@@ -1,5 +1,5 @@
 FROM debian:unstable
 RUN apt-get update
-RUN apt-get install -y gcc gdb make mingw-w64 libsdl2-dev libsdl2-image-dev mingw-w64-sdl2 mingw-w64-sdl2_image
+RUN apt-get install -y gcc gdb make mingw-w64 libsdl2-dev libsdl2-image-dev
 CMD ["bash"]
 ENTRYPOINT ["/dir/build.sh"]
