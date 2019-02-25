@@ -22,7 +22,7 @@ bool loadTexture(SDL_Renderer* renderer, char* filename, TextureRegistry* reg) {
     //SDL_Surface* surOp;
 
     // Create new entry into the registry.
-    // Point to the next uninitilized texture space
+    // Point to the next uninitialized texture space
     RegisteredTexture* newRT = &reg->registry[reg->currentSize];
     newRT->texture = SDL_CreateTextureFromSurface(renderer, sur);
     SDL_FreeSurface(sur);
@@ -61,9 +61,9 @@ bool freeTexture(RegisteredTexture* tex) {
  * Free all textures in registry.
  */
 bool freeTextures(TextureRegistry* reg) {
-    for (int i = reg->totalSize; i > 0; i--) {
+    for (int i = reg->currentSize; i > 0; i--) {
         if (!freeTexture(&reg->registry[i - 1])) {
-            printf("Failed to free texure in position %d.\n", i);
+            printf("Failed to free texture in position %d.\n", i);
         }
         reg->currentSize--;
     }
@@ -78,26 +78,19 @@ SDL_Surface* loadSurface(char* path) {
     printf("loading %s..\n", path);
     //The final optimized image
     SDL_Surface* optimizedSurface = NULL;
-
     //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load( path );
-    if( loadedSurface == NULL )
-    {
-        printf( "Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError() );
-    }
-    else
-    {
+    SDL_Surface* loadedSurface = IMG_Load(path);
+    if(loadedSurface == NULL) {
+        printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
+    } else {
         //Convert surface to screen format
-        optimizedSurface = SDL_ConvertSurface( loadedSurface, loadedSurface->format, 0 );
-        if( optimizedSurface == NULL )
-        {
-            printf( "Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError() );
+        optimizedSurface = SDL_ConvertSurface(loadedSurface, loadedSurface->format, 0);
+        if(optimizedSurface == NULL) {
+            printf("Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError());
         }
-
         //Get rid of old loaded surface
-        SDL_FreeSurface( loadedSurface );
+        SDL_FreeSurface(loadedSurface);
     }
-
     return optimizedSurface;
 }
 

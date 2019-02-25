@@ -39,14 +39,14 @@ $(BINDIR)/$(TARGET_LINUX): $(OBJECTS)
 	@$(LINKER_LINUX) $(OBJECTS) $(LFLAGS_LINUX) -o $@
 	@echo "Linking complete!"
 
-$(BINDIR)/$(TARGET_WINDOWS): $(OBJECTS)
-	@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
-	@$(LINKER_WINDOWS) $(OBJECTS) $(LFLAGS_WINDOWS) -o $@
-	@echo "Linking complete!"
+# $(BINDIR)/$(TARGET_WINDOWS): $(OBJECTS)
+# 	@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
+# 	@$(LINKER_WINDOWS) $(OBJECTS) $(LFLAGS_WINDOWS) -o $@
+# 	@echo "Linking complete!"
 
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@$(CC_LINUX) $(CFLAGS) -c $< -o $@
-	@$(CC_WINDOWS) $(CFLAGS) -c $< -o $@
+	# @$(CC_WINDOWS) $(CFLAGS) -c $< -o $@
 	@echo "Compiled "$<" successfully!"
 
 .PHONY: clean
