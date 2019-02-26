@@ -3,7 +3,9 @@
 
 #define WINDOW_TITLE "test"
 
-#define WINDOW_WIDTH 1920
-#define WINDOW_HEIGHT 1080
+#define WINDOW_WIDTH 1440
+#define WINDOW_HEIGHT 810
+
+#define FRAME_CAP 30
 
 #endif

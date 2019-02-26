@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "../include/config.h"
+#include "../include/frameratemanager.h"
 #include "../include/texturemanager.h"
 
 /**
@@ -16,23 +17,30 @@ int main(int argc, char* argv[]) {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-
     // Init sdl
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
         return 1;
     }
-
     // Create the window
     window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
         SDL_WINDOW_RESIZABLE);
-
     // Create the renderer
     renderer = SDL_CreateRenderer(window, -1, 0);
-
+    // Set default background colour
     SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
 
+    // Custom framerate manager
+    FrameRateManager f = {
+        .startTime = 0,
+        .endTime = 0,
+        .delta = 0,
+        .fps = FRAME_CAP,
+        .timePerFrame = 1000 / FRAME_CAP // 1000 / prefered fps
+    };
+
+    // Custom texture registry
     TextureRegistry tr;
     tr.currentSize = 0;
     tr.totalSize = 10;
@@ -58,7 +66,7 @@ int main(int argc, char* argv[]) {
     // Main game loop
     bool game = true;
     while (game) {
-        
+        setStartTime(&f);
         while (SDL_PollEvent(&event)) {
             // If person wants to exit i.e. alt+f4 or clicking x
             if (event.type == SDL_QUIT) {
@@ -82,7 +90,8 @@ int main(int argc, char* argv[]) {
                 printf("Failed to render texture..");
             }
             SDL_RenderPresent(renderer);
-
+        showFPS(&f);
+        setEndTime(&f);
         }
     }
 
