@@ -8,6 +8,30 @@
 #include "../include/texturemanager.h"
 
 /**
+ * Load textures.
+ */
+bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath) {
+    int total = 0;
+    char buffer[100];
+    FILE* fp = fopen(configPath, "r");
+    while(fgets(buffer, sizeof(buffer), fp)) {
+        total++;
+    }
+    fseek(fp, 0, SEEK_SET);
+    reg->registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture*) * reg->totalSize);
+    reg->currentSize = 0;
+    reg->totalSize = total;
+    while(fgets(buffer, sizeof(buffer), fp)) {
+        printf("Loading texture: %s\n", buffer);
+        if (!loadTexture(renderer, buffer, reg)) {
+            return false;
+        }
+        printf("Loaded texture: %s\n", buffer);
+    }
+    return true;
+}
+
+/**
  *  Load a texture into the manager.
  */
 bool loadTexture(SDL_Renderer* renderer, char* filename, TextureRegistry* reg) {

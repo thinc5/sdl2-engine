@@ -11,12 +11,16 @@ CC_LINUX       = gcc
 
 CC_WINDOWS     = x86_64-w64-mingw32-gcc
 
+CC_WASM        = emcc
+
 # compiler flags here
 CFLAGS   = -std=c99 -Wall -g
 
 LINKER_LINUX   = gcc
 
 LINKER_WINDOWS = x86_64-w64-mingw32-gcc
+
+WASM_FLAGS     = -s WASM=1
 
 # linking flags here
 LFLAGS_LINUX   = -Isrc/include -lSDL2 -lSDL2_image
