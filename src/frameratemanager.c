@@ -31,7 +31,7 @@ void setEndTime(FrameRateManager* f) {
  */
 void showFPS(FrameRateManager* f) {
     if (f->delta > f->timePerFrame) {
-        f->fps = 1000 / f->delta;
+        f->fpsCap = 1000 / f->delta;
     }
-    printf("FPS: %d\n", f->fps);
+    printf("FPS: %d\n", f->fpsCap);
 };

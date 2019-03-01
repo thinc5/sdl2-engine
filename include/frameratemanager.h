@@ -12,8 +12,8 @@ typedef struct FrameRateManager {
     uint32_t startTime;
     uint32_t endTime;
     uint32_t delta;
-    short fps;
-    const short timePerFrame; // ms
+    short fpsCap;
+    short timePerFrame;
 } FrameRateManager;
 
 /**

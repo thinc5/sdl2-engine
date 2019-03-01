@@ -6,6 +6,6 @@
 #define WINDOW_WIDTH 720
 #define WINDOW_HEIGHT 405
 
-#define FRAME_CAP 30
+#define FRAME_CAP 10
 
 #endif

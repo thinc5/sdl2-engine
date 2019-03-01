@@ -23,11 +23,19 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
     reg->totalSize = total;
     while(fgets(buffer, sizeof(buffer), fp)) {
         printf("Loading texture: %s\n", buffer);
+        FILE* test = fopen(buffer, "rw");
+        if (test == NULL) {
+            printf("Can't find %s\n", buffer);
+        } else {
+            printf("Can find %s\n", buffer);
+            fclose(test);
+        }
         if (!loadTexture(renderer, buffer, reg)) {
             return false;
         }
         printf("Loaded texture: %s\n", buffer);
     }
+    fclose(fp);
     return true;
 }
 

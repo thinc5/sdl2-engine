@@ -17,7 +17,7 @@ typedef struct RegisteredTexture {
 /**
  * The Registry of all loaded textures.
  */
-typedef struct TextureRegistry{
+typedef struct TextureRegistry {
     unsigned int currentSize;
     unsigned int totalSize;
     RegisteredTexture* registry;
