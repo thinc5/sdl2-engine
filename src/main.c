@@ -24,14 +24,17 @@ int main(int argc, char* argv[]) {
     //     return 2;
     // }
     // Start all major game components.
-    GameData gameData = initGame();
-    if (!loadTextures(gameData.renderer, gameData.tr, "./res/scene1.txt")) {
+    GameData gameData;
+    initGame(&gameData);
+    if (!loadTextures(gameData.renderer, gameData.tr, "./bin/res/scene1.txt")) {
         SDL_Quit();
         return false;
     }
     printf("Loaded %d out of %d textures!\n", gameData.tr->currentSize, gameData.tr->totalSize);
     int pickedTex = 0;
     // Main game loop
+    while (!gameData.renderer);
+    return 0;
     bool game = true;
     while (game) {
         startTimer(gameData.fps);
@@ -45,16 +48,13 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
-        printf("Test!\n");
         // Draw
         SDL_RenderClear(gameData.renderer);
-        printf("Test!\n");
         if (SDL_RenderCopy(gameData.renderer, gameData.tr->registry[pickedTex].texture, NULL, NULL) == -1) {
             printf("Failed to render texture..\n");
         }
-        printf("Test!\n");
         SDL_RenderPresent(gameData.renderer);
-        showFPS(gameData.fps);
+        //showFPS(gameData.fps);
         updateTimer(gameData.fps);
     }
     printf("Quitting now!\n");
