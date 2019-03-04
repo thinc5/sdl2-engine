@@ -2,36 +2,87 @@
 
 #include <stdio.h>
 
+#include "../include/config.h"
 #include "../include/frameratemanager.h"
 
 /**
- * Set the new start time at the beginning of a frame.
+ * Iniilise the timer using some global constants defined in config.h.
  */
-void setStartTime(FrameRateManager* f) {
-    if (!f->startTime) {
-        f->startTime = SDL_GetTicks();
-    } else {
-        f->delta = f->endTime - f->startTime;
-    }
+void initTimer(FrameRateManager* f) {
+    f->capped = FPS_CAPPED;
+    f->started = false;
+    f->paused = false;
+    f->startTime = 0;
+    f->pausedTime = 0;
+    f->cappedFPS = FRAME_CAP;
+    f->currentFPS = 0;
+}
+
+/**
+ * Start the fps timer.
+ */
+void startTimer(FrameRateManager* f) {
+    f->started = true;
+    f->paused = false;
+    f->startTime = SDL_GetTicks();
 };
 
 /**
- *  Set the end time at the ned of a frame.
+ *  Stop the timer.
  */
-void setEndTime(FrameRateManager* f) {
-    if (f->delta < f->timePerFrame) {
-        SDL_Delay(f->timePerFrame - f->delta);
-    }
-    f->startTime = f->endTime;
-    f->endTime = SDL_GetTicks();
+void stopTimer(FrameRateManager* f) {
+    f->started = false;
+    f->paused = false;
 };
+
+/**
+ * Pause the timer.
+ */
+void pauseTimer(FrameRateManager* f) {
+    if (f->started && !f->paused) {
+        f->paused = true;
+        f->pausedTime = SDL_GetTicks() - f->startTime;
+    }
+}
+
+/**
+ * Unpasue the timer.
+ */
+void unpauseTimer(FrameRateManager* f) {
+    if (f->paused) {
+        f->paused = false;
+        f->startTime = SDL_GetTicks() - f->pausedTime;
+        f->pausedTime = 0;
+    }
+}
+
+/**
+ * Return the current ticks of the timer.
+ */
+uint32_t getTimerTicks(FrameRateManager* f) {
+    if (f->started) {
+        if (f->paused) {
+            return f->pausedTime;
+        } else {
+            return SDL_GetTicks() + f->startTime;
+        }
+    }
+    return 0;
+}
+
+/**
+ * Maintain capped framerate.
+ */
+void updateTimer(FrameRateManager* f) {
+    f->currentFPS++;
+    if (f->capped &&  (getTimerTicks(f) < 1000 / f->cappedFPS)) {
+        SDL_Delay((1000 / f->cappedFPS) - getTimerTicks(f));
+    }
+}
 
 /**
  * Show the current average fps.
  */
 void showFPS(FrameRateManager* f) {
-    if (f->delta > f->timePerFrame) {
-        f->fpsCap = 1000 / f->delta;
-    }
-    printf("FPS: %d\n", f->fpsCap);
+    printf("FPS: %d\n", f->currentFPS);
 };

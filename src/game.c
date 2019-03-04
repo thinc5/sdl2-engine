@@ -1,9 +1,12 @@
 #include <SDL2/SDL.h>
 
+#include <stdlib.h>
+
 #include "../include/config.h"
 #include "../include/game.h"
+#include "../include/frameratemanager.h"
 
-GameData initialize_game() {
+GameData initGame() {
     // Create the window
     GameData gameData;
     gameData.window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED,
@@ -14,13 +17,22 @@ GameData initialize_game() {
     // Set default background colour
     SDL_SetRenderDrawColor(gameData.renderer, 255, 0, 0, 255);
     // Custom framerate manager
-    gameData.fps.startTime = 0;
-    gameData.fps.endTime = 0;
-    gameData.fps.delta = 0;
-    gameData.fps.fpsCap = FRAME_CAP;
-    gameData.fps.timePerFrame = (1000 / FRAME_CAP); // 1000 / prefered fps
+    gameData.fps = (FrameRateManager*) malloc(sizeof(FrameRateManager));
+    initTimer(gameData.fps);
     // Custom texture registry
-    gameData.tr.currentSize = 0;
-    gameData.tr.totalSize = 0;
+    gameData.tr = (TextureRegistry*) malloc(sizeof(TextureRegistry));
+    gameData.tr->currentSize = 0;
+    gameData.tr->totalSize = 0;
     return gameData;
+}
+
+/**
+ * Free game data struct.
+ */
+void freeGame(GameData* game) {
+    free(game->fps);
+    freeTextures(game->tr);
+    free(game->tr);
+    SDL_DestroyRenderer(game->renderer);
+    SDL_DestroyWindow(game->window);
 }

@@ -20,48 +20,45 @@ int main(int argc, char* argv[]) {
         SDL_Log("Unable to initialize SDL: %s", SDL_GetError());
         return 1;
     }
-    if (!update_workingdir(argv[0])) {
-        return 2;
-    }
+    // if (!update_workingdir(argv[0])) {
+    //     return 2;
+    // }
     // Start all major game components.
-    GameData gameData = initialize_game();
-    
-    if (!loadTextures(gameData.renderer, &gameData.tr, "scene1.config")) {
+    GameData gameData = initGame();
+    if (!loadTextures(gameData.renderer, gameData.tr, "./res/scene1.txt")) {
         SDL_Quit();
         return false;
     }
+    printf("Loaded %d out of %d textures!\n", gameData.tr->currentSize, gameData.tr->totalSize);
     int pickedTex = 0;
     // Main game loop
     bool game = true;
     while (game) {
-        setStartTime(&gameData.fps);
+        startTimer(gameData.fps);
         while (SDL_PollEvent(&gameData.event)) {
+            printf("We have an event!!\n");
             // If person wants to exit i.e. alt+f4 or clicking x
             if (gameData.event.type == SDL_QUIT) {
                 // Clean up memory here and break main game loop
                 printf("Caught SDL_QUIT, exiting now...\n");
                 game = false;
-                continue;
+                break;
             }
-            // Picked texture
-            if (pickedTex + 1 < gameData.tr.currentSize) {
-                pickedTex++;
-            } else {
-                pickedTex = 0;
-            }
-            // Draw
-            SDL_RenderClear(gameData.renderer);
-            if (SDL_RenderCopy(gameData.renderer, (&gameData.tr)->registry[pickedTex].texture, NULL, NULL) == -1) {
-                printf("Failed to render texture..\n");
-            }
-            SDL_RenderPresent(gameData.renderer);
-        showFPS(&gameData.fps);
-        setEndTime(&gameData.fps);
         }
+        printf("Test!\n");
+        // Draw
+        SDL_RenderClear(gameData.renderer);
+        printf("Test!\n");
+        if (SDL_RenderCopy(gameData.renderer, gameData.tr->registry[pickedTex].texture, NULL, NULL) == -1) {
+            printf("Failed to render texture..\n");
+        }
+        printf("Test!\n");
+        SDL_RenderPresent(gameData.renderer);
+        showFPS(gameData.fps);
+        updateTimer(gameData.fps);
     }
-    freeTextures(&gameData.tr);
-    SDL_DestroyRenderer(gameData.renderer);
-    SDL_DestroyWindow(gameData.window);
+    printf("Quitting now!\n");
+    freeGame(&gameData);
     SDL_Quit();
     return 0;
 }

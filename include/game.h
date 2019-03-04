@@ -13,13 +13,18 @@ typedef struct GameData {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-    TextureRegistry tr;
-    FrameRateManager fps;
+    TextureRegistry* tr;
+    FrameRateManager* fps;
 } GameData;
 
 /**
  * Return initialized GameData struct.
  */
-GameData initialize_game();
+GameData initGame();
+
+/**
+ * Free game objects.
+ */
+void freeGame(GameData* game);
 
 #endif

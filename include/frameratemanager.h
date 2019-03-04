@@ -4,28 +4,54 @@
 #include <SDL2/SDL.h>
 
 #include <stdio.h>
+#include <stdbool.h>
 
 /**
  * A frame rate counter.
  */
 typedef struct FrameRateManager {
+    bool capped;
+    bool started;
+    bool paused;
     uint32_t startTime;
-    uint32_t endTime;
-    uint32_t delta;
-    short fpsCap;
-    short timePerFrame;
+    uint32_t pausedTime;
+    short cappedFPS;
+    short currentFPS;
 } FrameRateManager;
 
 /**
- * Set the new start time at the beginning of a frame.
+ * Iniilise the timer using some global constants defined in config.h.
  */
-void setStartTime(FrameRateManager* f);
+void initTimer(FrameRateManager* f);
 
 /**
- *  Set the end time at the ned of a frame.
+ * Start the fps timer.
  */
-void setEndTime(FrameRateManager* f);
+void startTimer(FrameRateManager* f);
+/**
+ *  Stop the timer.
+ */
+void stopTimer(FrameRateManager* f);
 
+/**
+ * Pause the timer.
+ */
+void pauseTimer(FrameRateManager* f);
+
+/**
+ * Unpasue the timer.
+ */
+void unpauseTimer(FrameRateManager* f);
+
+/**
+ * Return the current ticks of the timer.
+ */
+uint32_t getTimerTicks(FrameRateManager* f);
+
+/**
+ * Maintain capped framerate.
+ */
+void updateTimer(FrameRateManager* f);
 /**
  * Show the current average fps.
  */
