@@ -1,0 +1,2 @@
+./bin/res/raw/alex.jpg
+./bin/res/raw/cat.jpg
