@@ -1,5 +1,5 @@
-#ifndef FRAMERATEMANAGER_H
-#define FRAMERATEMANAGER_H
+#ifndef TIMER_H
+#define TIMER_H
 
 #include <SDL2/SDL.h>
 
@@ -7,51 +7,64 @@
 #include <stdbool.h>
 
 /**
- * A frame rate counter.
+ * A timer.
  */
-typedef struct FrameRateManager {
-    bool capped;
+typedef struct Timer {
     bool started;
     bool paused;
     uint32_t startTime;
     uint32_t pausedTime;
+} Timer;
+
+/**
+ * A frame rate counter.
+ */
+typedef struct FrameRateManager {
+    bool capped;
     short cappedFPS;
     short currentFPS;
+    Timer timer;
 } FrameRateManager;
 
 /**
- * Iniilise the timer using some global constants defined in config.h.
+ * Initialise the timer using some global constants defined in config.h.
  */
-void initTimer(FrameRateManager* f);
+void initFPSManager(FrameRateManager* f);
+
+/**
+ * Initialise a timer.
+ */
+void initTimer(Timer* t);
 
 /**
  * Start the fps timer.
  */
-void startTimer(FrameRateManager* f);
+void startTimer(Timer* t);
 /**
  *  Stop the timer.
  */
-void stopTimer(FrameRateManager* f);
+void stopTimer(Timer* t);
 
 /**
  * Pause the timer.
  */
-void pauseTimer(FrameRateManager* f);
+void pauseTimer(Timer* t);
 
 /**
  * Unpasue the timer.
  */
-void unpauseTimer(FrameRateManager* f);
+void unpauseTimer(Timer* t);
 
 /**
  * Return the current ticks of the timer.
  */
-uint32_t getTimerTicks(FrameRateManager* f);
+uint32_t getTimerTicks(Timer* t);
 
 /**
  * Maintain capped framerate.
  */
 void updateTimer(FrameRateManager* f);
+
 /**
  * Show the current average fps.
  */

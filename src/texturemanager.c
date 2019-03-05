@@ -37,22 +37,12 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
         if (buffer[blen - 1] == '\n') {
             buffer[strlen(buffer) - 1] = '\0';
         }
-        printf("Loading texture: %s\n", buffer);
-        // Check file exists before attepting to load.
-        FILE* test = fopen(buffer, "rw");
-        if (test == NULL) {
-            printf("Can't find %s\n", buffer);
-        } else {
-            printf("Can find %s\n", buffer);
-            fclose(test);
-        }
         // Remove newline
         if (!loadTexture(renderer, buffer, reg)) {
             fprintf(stderr, "Could not load file: %s\n", buffer);
             memset(buffer, '\0', sizeof(buffer));
             return false;
         }
-        printf("Loaded texture: %s\n", buffer);
         memset(buffer, '\0', sizeof(buffer));
     }
     fclose(fp);
@@ -64,14 +54,12 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
  */
 bool loadTexture(SDL_Renderer* renderer, char* filename, TextureRegistry* reg) {
     // Load texture from path.
-    SDL_Surface* sur;
-    sur = loadSurface(filename);
-    if (!sur) {
+    SDL_Surface* sur = loadSurface(filename);
+    if (sur == NULL) {
         printf("Failed to create surface, check path.\n");
+        printf("%d\n", (int)sur);
         return false;
     }
-    // Optimise surface?
-    //SDL_Surface* surOp;
     // Create new entry into the registry.
     // Point to the next uninitialized texture space
     RegisteredTexture* newRT = &reg->registry[reg->currentSize];
@@ -91,7 +79,6 @@ bool loadTexture(SDL_Renderer* renderer, char* filename, TextureRegistry* reg) {
         printf("Failed to copy filename into registry\n");
         return false;
     }
-    printf("Failed to create surface, check path.\n");
     // Let the registry know we have added a texture.
     reg->currentSize++;
     printf("Successfully loaded %s\n", newRT->reference);
@@ -113,13 +100,15 @@ bool freeTexture(RegisteredTexture* tex) {
  * Free all textures in registry.
  */
 bool freeTextures(TextureRegistry* reg) {
+    int freed = 0;
     for (int i = reg->currentSize; i > 0; i--) {
         if (!freeTexture(&reg->registry[i - 1])) {
             printf("Failed to free texture in position %d.\n", i);
         }
         reg->currentSize--;
+        freed++;
     }
-    printf("Freed %d textures out of %d.\n", reg->currentSize, reg->totalSize);
+    printf("Freed %d textures out of %d.\n", freed, reg->totalSize);
     return true;
 }
 
@@ -127,22 +116,22 @@ bool freeTextures(TextureRegistry* reg) {
  * Loading surface from provided path
  */
 SDL_Surface* loadSurface(char* path) {
-    printf("Loading: %s\n", path);
+    //Load image at specified path
+    SDL_Surface* loadedSurface = NULL;
+    loadedSurface = IMG_Load(path);
+    if (loadedSurface == NULL) {
+        printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
+        return NULL;
+    }
     //The final optimized image
     SDL_Surface* optimizedSurface = NULL;
-    //Load image at specified path
-    SDL_Surface* loadedSurface = IMG_Load(path);
-    if (!loadedSurface) {
-        printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
-    } else {
-        //Convert surface to screen format
-        optimizedSurface = SDL_ConvertSurface(loadedSurface, loadedSurface->format, 0);
-        if(optimizedSurface == NULL) {
-            printf("Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError());
-        }
-        //Get rid of old loaded surface
-        SDL_FreeSurface(loadedSurface);
+    //Convert surface to screen format
+    optimizedSurface = SDL_ConvertSurface(loadedSurface, loadedSurface->format, 0);
+    if(optimizedSurface == NULL) {
+        printf("Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError());
     }
+    //Get rid of old loaded surface
+    SDL_FreeSurface(loadedSurface);
     return optimizedSurface;
 }
 

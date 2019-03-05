@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include "../include/texturemanager.h"
-#include "../include/frameratemanager.h"
+#include "../include/timer.h"
 
 /**
  * Each texture to be registered.

@@ -4,7 +4,7 @@
 
 #include "../include/config.h"
 #include "../include/game.h"
-#include "../include/frameratemanager.h"
+#include "../include/timer.h"
 
 void initGame(GameData* gameData) {
     // Create the window
@@ -17,7 +17,7 @@ void initGame(GameData* gameData) {
     SDL_SetRenderDrawColor(gameData->renderer, 255, 0, 0, 255);
     // Custom framerate manager
     gameData->fps = (FrameRateManager*) malloc(sizeof(FrameRateManager));
-    initTimer(gameData->fps);
+    initFPSManager(gameData->fps);
     // Custom texture registry
     gameData->tr = (TextureRegistry*) malloc(sizeof(TextureRegistry));
     gameData->tr->currentSize = 0;

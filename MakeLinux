@@ -37,8 +37,5 @@ $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 clean:
 	@$(rm) $(OBJECTS)
 	@echo "Cleanup complete!"
-
-.PHONY: remove
-remove: clean
 	@$(rm) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
