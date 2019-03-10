@@ -68,7 +68,7 @@ int main(int argc, char* argv[]) {
                     default:
                         break;
                 }
-                printf("Selected Texture: %s\n", "LOL");//gameData.tr->registry[pickedTex].reference);
+                printf("Selected Texture: %s\n", gameData.tr->registry[pickedTex].reference); //;
             }
         }
         // Draw

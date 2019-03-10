@@ -32,7 +32,7 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
     reg->totalSize = total;
     // Loop for each line and load the texture.
     while(fgets(buffer, sizeof(buffer), fp)) {
-        // If last character of buffer is a newline, kill it :)
+        // If last character of buffer is a newline, strip it
         int blen = strlen(buffer);
         if (buffer[blen - 1] == '\n') {
             buffer[strlen(buffer) - 1] = '\0';
