@@ -27,9 +27,9 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
     fseek(fp, 0, SEEK_SET);
     memset(buffer, '\0', sizeof(buffer));
     // Allocate space for each of the textures.
+    reg->totalSize = total;
     reg->registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture) * reg->totalSize);
     reg->currentSize = 0;
-    reg->totalSize = total;
     // Loop each line and load the texture.
     while(fgets(buffer, sizeof(buffer), fp)) {
         // If last character of buffer is a newline, strip it

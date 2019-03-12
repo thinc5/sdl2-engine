@@ -32,6 +32,10 @@ void initGame(GameData* gameData) {
 void freeGame(GameData* game) {
     printf("Freeing textures...\n");
     freeTextures(game->tr);
+    free(game->tr->registry);
+    game->tr->registry = NULL;
+    free(game->tr);
+    game->tr = NULL;
     printf("Freeing timer\n");
     free(game->fps);
     printf("Freeing renderer\n");
