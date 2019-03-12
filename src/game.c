@@ -6,6 +6,8 @@
 #include "../include/config.h"
 #include "../include/game.h"
 #include "../include/timer.h"
+#include "../include/texturemanager.h"
+#include "../include/fontmanager.h"
 
 void initGame(GameData* gameData) {
     gameData->status = true;
@@ -24,6 +26,10 @@ void initGame(GameData* gameData) {
     gameData->tr = (TextureRegistry*) malloc(sizeof(TextureRegistry));
     gameData->tr->currentSize = 0;
     gameData->tr->totalSize = 0;
+    // Custom font registry
+    gameData->fr = (FontRegistry*) malloc(sizeof(FontRegistry));
+    gameData->fr->currentSize = 0;
+    gameData->fr->totalSize = 0;
 }
 
 /**
@@ -36,6 +42,12 @@ void freeGame(GameData* game) {
     game->tr->registry = NULL;
     free(game->tr);
     game->tr = NULL;
+    printf("Freeing fonts..\n");
+    freeFonts(game->fr);
+    free(game->fr->registry);
+    game->fr->registry = NULL;
+    free(game->fr);
+    game->fr = NULL;
     printf("Freeing timer\n");
     free(game->fps);
     printf("Freeing renderer\n");

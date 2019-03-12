@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_image.h>
+#include <SDL2/SDL_ttf.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -11,7 +12,9 @@
 #include "../include/util.h"
 #include "../include/timer.h"
 #include "../include/texturemanager.h"
+#include "../include/fontmanager.h"
 #include "../include/eventmanager.h"
+#include "../include/renderer.h"
 
 /**
  * Entry point for Engine.
@@ -26,12 +29,22 @@ int main(int argc, char* argv[]) {
         printf("Unable to initialize SDL_image\n");
         return 1;
     }
+    if (TTF_Init() != 0) {
+        printf("Unable to initialize SDL_ttf");
+        return 1;
+    }
+
+
     // Start all major game components.
     GameData gameData;
     initGame(&gameData);
-    if (!loadTextures(gameData.renderer, gameData.tr, "./bin/res/scene1.txt")) {
+    if (!loadTextures(gameData.renderer, gameData.tr, "./res/scene1_textures.conf")) {
         SDL_Quit();
-        return false;
+        return 2;
+    }
+    
+    if(!loadFonts(gameData.fr, "./res/scene1_fonts.conf")) {
+        return 2;
     }
 
     printf("Loaded %d out of %d textures!\n", gameData.tr->currentSize,
@@ -58,10 +71,12 @@ int main(int argc, char* argv[]) {
             printf("Failed to render texture..\n");
             gameData.status = false;
         }
+        drawDebugMessage(gameData.renderer, gameData.fr->registry[0].font, gameData.tr->registry[pickedTex].reference);
         SDL_RenderPresent(gameData.renderer);
         //showFPS(gameData.fps);
         updateTimer(gameData.fps);
     }
+
     printf("Freeing game data..\n");
     freeGame(&gameData);
     printf("Quitting now!\n");

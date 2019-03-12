@@ -17,7 +17,7 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
     // Open file and count how many lines
     FILE* fp = fopen(configPath, "r");
     if (!fp) {
-        printf("Unable to find specified resource configuration file.\n");
+        printf("Unable to find specified texture configuration file.\n");
         return false;
     }
     while(fgets(buffer, sizeof(buffer), fp)) {
