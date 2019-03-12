@@ -1,2 +1,6 @@
-./bin/res/raw/alex.jpg
-./bin/res/raw/cat.jpg
+./bin/res/raw/cat1.jpg
+./bin/res/raw/cat2.jpg
+./bin/res/raw/cat3.jpg
+./bin/res/raw/cat4.jpg
+./bin/res/raw/cat5.jpg
+./bin/res/raw/cat6.jpg

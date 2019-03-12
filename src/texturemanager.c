@@ -26,11 +26,11 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
     // Reset the pointer back to the beginning of the file
     fseek(fp, 0, SEEK_SET);
     memset(buffer, '\0', sizeof(buffer));
-    // Allocate space for each of the texures.
-    reg->registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture*) * reg->totalSize);
+    // Allocate space for each of the textures.
+    reg->registry = (RegisteredTexture*) malloc(sizeof(RegisteredTexture) * reg->totalSize);
     reg->currentSize = 0;
     reg->totalSize = total;
-    // Loop for each line and load the texture.
+    // Loop each line and load the texture.
     while(fgets(buffer, sizeof(buffer), fp)) {
         // If last character of buffer is a newline, strip it
         int blen = strlen(buffer);
@@ -54,17 +54,17 @@ bool loadTextures(SDL_Renderer* renderer, TextureRegistry* reg, char* configPath
  */
 bool loadTexture(SDL_Renderer* renderer, char* filename, TextureRegistry* reg) {
     // Load texture from path.
-    SDL_Surface* sur = loadSurface(filename);
-    if (sur == NULL) {
-        printf("Failed to create surface, check path.\n");
-        printf("%d\n", (int)sur);
-        return false;
-    }
+    // SDL_Surface* sur = loadSurface(filename);
+    // if (sur == NULL) {
+    //     printf("Failed to create surface, check path.\n");
+    //     printf("%d\n", (int)sur);
+    //     return false;
+    // }
     // Create new entry into the registry.
     // Point to the next uninitialized texture space
     RegisteredTexture* newRT = &reg->registry[reg->currentSize];
-    newRT->texture = SDL_CreateTextureFromSurface(renderer, sur);
-    SDL_FreeSurface(sur);
+    newRT->texture = IMG_LoadTexture(renderer, filename);
+    // SDL_FreeSurface(sur);
     if (newRT->texture == NULL) {
         printf("Failed to create texture from surface..\n");
         return false;
@@ -89,10 +89,19 @@ bool loadTexture(SDL_Renderer* renderer, char* filename, TextureRegistry* reg) {
  * Free an entry in the texture registry.
  */
 bool freeTexture(RegisteredTexture* tex) {
-    free(tex->reference);
-    tex->reference = NULL;
-    SDL_DestroyTexture(tex->texture);
-    tex->texture = NULL;
+    if (tex->texture) {
+        SDL_DestroyTexture(tex->texture);
+        tex->texture = NULL;
+    } else {
+        printf("Texture was not allocated and cannot be freed\n");
+    }
+    if (tex->reference) {
+        printf("Freed %s\n", tex->reference);
+        free(tex->reference);
+        tex->reference = NULL;
+    } else {
+        printf("Reference name not allocated to begin with...\n");
+    }
     return true;
 }
 
@@ -101,11 +110,10 @@ bool freeTexture(RegisteredTexture* tex) {
  */
 bool freeTextures(TextureRegistry* reg) {
     int freed = 0;
-    for (int i = reg->currentSize; i > 0; i--) {
-        if (!freeTexture(&reg->registry[i - 1])) {
+    for (int i = 0; i < reg->currentSize; i++) {
+        if (!freeTexture(&reg->registry[i])) {
             printf("Failed to free texture in position %d.\n", i);
         }
-        reg->currentSize--;
         freed++;
     }
     printf("Freed %d textures out of %d.\n", freed, reg->totalSize);
@@ -116,21 +124,21 @@ bool freeTextures(TextureRegistry* reg) {
  * Loading surface from provided path
  */
 SDL_Surface* loadSurface(char* path) {
-    //Load image at specified path
+    // Load image at specified path
     SDL_Surface* loadedSurface = NULL;
     loadedSurface = IMG_Load(path);
     if (loadedSurface == NULL) {
         printf("Unable to load image %s! SDL_image Error: %s\n", path, IMG_GetError());
         return NULL;
     }
-    //The final optimized image
+    // The final optimized image
     SDL_Surface* optimizedSurface = NULL;
-    //Convert surface to screen format
+    // Convert surface to screen format
     optimizedSurface = SDL_ConvertSurface(loadedSurface, loadedSurface->format, 0);
     if(optimizedSurface == NULL) {
         printf("Unable to optimize image %s! SDL Error: %s\n", path, SDL_GetError());
     }
-    //Get rid of old loaded surface
+    // Get rid of old loaded surface
     SDL_FreeSurface(loadedSurface);
     return optimizedSurface;
 }

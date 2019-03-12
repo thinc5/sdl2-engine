@@ -1,12 +1,14 @@
 #include <SDL2/SDL.h>
 
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../include/config.h"
 #include "../include/game.h"
 #include "../include/timer.h"
 
 void initGame(GameData* gameData) {
+    gameData->status = true;
     // Create the window
     gameData->window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED,
         SDL_WINDOWPOS_UNDEFINED, WINDOW_WIDTH, WINDOW_HEIGHT,
@@ -28,9 +30,12 @@ void initGame(GameData* gameData) {
  * Free game data struct.
  */
 void freeGame(GameData* game) {
-    free(game->fps);
+    printf("Freeing textures...\n");
     freeTextures(game->tr);
-    free(game->tr);
-    SDL_DestroyRenderer(game->renderer);
+    printf("Freeing timer\n");
+    free(game->fps);
+    printf("Freeing renderer\n");
+    SDL_DestroyRenderer(game->renderer); // Causes SEGFAULT?
+    printf("Freeing window\n");
     SDL_DestroyWindow(game->window);
 }

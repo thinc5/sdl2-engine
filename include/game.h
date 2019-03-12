@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <stdbool.h>
+
 #include "../include/texturemanager.h"
 #include "../include/timer.h"
 
@@ -10,6 +12,7 @@
  * Each texture to be registered.
  */
 typedef struct GameData {
+    bool status;
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
