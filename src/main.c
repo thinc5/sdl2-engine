@@ -15,6 +15,7 @@
 #include "../include/fontmanager.h"
 #include "../include/eventmanager.h"
 #include "../include/renderer.h"
+#include "../include/renderertemplates.h"
 
 /**
  * Entry point for Engine.
@@ -51,6 +52,13 @@ int main(int argc, char* argv[]) {
             gameData.tr->totalSize);
     
     int pickedTex = 0;
+    // Dummy sdl rect
+    SDL_Rect test = {
+        .x = 50,
+        .y = 50,
+        .w = 50,
+        .h = 50
+    };
     // Main game loop
     while (!gameData.renderer);
     while (gameData.status) {
@@ -67,10 +75,8 @@ int main(int argc, char* argv[]) {
         }
         // Draw
         SDL_RenderClear(gameData.renderer);
-        if (SDL_RenderCopy(gameData.renderer, gameData.tr->registry[pickedTex].texture, NULL, NULL) == -1) {
-            printf("Failed to render texture..\n");
-            gameData.status = false;
-        }
+        renderBackground(gameData.renderer, gameData.tr->registry[pickedTex].texture);
+        renderTexture(gameData.renderer, gameData.tr->registry[3].texture, &test);
         drawDebugMessage(gameData.renderer, gameData.fr->registry[0].font, gameData.tr->registry[pickedTex].reference);
         SDL_RenderPresent(gameData.renderer);
         //showFPS(gameData.fps);
