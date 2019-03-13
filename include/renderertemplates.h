@@ -6,6 +6,7 @@
 #include <SDL2/SDL_ttf.h>
 
 #include <stdbool.h>
+#include <string.h>
 
 #include "renderer.h"
 
