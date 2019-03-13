@@ -12,6 +12,11 @@
 /**
  * Draw a pre-designed debug message to the screen.
  */
-bool drawDebugMessage(SDL_Renderer* renderer, TTF_Font* font, char* text);
+bool renderDebugMessage(SDL_Renderer* renderer, TTF_Font* font, char* text);
+
+/**
+ * Show the fps in the top right corner of the screen.
+ */
+bool renderFPS(SDL_Renderer* renderer, TTF_Font* font, int fps);
 
 #endif
