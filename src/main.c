@@ -77,9 +77,9 @@ int main(int argc, char* argv[]) {
         SDL_RenderClear(gameData.renderer);
         renderBackground(gameData.renderer, gameData.tr->registry[pickedTex].texture);
         renderTexture(gameData.renderer, gameData.tr->registry[3].texture, &test);
-        drawDebugMessage(gameData.renderer, gameData.fr->registry[0].font, gameData.tr->registry[pickedTex].reference);
+        renderDebugMessage(gameData.renderer, gameData.fr->registry[0].font, gameData.tr->registry[pickedTex].reference);
+        renderFPS(gameData.renderer, gameData.fr->registry[0].font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
-        //showFPS(gameData.fps);
         updateTimer(gameData.fps);
     }
 

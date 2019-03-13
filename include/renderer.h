@@ -5,6 +5,8 @@
 #include <SDL2/SDL_image.h>
 #include <SDL2/SDL_ttf.h>
 
+#include <stdbool.h>
+
 /**
  * Simple function to draw a message to the screen using a font.
  */
