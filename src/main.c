@@ -60,9 +60,8 @@ int main(int argc, char* argv[]) {
         .h = 50
     };
     // Main game loop
-    while (!gameData.renderer);
+    startTimer(&gameData.fps->timer);
     while (gameData.status) {
-        startTimer(&gameData.fps->timer);
         while (SDL_PollEvent(&gameData.event)) {
             // If person wants to exit i.e. alt+f4, clicking x, or for now esc
             if (gameData.event.type == SDL_QUIT) {

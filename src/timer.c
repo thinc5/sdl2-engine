@@ -71,7 +71,7 @@ uint32_t getTimerTicks(Timer* t) {
         if (t->paused) {
             return t->pausedTime;
         } else {
-            return SDL_GetTicks() + t->startTime;
+            return t->startTime;
         }
     }
     return 0;
@@ -81,15 +81,18 @@ uint32_t getTimerTicks(Timer* t) {
  * Maintain capped framerate.
  */
 void updateTimer(FrameRateManager* f) {
-    f->currentFPS++;
-    if (f->capped && (getTimerTicks(&f->timer) < (1000 / f->cappedFPS))) {
-        SDL_Delay((1000 / f->cappedFPS) - getTimerTicks(&f->timer));
-        // Reset timer
-        f->timer.startTime = SDL_GetTicks();
-        f->currentFPS = 0;
+    if (f->capped) {
+        int cap = (1000 / f->cappedFPS);
+        int diff = SDL_GetTicks() - getTimerTicks(&f->timer);
+        if (diff < cap) {
+            SDL_Delay(cap - diff);
+            f->timer.startTime = SDL_GetTicks();
+        }
     }
-    
-    
+    // Implement frame rate display and update
+    // if (SDL_GetTicks() - second > 1000) {
+    //     f->currentFPS = frames;
+    // }
 }
 
 /**
