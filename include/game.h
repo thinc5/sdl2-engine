@@ -5,8 +5,7 @@
 
 #include <stdbool.h>
 
-#include "../include/texturemanager.h"
-#include "../include/fontmanager.h"
+#include "../include/assetmanager.h"
 #include "../include/timer.h"
 
 /**
@@ -17,8 +16,7 @@ typedef struct GameData {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-    TextureRegistry* tr;
-    FontRegistry* fr;
+    AssetRegistry* assets;
     FrameRateManager* fps;
 } GameData;
 

@@ -6,19 +6,17 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "../include/game.h"
 #include "../include/util.h"
 #include "../include/timer.h"
-#include "../include/texturemanager.h"
-#include "../include/fontmanager.h"
+#include "../include/assetmanager.h"
 #include "../include/eventmanager.h"
 #include "../include/renderer.h"
 #include "../include/renderertemplates.h"
 
 /**
- * Entry point for Engine.
+ * Enassety point for Engine.
  */
 int main(int argc, char* argv[]) {
     // Start SDL and components.
@@ -34,24 +32,24 @@ int main(int argc, char* argv[]) {
         printf("Unable to initialize SDL_ttf");
         return 1;
     }
+    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+        return 1;    
+    }
 
 
     // Start all major game components.
     GameData gameData;
     initGame(&gameData);
-    if (!loadTextures(gameData.renderer, gameData.tr, "./res/scene1_textures.conf")) {
+    if (!loadAssets(gameData.renderer, gameData.assets, "./res/scene1_textures.conf")) {
         SDL_Quit();
         return 2;
     }
-    
-    if(!loadFonts(gameData.fr, "./res/scene1_fonts.conf")) {
-        return 2;
-    }
 
-    printf("Loaded %d out of %d textures!\n", gameData.tr->currentSize,
-            gameData.tr->totalSize);
+    printf("Loaded %d out of %d textures!\n", gameData.assets->currentSize,
+            gameData.assets->totalSize);
     
     int pickedTex = 0;
+
     // Dummy sdl rect
     SDL_Rect test = {
         .x = 50,
@@ -74,10 +72,10 @@ int main(int argc, char* argv[]) {
         }
         // Draw
         SDL_RenderClear(gameData.renderer);
-        renderBackground(gameData.renderer, gameData.tr->registry[pickedTex].texture);
-        renderTexture(gameData.renderer, gameData.tr->registry[3].texture, &test);
-        renderDebugMessage(gameData.renderer, gameData.fr->registry[0].font, gameData.tr->registry[pickedTex].reference);
-        renderFPS(gameData.renderer, gameData.fr->registry[0].font, gameData.fps->currentFPS);
+        renderBackground(gameData.renderer, gameData.assets->registry[pickedTex].pointer.texture);
+        // renderTexture(gameData.renderer, gameData.assets->register[3].pointer.texture, &test);
+        // renderDebugMessage(gameData.renderer, gameData.assets->register[7].pointer.font, gameData.assets->register[pickedTex].reference);
+        // renderFPS(gameData.renderer, gameData.assets->register[7].pointer.font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
         updateTimer(gameData.fps);
     }
@@ -85,6 +83,8 @@ int main(int argc, char* argv[]) {
     printf("Freeing game data..\n");
     freeGame(&gameData);
     printf("Quitting now!\n");
+    Mix_Quit();
+    TTF_Quit();
     IMG_Quit();
     SDL_Quit();
     return 0;

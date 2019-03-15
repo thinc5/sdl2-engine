@@ -6,8 +6,7 @@
 #include "../include/config.h"
 #include "../include/game.h"
 #include "../include/timer.h"
-#include "../include/texturemanager.h"
-#include "../include/fontmanager.h"
+#include "../include/assetmanager.h"
 
 void initGame(GameData* gameData) {
     gameData->status = true;
@@ -23,13 +22,9 @@ void initGame(GameData* gameData) {
     gameData->fps = (FrameRateManager*) malloc(sizeof(FrameRateManager));
     initFPSManager(gameData->fps);
     // Custom texture registry
-    gameData->tr = (TextureRegistry*) malloc(sizeof(TextureRegistry));
-    gameData->tr->currentSize = 0;
-    gameData->tr->totalSize = 0;
-    // Custom font registry
-    gameData->fr = (FontRegistry*) malloc(sizeof(FontRegistry));
-    gameData->fr->currentSize = 0;
-    gameData->fr->totalSize = 0;
+    gameData->assets = (AssetRegistry*) malloc(sizeof(AssetRegistry));
+    gameData->assets->currentSize = 0;
+    gameData->assets->totalSize = 0;
 }
 
 /**
@@ -37,21 +32,15 @@ void initGame(GameData* gameData) {
  */
 void freeGame(GameData* game) {
     printf("Freeing textures...\n");
-    freeTextures(game->tr);
-    free(game->tr->registry);
-    game->tr->registry = NULL;
-    free(game->tr);
-    game->tr = NULL;
-    printf("Freeing fonts..\n");
-    freeFonts(game->fr);
-    free(game->fr->registry);
-    game->fr->registry = NULL;
-    free(game->fr);
-    game->fr = NULL;
+    freeAssets(game->assets);
+    free(game->assets->registry);
+    game->assets->registry = NULL;
+    free(game->assets);
+    game->assets = NULL;
     printf("Freeing timer\n");
     free(game->fps);
     printf("Freeing renderer\n");
-    SDL_DestroyRenderer(game->renderer); // Causes SEGFAULT?
+    SDL_DestroyRenderer(game->renderer);
     printf("Freeing window\n");
     SDL_DestroyWindow(game->window);
 }
