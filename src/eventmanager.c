@@ -1,4 +1,5 @@
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_mixer.h>
 
 #include "../include/eventmanager.h"
 #include "../include/game.h"
@@ -33,5 +34,6 @@ void scene1Manager(GameData* gameData, Entity* e) {
             default:
                 break;
         }
+        Mix_PlayChannel(-1, e->sound, 0);
     }    
 }

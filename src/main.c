@@ -69,7 +69,7 @@ int main(int argc, char* argv[]) {
     }
     
     Entity cat;
-    initEntity(&cat, gameData.assets, "cat4.jpg");
+    initEntity(&cat, gameData.assets, "cat4.jpg", "meow1.ogg");
 
     // Main game loop
     startTimer(&gameData.fps->timer);

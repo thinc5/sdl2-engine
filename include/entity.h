@@ -22,6 +22,7 @@ typedef enum Direction {
  */
 typedef struct Entity {
     SDL_Texture* texture;
+    Mix_Chunk* sound;
     SDL_Rect position;
     void (*move)(void* e, Direction d);
 } Entity;
@@ -29,7 +30,7 @@ typedef struct Entity {
 /**
  * Initalize an entity with a default size, location and with provided texture.
  */
-bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef);
+bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const char* soundRef);
 
 /**
  * Move an entity a set distance in a provided direction.

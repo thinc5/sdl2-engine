@@ -7,13 +7,23 @@
 /**
  * Initalize an entity with a default size, location and with provided texture.
  */
-bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef) {
-    RegisteredAsset* asset = getAssetByReference(textureRef, reg);
-    if (asset == NULL) {
-        fprintf(stderr, "Unable to find asset for entity: %s\n", textureRef);
-        return false;
+bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const char* soundRef) {
+    if (textureRef != NULL) {
+        RegisteredAsset* asset = getAssetByReference(textureRef, reg);
+        if (asset == NULL) {
+            fprintf(stderr, "Unable to find asset for entity: %s\n", textureRef);
+            return false;
+        }
+        e->texture = asset->pointer.texture;
     }
-    e->texture = asset->pointer.texture;
+    if (soundRef != NULL) {
+        RegisteredAsset* asset = getAssetByReference(soundRef, reg);
+        if (asset == NULL) {
+            fprintf(stderr, "Unable to find asset for entity: %s\n", soundRef);
+            return false;
+        }
+        e->sound = asset->pointer.sound;
+    }
     e->position.x = 50;
     e->position.y = 50;
     e->position.w = 50;
@@ -43,4 +53,5 @@ void move(void* e, Direction d) {
         default:
             break;
     }
+    Mix_PlayChannel(-1, entity->sound, 0);
 }
