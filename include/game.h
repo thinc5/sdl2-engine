@@ -23,7 +23,7 @@ typedef struct GameData {
 /**
  * Return initialized GameData struct.
  */
-void initGame(GameData* gameData);
+bool initGame(GameData* gameData);
 
 /**
  * Free game objects.

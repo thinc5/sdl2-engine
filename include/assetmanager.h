@@ -48,21 +48,26 @@ typedef struct AssetRegistry {
 /**
  * Load assets from a newline-delimated plain text file.
  */
-bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, char* configPath);
+bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* configPath);
 
 /**
- *  Load a texture into the manager.
+ *  Load an asset into the manager.
  */
-bool loadAsset(SDL_Renderer* renderer, char* path, RegisteredAsset* reg);
+bool loadAsset(SDL_Renderer* renderer, const char* path, RegisteredAsset* reg);
 
 /**
  * Determine the type of the asset and set the filename and type.
  */
-bool typeAsset(RegisteredAsset* asset, char* path);
+bool typeAsset(RegisteredAsset* asset, const char* path);
 
 /**
  * Free all assets from a provided registry.
  */
 bool freeAssets(AssetRegistry* reg);
+
+/**
+ * If an asset is found with provided reference, return pointer to asset, else return NULL.
+ */
+RegisteredAsset* getAssetByReference(const char* reference, AssetRegistry* reg);
 
 #endif

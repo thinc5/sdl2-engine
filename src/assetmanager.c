@@ -12,14 +12,14 @@
 /**
  * Load textures.
  */
-bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, char* filepath) {
+bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath) {
     // How many textures are we loading?
     int total = 0;
     char buffer[100];
     // Open file and count how many lines
     FILE* fp = fopen(filepath, "r");
     if (!fp) {
-        printf("Unable to find specified asset manifest file.\n");
+        fprintf(stderr, "Unable to find specified asset manifest file.\n");
         return false;
     }
     while(fgets(buffer, sizeof(buffer), fp)) {
@@ -33,7 +33,6 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, char* filepath) {
     reg->registry = (RegisteredAsset*) malloc(sizeof(RegisteredAsset) * reg->totalSize);
     reg->currentSize = 0;
     // Loop each line and load the texture.
-    printf("Loading textures.....\n");
     while(fgets(buffer, sizeof(buffer), fp)) {
         // If last character of buffer is a newline, strip it
         int blen = strlen(buffer);
@@ -42,7 +41,7 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, char* filepath) {
         }
         if (!loadAsset(renderer, buffer, &reg->registry[reg->currentSize])) {
             // Unable to load?
-            fprintf(stderr, "Could not load file: %s\n", buffer);
+            fprintf(stderr, "Could not load file: %s\n", reg->registry[reg->currentSize].reference);
             memset(buffer, '\0', sizeof(buffer));
             continue;
         }
@@ -53,56 +52,75 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, char* filepath) {
         memset(buffer, '\0', sizeof(buffer));
     }
     fclose(fp);
+    printf("Loaded %d out of %d assets.\n", reg->currentSize, reg->totalSize);
     return true;
 }
 
 /**
- *  Load a texture into the manager.
+ *  Load an asset into the manager.
  */
-bool loadAsset(SDL_Renderer* renderer, char* path, RegisteredAsset* asset) {
+bool loadAsset(SDL_Renderer* renderer, const char* path, RegisteredAsset* asset) {
     // Set the texture's reference string and check the asset type.
     if (!typeAsset(asset, path)) {
-        printf("Unable to type asset.\n");
+        fprintf(stderr, "Unable to type asset %s.\n", path);
         return false;
     }
     switch (asset->type) {
         case Texture:
             asset->pointer.texture = IMG_LoadTexture(renderer, path);
+            if (asset->pointer.texture == NULL) {
+                return false;
+            }
             break;
         case Font:
             asset->pointer.font = TTF_OpenFont(path, 20);
+            if (asset->pointer.font == NULL) {
+                return false;
+            }
+            break;
         case Sound:
+            asset->pointer.sound = Mix_LoadWAV(path);
+            if (asset->pointer.font == NULL) {
+                return false;
+            }
             break;
         default:
             return false;
     }
-    printf("Successfully loaded %s\n", asset->reference);
     return true;
 }
 
 /**
  * Determine the type of the asset and set the filename and type.
  */
-bool typeAsset(RegisteredAsset* asset, char* path) {
+bool typeAsset(RegisteredAsset* asset, const char* path) {
     // Parse filename to get extention.
-    char* filename = strtok(path, "/");
-    while (strtok(NULL, "/") != NULL) {
-        filename = strtok(NULL, "/");
+    char copy[strlen(path)];
+    strcpy(copy, path);
+    char* filename = strtok(copy, "/");
+    while (1) {
+        char* test = strtok(NULL, "/");
+        if (test == NULL) {
+            break;
+        }
+        filename = test;
     }
     asset->reference = (char*) malloc(sizeof(char) * strlen(filename) + 1);
     strcpy(asset->reference, filename);
-    printf("%s %s\n", filename, asset->reference);
     char* ext = strtok(filename, ".");
-    while (strtok(NULL, ".") != NULL) {
-        ext = strtok(NULL, ".");
+    while (1) {
+        char* test = strtok(NULL, ".");
+        if (test == NULL) {
+            break;
+        }
+        ext = test;
     }
-    printf("%s\n", ext);
     // Determine which load function to use
-    if (!strcmp(ext, ".png") || !strcmp(ext, ".jpg")) {
+    if (!strcmp(ext, "png") || !strcmp(ext, "jpg")) {
         asset->type = Texture;
-    } else if (!strcmp(ext, ".ttf") || !strcmp(ext, ".otf")) {
+    } else if (!strcmp(ext, "ttf") || !strcmp(ext, "otf")) {
         asset->type = Font;
-    } else if (!strcmp(ext, ".ogg") || !strcmp(ext, ".mp3")) {
+    } else if (!strcmp(ext, "ogg") || !strcmp(ext, "mp3")) {
         asset->type = Sound;
     } else {
         // File type not supported.
@@ -127,17 +145,16 @@ bool freeAsset(RegisteredAsset* asset) {
             Mix_FreeChunk(asset->pointer.sound);
             break;
         default:
-            printf("Asset type unknown, unable to free.\n");
+            fprintf(stderr, "Asset type unknown, unable to free.\n");
             return false;
             break;
     }
     // Free asset reference name.
     if (asset->reference) {
-        printf("Freed %s\n", asset->reference);
         free(asset->reference);
         asset->reference = NULL;
     } else {
-        printf("Reference name not allocated to begin with...\n");
+        fprintf(stderr, "Reference name not allocated.\n");
         return false;
     }
     return true;
@@ -150,10 +167,22 @@ bool freeAssets(AssetRegistry* reg) {
     int freed = 0;
     for (int i = 0; i < reg->currentSize; i++) {
         if (!freeAsset(&reg->registry[i])) {
-            printf("Failed to free asset in position %d.\n", i);
+            fprintf(stderr, "Failed to free asset in position %d [%s].\n", i, reg->registry[i].reference);
         }
         freed++;
     }
-    printf("Freed %d textures out of %d.\n", freed, reg->totalSize);
+    printf("Freed %d assets out of %d.\n", freed, reg->totalSize);
     return true;
+}
+
+/**
+ * If an asset is found with provided reference, return pointer to asset, else return NULL.
+ */
+RegisteredAsset* getAssetByReference(const char* reference, AssetRegistry* reg) {
+    for (int i = 0; i < reg->currentSize; i++) {
+        if (strcmp(reg->registry[i].reference, reference) == 0) {
+            return &reg->registry[i];
+        }
+    }
+    return NULL;
 }

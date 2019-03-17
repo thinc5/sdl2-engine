@@ -8,7 +8,7 @@
 #include "../include/timer.h"
 #include "../include/assetmanager.h"
 
-void initGame(GameData* gameData) {
+bool initGame(GameData* gameData) {
     gameData->status = true;
     // Create the window
     gameData->window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED,
@@ -25,22 +25,20 @@ void initGame(GameData* gameData) {
     gameData->assets = (AssetRegistry*) malloc(sizeof(AssetRegistry));
     gameData->assets->currentSize = 0;
     gameData->assets->totalSize = 0;
+    return true;
 }
 
 /**
  * Free game data struct.
  */
 void freeGame(GameData* game) {
-    printf("Freeing textures...\n");
+    printf("Freeing assets...\n");
     freeAssets(game->assets);
     free(game->assets->registry);
     game->assets->registry = NULL;
     free(game->assets);
     game->assets = NULL;
-    printf("Freeing timer\n");
     free(game->fps);
-    printf("Freeing renderer\n");
     SDL_DestroyRenderer(game->renderer);
-    printf("Freeing window\n");
     SDL_DestroyWindow(game->window);
 }
