@@ -16,13 +16,13 @@ void scene1Manager(GameData* gameData, int* pickedTex) {
                     break;
             case SDLK_LEFT:
                 if (*pickedTex - 1 < 0) {
-                    *pickedTex = gameData->tr->currentSize - 1;
+                    *pickedTex = gameData->assets->currentSize - 1;
                 } else {
                     *pickedTex = *pickedTex - 1;
                 }
                 break;
             case SDLK_RIGHT:
-                if (*pickedTex + 1 < gameData->tr->currentSize) {
+                if (*pickedTex + 1 < gameData->assets->currentSize) {
                     *pickedTex = *pickedTex + 1;
                 } else {
                     *pickedTex = 0;

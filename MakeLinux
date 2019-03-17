@@ -11,7 +11,7 @@ CFLAGS   		= -std=c99 -Wall -g
 LINKER   		= gcc
 
 # linking flags
-LFLAGS			= -Isrc/include -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf
+LFLAGS			= -Isrc/include -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 # directories
 SRCDIR   = src

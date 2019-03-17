@@ -20,7 +20,6 @@ bool renderFont(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color
     return result;
 }
 
-
 /**
  * Simple wrapper function for rendering textures to the screen.
  */

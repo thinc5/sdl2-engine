@@ -5,8 +5,7 @@
 
 #include <stdbool.h>
 
-#include "../include/texturemanager.h"
-#include "../include/fontmanager.h"
+#include "../include/assetmanager.h"
 #include "../include/timer.h"
 
 /**
@@ -17,15 +16,14 @@ typedef struct GameData {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-    TextureRegistry* tr;
-    FontRegistry* fr;
+    AssetRegistry* assets;
     FrameRateManager* fps;
 } GameData;
 
 /**
  * Return initialized GameData struct.
  */
-void initGame(GameData* gameData);
+bool initGame(GameData* gameData);
 
 /**
  * Free game objects.

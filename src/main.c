@@ -6,52 +6,70 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
-#include <string.h>
 
 #include "../include/game.h"
-#include "../include/util.h"
 #include "../include/timer.h"
-#include "../include/texturemanager.h"
-#include "../include/fontmanager.h"
+#include "../include/assetmanager.h"
 #include "../include/eventmanager.h"
 #include "../include/renderer.h"
 #include "../include/renderertemplates.h"
 
 /**
- * Entry point for Engine.
+ *  Initialize SDL components.
  */
-int main(int argc, char* argv[]) {
+ bool initModules(void) {
     // Start SDL and components.
     if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
-        printf("Unable to initialize SDL: %s\n", SDL_GetError());
-        return 1;
+        fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+        return false;
     }
     if (IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG) == 0) {
-        printf("Unable to initialize SDL_image\n");
-        return 1;
+        fprintf(stderr, "Unable to initialize SDL_image\n");
+        return false;
     }
     if (TTF_Init() != 0) {
-        printf("Unable to initialize SDL_ttf");
+        fprintf(stderr, "Unable to initialize SDL_ttf\n");
+        return false;
+    }
+    if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
+        fprintf(stderr, "Unable to initialize SDL_mixer\n");
+        return false;    
+    }
+    return true;
+ }
+
+/**
+ * Quit SDL components.
+ */
+ void quitModules(void) {
+    Mix_Quit();
+    TTF_Quit();
+    IMG_Quit();
+    SDL_Quit();
+ }
+
+/**
+ * Enassety point for Engine.
+ */
+int main(int argc, char* argv[]) {
+    // Start all major game components.
+    if (!initModules()) {
         return 1;
     }
 
-
-    // Start all major game components.
     GameData gameData;
-    initGame(&gameData);
-    if (!loadTextures(gameData.renderer, gameData.tr, "./res/scene1_textures.conf")) {
+    if (!initGame(&gameData)) {
+        fprintf(stderr, "Unable to initilize SDL.\n");
+        return 2;
+    }
+    if (!loadAssets(gameData.renderer, gameData.assets, "./res/scene1.manifest")) {
+        fprintf(stderr, "Unable to initilize SDL.\n");
         SDL_Quit();
-        return 2;
+        return 3;
     }
-    
-    if(!loadFonts(gameData.fr, "./res/scene1_fonts.conf")) {
-        return 2;
-    }
-
-    printf("Loaded %d out of %d textures!\n", gameData.tr->currentSize,
-            gameData.tr->totalSize);
     
     int pickedTex = 0;
+
     // Dummy sdl rect
     SDL_Rect test = {
         .x = 50,
@@ -74,18 +92,17 @@ int main(int argc, char* argv[]) {
         }
         // Draw
         SDL_RenderClear(gameData.renderer);
-        renderBackground(gameData.renderer, gameData.tr->registry[pickedTex].texture);
-        renderTexture(gameData.renderer, gameData.tr->registry[3].texture, &test);
-        renderDebugMessage(gameData.renderer, gameData.fr->registry[0].font, gameData.tr->registry[pickedTex].reference);
-        renderFPS(gameData.renderer, gameData.fr->registry[0].font, gameData.fps->currentFPS);
+        renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", gameData.assets)->pointer.texture);
+        renderTexture(gameData.renderer, getAssetByReference("cat3.jpg", gameData.assets)->pointer.texture, &test);
+        renderDebugMessage(gameData.renderer, getAssetByReference("ssp-regular.otf", gameData.assets)->pointer.font,
+                getAssetByReference("ssp-regular.otf", gameData.assets)->reference);
+        // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
         updateTimer(gameData.fps);
     }
 
-    printf("Freeing game data..\n");
     freeGame(&gameData);
+    quitModules();
     printf("Quitting now!\n");
-    IMG_Quit();
-    SDL_Quit();
     return 0;
 }
