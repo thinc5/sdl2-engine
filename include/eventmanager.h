@@ -6,6 +6,7 @@
 #include <stdbool.h>
 
 #include "game.h"
+#include "entity.h"
 
 /**
  * The event type and the function to execute.
@@ -34,6 +35,6 @@ void initEventManager(EventManager* em);
  */
 void checkEvent(SDL_Keycode);
 
-void scene1Manager(GameData* gameData, int* pickedTex);
+void scene1Manager(GameData* gameData, Entity* e);
 
 #endif

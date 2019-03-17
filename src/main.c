@@ -68,15 +68,9 @@ int main(int argc, char* argv[]) {
         return 3;
     }
     
-    int pickedTex = 0;
+    Entity cat;
+    initEntity(&cat, gameData.assets, "cat4.jpg");
 
-    // Dummy sdl rect
-    SDL_Rect test = {
-        .x = 50,
-        .y = 50,
-        .w = 50,
-        .h = 50
-    };
     // Main game loop
     startTimer(&gameData.fps->timer);
     while (gameData.status) {
@@ -88,12 +82,12 @@ int main(int argc, char* argv[]) {
                 gameData.status = false;
                 break;
             }
-            scene1Manager(&gameData, &pickedTex);
+            scene1Manager(&gameData, &cat);
         }
         // Draw
         SDL_RenderClear(gameData.renderer);
         renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", gameData.assets)->pointer.texture);
-        renderTexture(gameData.renderer, getAssetByReference("cat3.jpg", gameData.assets)->pointer.texture, &test);
+        renderTexture(gameData.renderer, cat.texture, &cat.position);
         renderDebugMessage(gameData.renderer, getAssetByReference("ssp-regular.otf", gameData.assets)->pointer.font,
                 getAssetByReference("ssp-regular.otf", gameData.assets)->reference);
         // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);
