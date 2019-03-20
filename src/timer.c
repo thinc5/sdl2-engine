@@ -8,21 +8,25 @@
 /**
  * Initialise the timer using some global constants defined in config.h.
  */
-void initFPSManager(FrameRateManager* f) {
-    f->capped = FPS_CAPPED;
-    f->cappedFPS = FRAME_CAP;
-    f->currentFPS = 0;
-    initTimer(&f->timer);
+FrameRateManager initFPSManager(void) {
+    return (FrameRateManager) {
+        .capped = FPS_CAPPED,
+        .cappedFPS = FRAME_CAP,
+        .currentFPS = 0,
+        .timer = initTimer(),
+    };
 }
 
 /**
  * Initialise a timer.
  */
-void initTimer(Timer* t) {
-    t->started = false;
-    t->paused = false;
-    t->startTime = 0;
-    t->pausedTime = 0;
+Timer initTimer(void) {
+    return (Timer) {
+        .started = false,
+        .paused = false,
+        .startTime = 0,
+        .pausedTime = 0.
+    };
 }
 
 /**
@@ -101,3 +105,4 @@ void updateTimer(FrameRateManager* f) {
 void showFPS(FrameRateManager* f) {
     printf("FPS: %d\n", f->currentFPS);
 };
+

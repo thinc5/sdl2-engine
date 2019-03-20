@@ -29,12 +29,12 @@ typedef struct FrameRateManager {
 /**
  * Initialise the timer using some global constants defined in config.h.
  */
-void initFPSManager(FrameRateManager* f);
+FrameRateManager initFPSManager(void);
 
 /**
  * Initialise a timer.
  */
-void initTimer(Timer* t);
+Timer initTimer(void);
 
 /**
  * Start the fps timer.

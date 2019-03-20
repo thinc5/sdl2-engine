@@ -19,11 +19,15 @@ INCDIR   = include
 OBJDIR   = obj
 BINDIR   = bin
 
-SOURCES  := $(wildcard $(SRCDIR)/*.c)
-INCLUDES := $(wildcard $(INCDIR)/*.h)
+SOURCES  := $(shell find $(SRCDIR)/ -type f -name *.c)
+INCLUDES := $(shell find $(INCDIR)/ -type f -name *.h)
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-rm       = rm -f
+rm       = rm -rf
 
+
+$(shell mkdir -p $(OBJDIR))
+$(shell mkdir -p $(OBJDIR)/Entities)
+$(shell mkdir -p $(OBJDIR)/Components)
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	#@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@

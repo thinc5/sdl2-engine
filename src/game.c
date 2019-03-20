@@ -5,10 +5,15 @@
 
 #include "../include/config.h"
 #include "../include/game.h"
+
 #include "../include/timer.h"
 #include "../include/assetmanager.h"
+#include "../include/entitymanager.h"
+
+#include "../include/Entities/cat.h"
 
 bool initGame(GameData* gameData) {
+    // Game is running?
     gameData->status = true;
     // Create the window
     gameData->window = SDL_CreateWindow(WINDOW_TITLE, SDL_WINDOWPOS_UNDEFINED,
@@ -19,12 +24,13 @@ bool initGame(GameData* gameData) {
     // Set default background colour
     SDL_SetRenderDrawColor(gameData->renderer, 255, 0, 0, 255);
     // Custom framerate manager
-    gameData->fps = (FrameRateManager*) malloc(sizeof(FrameRateManager));
-    initFPSManager(gameData->fps);
+    gameData->fps = initFPSManager();
     // Custom texture registry
-    gameData->assets = (AssetRegistry*) malloc(sizeof(AssetRegistry));
-    gameData->assets->currentSize = 0;
-    gameData->assets->totalSize = 0;
+    gameData->assets = (AssetRegistry) {
+        .currentSize = 0,
+        .totalSize = 0,
+    };
+    gameData->entities = initEntityManager();
     return true;
 }
 
@@ -33,12 +39,11 @@ bool initGame(GameData* gameData) {
  */
 void freeGame(GameData* game) {
     printf("Freeing assets...\n");
-    freeAssets(game->assets);
-    free(game->assets->registry);
-    game->assets->registry = NULL;
-    free(game->assets);
-    game->assets = NULL;
-    free(game->fps);
+    free(game->entities.entities);
+    freeAssets(&game->assets);
+    free(game->assets.registry);
+    game->assets.registry = NULL;
+    // Destroy SDL components.
     SDL_DestroyRenderer(game->renderer);
     SDL_DestroyWindow(game->window);
 }

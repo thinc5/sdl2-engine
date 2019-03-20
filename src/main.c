@@ -7,12 +7,15 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#include "../include/game.h"
 #include "../include/timer.h"
 #include "../include/assetmanager.h"
 #include "../include/eventmanager.h"
 #include "../include/renderer.h"
 #include "../include/renderertemplates.h"
+
+#include "../include/Entities/cat.h"
+
+#include "../include/game.h"
 
 /**
  *  Initialize SDL components.
@@ -56,43 +59,41 @@ int main(int argc, char* argv[]) {
     if (!initModules()) {
         return 1;
     }
-
+    // Load game components and state.
     GameData gameData;
     if (!initGame(&gameData)) {
-        fprintf(stderr, "Unable to initilize SDL.\n");
+        fprintf(stderr, "Unable to initilize game modules.\n");
         return 2;
     }
-    if (!loadAssets(gameData.renderer, gameData.assets, "./res/scene1.manifest")) {
-        fprintf(stderr, "Unable to initilize SDL.\n");
+    // Load game assets.
+    if (!loadAssets(gameData.renderer, &gameData.assets, "./res/debug.manifest")) {
+        fprintf(stderr, "Unable to load assets.\n");
         SDL_Quit();
         return 3;
     }
     
-    Entity cat;
-    initEntity(&cat, gameData.assets, "cat4.jpg", "meow1.ogg");
+    addEntity(&gameData.entities, &gameData.assets, &initCat);
 
     // Main game loop
-    startTimer(&gameData.fps->timer);
     while (gameData.status) {
         while (SDL_PollEvent(&gameData.event)) {
-            // If person wants to exit i.e. alt+f4, clicking x, or for now esc
             if (gameData.event.type == SDL_QUIT) {
                 // Clean up memory here and break main game loop
                 printf("Caught SDL_QUIT, exiting now...\n");
                 gameData.status = false;
                 break;
             }
-            scene1Manager(&gameData, &cat);
+            eventHandler(&gameData);
         }
         // Draw
         SDL_RenderClear(gameData.renderer);
-        renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", gameData.assets)->pointer.texture);
-        renderTexture(gameData.renderer, cat.texture, &cat.position);
-        renderDebugMessage(gameData.renderer, getAssetByReference("ssp-regular.otf", gameData.assets)->pointer.font,
-                getAssetByReference("ssp-regular.otf", gameData.assets)->reference);
+        renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.assets))->pointer.texture);
+        renderTexture(gameData.renderer, gameData.entities.entities[0].texture, &gameData.entities.entities[0].position);
+        renderDebugMessage(gameData.renderer, getAssetByReference("ssp-regular.otf", (&gameData.assets))->pointer.font,
+                getAssetByReference("ssp-regular.otf", (&gameData.assets))->reference);
         // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
-        updateTimer(gameData.fps);
+        updateTimer(&gameData.fps);
     }
 
     freeGame(&gameData);

@@ -8,6 +8,8 @@
 #include "../include/assetmanager.h"
 #include "../include/timer.h"
 
+#include "../include/entitymanager.h"
+
 /**
  * Each texture to be registered.
  */
@@ -16,8 +18,9 @@ typedef struct GameData {
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
-    AssetRegistry* assets;
-    FrameRateManager* fps;
+    FrameRateManager fps;
+    AssetRegistry assets;
+    EntityManager entities;
 } GameData;
 
 /**
