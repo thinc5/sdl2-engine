@@ -58,15 +58,13 @@ void eventHandler(GameData* gameData) {
         case SDL_MOUSEBUTTONDOWN:
             SDL_GetMouseState(&x, &y);
             if (gameData->event.button.button == SDL_BUTTON_LEFT) {
-                printf("Mouse Position: %d %d\n", x, y);
-                printf("Left click!\n");
                 if (gameData->event.type == SDL_MOUSEMOTION) {
                     printf("Mouse left clicked and draged!\n");
                     // Being dragged
                     for (int i = 0; i < gameData->entities.current; i++) {
                         Entity* e = &gameData->entities.entities[i];
                         // Can enttiy even be clicked?
-                        if (e->components[Draged].call == NULL) {
+                        if (!hasComponent(e, Draged)) {
                             continue;
                         }
                         // Check if entity has been clicked.
@@ -75,17 +73,25 @@ void eventHandler(GameData* gameData) {
                             e->components[Draged].call(e, x, y);
                         }
                     }   
+                } else {
+                    for (int i = 0; i < gameData->entities.current; i++) {
+                        Entity* e = &gameData->entities.entities[i];
+                        if (!hasComponent(e, LeftClicked)) {
+                            continue;
+                        }
+                        if (isCollision(x, y, e->position)) {
+                            e->components[LeftClicked].call(e);
+                        }
+                    }
                 }
             } else if (gameData->event.button.button == SDL_BUTTON_RIGHT) {
-                printf("Right click!\n");
                 for (int i = 0; i < gameData->entities.current; i++) {
                     Entity* e = &gameData->entities.entities[i];
-                    // Can enttiy even be clicked?
-                    if (e->components[RightClicked].call == NULL) {
-                        continue;
-                    }
+                    // Can entity even be clicked?
+                    if (!hasComponent(e, RightClicked)) {
+                            continue;
+                        }
                     // Check if entity has been clicked.
-                    printf("Checking collision!\n");
                     if (isCollision(x, y, e->position)) {
                         // Call entity's clicked function.
                         e->components[RightClicked].call(e);

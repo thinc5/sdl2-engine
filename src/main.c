@@ -14,6 +14,7 @@
 #include "../include/renderertemplates.h"
 
 #include "../include/Entities/cat.h"
+#include "../include/Entities/button.h"
 
 #include "../include/game.h"
 
@@ -73,6 +74,7 @@ int main(int argc, char* argv[]) {
     }
     
     addEntity(&gameData.entities, &gameData.assets, &initCat);
+    addEntity(&gameData.entities, &gameData.assets, &initButton);
 
     // Main game loop.
     while (gameData.status) {
