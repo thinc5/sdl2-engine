@@ -24,5 +24,10 @@ typedef struct Entity {
  */
 bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const char* soundRef);
 
+/**
+ * Returns true if the entity has queried component.
+ */
+bool hasComponent(Entity* e, ComponentType c);
+
 
 #endif

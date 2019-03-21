@@ -35,6 +35,7 @@ void cleanEntities(EntityManager* entityManager) {
         // Does this entity need to be removed?
         if (entityManager->entities[i].remove) {
             // Shift over it
+            entityManager->entities[i] = (Entity) {};
             for (int j = i; i < (entityManager->current) - 1; j++) {
                 entityManager->entities[j] = entityManager->entities[j + 1];
             }

@@ -7,20 +7,11 @@
 
 #include <stdbool.h>
 
-/**
- * Simple function to draw a message to the screen using a font.
- */
-bool renderFont(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text);
-
+#include "game.h"
 
 /**
- * Simple wrapper function for rendering textures to the screen.
+ * Render all renderable entites.
  */
-bool renderTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos);
-
-/**
- * Simple wrapper function for rendering textures to the screen.
- */
-bool renderBackground(SDL_Renderer* renderer, SDL_Texture* texture);
+void renderEntities(GameData* gameData);
 
 #endif

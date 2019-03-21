@@ -74,21 +74,21 @@ int main(int argc, char* argv[]) {
     
     addEntity(&gameData.entities, &gameData.assets, &initCat);
 
-    // Main game loop
+    // Main game loop.
     while (gameData.status) {
         while (SDL_PollEvent(&gameData.event)) {
+            eventHandler(&gameData);
             if (gameData.event.type == SDL_QUIT) {
-                // Clean up memory here and break main game loop
-                printf("Caught SDL_QUIT, exiting now...\n");
                 gameData.status = false;
                 break;
             }
-            eventHandler(&gameData);
         }
-        // Draw
+        // Remove all entities marked for deletion.
+        cleanEntities(&gameData.entities);
+        // Render.
         SDL_RenderClear(gameData.renderer);
         renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.assets))->pointer.texture);
-        renderTexture(gameData.renderer, gameData.entities.entities[0].texture, &gameData.entities.entities[0].position);
+        renderEntities(&gameData);
         renderDebugMessage(gameData.renderer, getAssetByReference("ssp-regular.otf", (&gameData.assets))->pointer.font,
                 getAssetByReference("ssp-regular.otf", (&gameData.assets))->reference);
         // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);

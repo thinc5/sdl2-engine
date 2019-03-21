@@ -5,7 +5,10 @@
  * All types of components are listed here.
  */
 typedef enum ComponentType {
-    Clicked,
+    Render,
+    LeftClicked,
+    RightClicked,
+    Draged,
     Moved,
     Deleted,
     COMPONENT_TOTAL,

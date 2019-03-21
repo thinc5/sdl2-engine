@@ -8,7 +8,21 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "renderer.h"
+/**
+ * Simple function to draw a message to the screen using a font.
+ */
+bool renderFont(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text);
+
+
+/**
+ * Simple wrapper function for rendering textures to the screen.
+ */
+bool renderTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos);
+
+/**
+ * Render an image as the background.
+ */
+bool renderBackground(SDL_Renderer* renderer, SDL_Texture* texture);
 
 /**
  * Draw a pre-designed debug message to the screen.
