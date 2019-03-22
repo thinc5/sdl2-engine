@@ -16,10 +16,9 @@ For now just ensure you are in it's directory before executing it. (Clicking on 
 
 ## About
 Simple engine for rendering 2d texutures with simple sound playback.
-
 This project was started to help a friend make his dream game (a visual novel) however eventually the base of this engine may be added to, in order to support more advanced functions and mechanics.
 
-## Discaimer
+## Disclaimer
 This engine is very silly and not as optimised or modular/reusable as I would like.
 That is becasue this is a hobby project and I dont always have time to make things as perfect as I would like.
 Working on it has been lots of fun, so feel free to make a pull request or post an issue and/or feature request!
