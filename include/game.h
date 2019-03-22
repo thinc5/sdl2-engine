@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "../include/assetmanager.h"
-#include "../include/timer.h"
+#include "../include/framerate.h"
 
 #include "../include/entitymanager.h"
 

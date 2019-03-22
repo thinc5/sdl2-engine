@@ -6,18 +6,6 @@
 #include "../include/timer.h"
 
 /**
- * Initialise the timer using some global constants defined in config.h.
- */
-FrameRateManager initFPSManager(void) {
-    return (FrameRateManager) {
-        .capped = FPS_CAPPED,
-        .cappedFPS = FRAME_CAP,
-        .currentFPS = 0,
-        .timer = initTimer(),
-    };
-}
-
-/**
  * Initialise a timer.
  */
 Timer initTimer(void) {
@@ -82,27 +70,12 @@ uint32_t getTimerTicks(Timer* t) {
 }
 
 /**
- * Maintain capped framerate.
+ * Check if provided time in ms has elapsed already.
  */
-void updateTimer(FrameRateManager* f) {
-    if (f->capped) {
-        int cap = (1000 / f->cappedFPS);
-        int diff = SDL_GetTicks() - getTimerTicks(&f->timer);
-        if (diff < cap) {
-            SDL_Delay(cap - diff);
-            f->timer.startTime = SDL_GetTicks();
-        }
+bool timeElapsed(Timer* t, uint32_t ms) {
+    uint32_t elapsed = SDL_GetTicks() - getTimerTicks(t);
+    if (elapsed >= ms) {
+        return true;
     }
-    // Implement frame rate display and update
-    // if (SDL_GetTicks() - second > 1000) {
-    //     f->currentFPS = frames;
-    // }
+    return false;
 }
-
-/**
- * Show the current average fps.
- */
-void showFPS(FrameRateManager* f) {
-    printf("FPS: %d\n", f->currentFPS);
-};
-

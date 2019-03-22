@@ -17,21 +17,6 @@ typedef struct Timer {
 } Timer;
 
 /**
- * A frame rate counter.
- */
-typedef struct FrameRateManager {
-    bool capped;
-    short cappedFPS;
-    short currentFPS;
-    Timer timer;
-} FrameRateManager;
-
-/**
- * Initialise the timer using some global constants defined in config.h.
- */
-FrameRateManager initFPSManager(void);
-
-/**
  * Initialise a timer.
  */
 Timer initTimer(void);
@@ -61,13 +46,8 @@ void unpauseTimer(Timer* t);
 uint32_t getTimerTicks(Timer* t);
 
 /**
- * Maintain capped framerate.
+ * Check if provided time in ms has elapsed already.
  */
-void updateTimer(FrameRateManager* f);
-
-/**
- * Show the current average fps.
- */
-void showFPS(FrameRateManager* f);
+bool timeElapsed(Timer* t, uint32_t ms);
 
 #endif

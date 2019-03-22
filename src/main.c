@@ -7,7 +7,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#include "../include/timer.h"
+#include "../include/framerate.h"
 #include "../include/assetmanager.h"
 #include "../include/eventmanager.h"
 #include "../include/renderer.h"
@@ -53,7 +53,7 @@
  }
 
 /**
- * Enassety point for Engine.
+ * Entry point for the engine.
  */
 int main(int argc, char* argv[]) {
     // Start all major game components.
@@ -63,7 +63,7 @@ int main(int argc, char* argv[]) {
     // Load game components and state.
     GameData gameData;
     if (!initGame(&gameData)) {
-        fprintf(stderr, "Unable to initilize game modules.\n");
+        fprintf(stderr, "Unable to initialize game modules.\n");
         return 2;
     }
     // Load game assets.
@@ -95,7 +95,8 @@ int main(int argc, char* argv[]) {
                 getAssetByReference("ssp-regular.otf", (&gameData.assets))->reference);
         // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
-        updateTimer(&gameData.fps);
+        
+        capFPS(&gameData.fps);
     }
 
     freeGame(&gameData);
