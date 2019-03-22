@@ -59,18 +59,18 @@ void eventHandler(GameData* gameData) {
             SDL_GetMouseState(&x, &y);
             if (gameData->event.button.button == SDL_BUTTON_LEFT) {
                 if (gameData->event.type == SDL_MOUSEMOTION) {
-                    printf("Mouse left clicked and draged!\n");
+                    printf("Mouse left clicked and dragged!\n");
                     // Being dragged
                     for (int i = 0; i < gameData->entities.current; i++) {
                         Entity* e = &gameData->entities.entities[i];
-                        // Can enttiy even be clicked?
-                        if (!hasComponent(e, Draged)) {
+                        // Can entity even be clicked?
+                        if (!hasComponent(e, Dragged)) {
                             continue;
                         }
                         // Check if entity has been clicked.
                         if (isCollision(x, y, e->position)) {
                             // Call entity's clicked function.
-                            e->components[Draged].call(e, x, y);
+                            e->components[Dragged].call(e, x, y);
                         }
                     }   
                 } else {
@@ -89,8 +89,8 @@ void eventHandler(GameData* gameData) {
                     Entity* e = &gameData->entities.entities[i];
                     // Can entity even be clicked?
                     if (!hasComponent(e, RightClicked)) {
-                            continue;
-                        }
+                        continue;
+                    }
                     // Check if entity has been clicked.
                     if (isCollision(x, y, e->position)) {
                         // Call entity's clicked function.

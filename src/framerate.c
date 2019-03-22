@@ -6,7 +6,6 @@
 #include "../include/framerate.h"
 #include "../include/config.h"
 
-
 /**
  * Initialise the timer using some global constants defined in config.h.
  */
@@ -44,4 +43,3 @@ int showFPS(FrameRateManager* f) {
     printf("FPS: %d\n", f->currentFPS);
     return f->currentFPS;
 };
-

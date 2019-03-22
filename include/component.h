@@ -6,9 +6,10 @@
  */
 typedef enum ComponentType {
     Render,
+    OnTick,
     LeftClicked,
     RightClicked,
-    Draged,
+    Dragged,
     Moved,
     Deleted,
     COMPONENT_TOTAL,

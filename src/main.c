@@ -85,6 +85,12 @@ int main(int argc, char* argv[]) {
                 break;
             }
         }
+        // On tick
+        for (int i = 0; i < gameData.entities.current; i++) {
+            if (hasComponent(&gameData.entities.entities[i], OnTick)) {
+                gameData.entities.entities[i].components[OnTick].call(&gameData.entities.entities[i]);
+            }
+        }
         // Remove all entities marked for deletion.
         cleanEntities(&gameData.entities);
         // Render.
@@ -95,7 +101,7 @@ int main(int argc, char* argv[]) {
                 getAssetByReference("ssp-regular.otf", (&gameData.assets))->reference);
         // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
-        
+
         capFPS(&gameData.fps);
     }
 

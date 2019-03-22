@@ -38,12 +38,13 @@ bool initGame(GameData* gameData) {
  * Free game data struct.
  */
 void freeGame(GameData* game) {
+    SDL_DestroyRenderer(game->renderer);
+    SDL_DestroyWindow(game->window);
     printf("Freeing assets...\n");
     free(game->entities.entities);
     freeAssets(&game->assets);
     free(game->assets.registry);
     game->assets.registry = NULL;
     // Destroy SDL components.
-    SDL_DestroyRenderer(game->renderer);
-    SDL_DestroyWindow(game->window);
+    
 }

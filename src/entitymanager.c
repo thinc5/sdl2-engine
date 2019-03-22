@@ -14,17 +14,17 @@ EntityManager initEntityManager(void) {
 }
 
 /**
- * Add a new entity to the manager if there is space, if not allocate more space for new entitiy.
+ * Add a new entity to the manager if there is space, if not allocate more space for new entity.
  */
-void addEntity(EntityManager* entitiyManager, AssetRegistry* assets, Entity (*initEntity)(AssetRegistry* assets)) {
+void addEntity(EntityManager* entityManager, AssetRegistry* assets, Entity (*initEntity)(AssetRegistry* assets)) {
     // Check if we have any space left for a new entity.
-    if (entitiyManager->current + 1 >= entitiyManager->maximum) {
-        entitiyManager->maximum *= 2;
-        entitiyManager->entities = (Entity*) realloc(entitiyManager, sizeof(Entity) * entitiyManager->maximum);
+    if (entityManager->current + 1 >= entityManager->maximum) {
+        entityManager->maximum *= 2;
+        entityManager->entities = (Entity*) realloc(entityManager, sizeof(Entity) * entityManager->maximum);
     }
     // Create new entity with provided constructor.
-    entitiyManager->entities[entitiyManager->current] = initEntity(assets);
-    entitiyManager->current++;
+    entityManager->entities[entityManager->current] = initEntity(assets);
+    entityManager->current++;
 }
 
 /**
