@@ -35,17 +35,14 @@ void catDragged(void *e, int x, int y) {
  */
 void catOnTick(void* e) {
     Entity* entity = (Entity*) e;
-    static Timer timer;
-    if (!timer.started) {
-        timer = initTimer();
-        startTimer(&timer);
+    if (!entity->timers[0].started) {
+        startTimer(&entity->timers[0]);
     }
-    if (timeElapsed(&timer, 1000)) {
+    if (timeElapsed(&entity->timers[0], 250)) {
         // Pick which direction we are moving.
         unsigned int direction = rand() % 4;
-        entity->components[Moved].call(entity, direction);
-        printf("Ticked! %d\n", direction);
-        timer.startTime = SDL_GetTicks();
+        entity->components[Moved].call(entity, direction, entity->position.w/10);
+        entity->timers[0].startTime = SDL_GetTicks();
     }
 
 }
@@ -72,5 +69,6 @@ Entity initCat(AssetRegistry* reg) {
     cat.components[RightClicked].call = &catRightClicked;
     cat.components[Dragged].call = &catDragged;
     cat.components[OnTick].call = &catOnTick;
+    cat.timers[0] = initTimer();
     return cat;
 }

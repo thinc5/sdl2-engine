@@ -7,15 +7,17 @@
 
 #include "assetmanager.h"
 #include "component.h"
+#include "timer.h"
 
 /**
  * A simple entity, with a position, texture and movement function.
  */
 typedef struct Entity {
-    SDL_Texture* texture;
-    Mix_Chunk* sound;
+    SDL_Texture* textures[4];
+    Mix_Chunk* sounds[4];
     SDL_Rect position;
     Component components[COMPONENT_TOTAL];
+    Timer timers[4];
     bool remove;
 } Entity;
 

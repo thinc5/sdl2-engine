@@ -38,19 +38,25 @@ void eventHandler(GameData* gameData) {
         case SDL_KEYDOWN:
             switch (gameData->event.key.keysym.sym) {
                 case SDLK_LEFT:
-                    gameData->entities.entities[0].components[Moved].call(&gameData->entities.entities[0], LEFT);
+                    // Implement after we have selection.
                     break;
                 case SDLK_RIGHT:
-                    gameData->entities.entities[0].components[Moved].call(&gameData->entities.entities[0], RIGHT);
                     break;
                 case SDLK_UP:
-                    gameData->entities.entities[0].components[Moved].call(&gameData->entities.entities[0], UP);
                     break;
                 case SDLK_DOWN:
-                    gameData->entities.entities[0].components[Moved].call(&gameData->entities.entities[0], DOWN);
                     break;
-                case SDLK_d:
-                    gameData->entities.entities[0].components[Deleted].call(&gameData->entities.entities[0]);
+                case SDLK_DELETE:
+                    // If hovering over an entity delete it.
+                    SDL_GetMouseState(&x, &y);
+                    for (int i = 0; i < gameData->entities.current; i++) {
+                        Entity* e = &gameData->entities.entities[i];
+                        if (isCollision(x, y, e->position)) {
+                            // Call entity's clicked function.
+                            e->components[Deleted].call(e);
+                        }
+                    }
+                    break;
                 default:
                     break;
             }

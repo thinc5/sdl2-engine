@@ -13,6 +13,6 @@ typedef enum Direction {
     RIGHT
 } Direction;
 
-void move(void* e, Direction d);
+void move(void* e, Direction d, int pixels);
 
 #endif

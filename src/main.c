@@ -72,19 +72,23 @@ int main(int argc, char* argv[]) {
         SDL_Quit();
         return 3;
     }
-    
-    addEntity(&gameData.entities, &gameData.assets, &initCat);
-    addEntity(&gameData.entities, &gameData.assets, &initButton);
 
+    // Populate scene with entities.
+    addEntity(&gameData.entities, &gameData.assets, &initButton);
+    for (int i = 0; i < 1000; i++) {
+        addEntity(&gameData.entities, &gameData.assets, &initCat);
+    }
+    
     // Main game loop.
     while (gameData.status) {
         while (SDL_PollEvent(&gameData.event)) {
-            eventHandler(&gameData);
             if (gameData.event.type == SDL_QUIT) {
                 gameData.status = false;
                 break;
             }
+            eventHandler(&gameData);
         }
+
         // On tick
         for (int i = 0; i < gameData.entities.current; i++) {
             if (hasComponent(&gameData.entities.entities[i], OnTick)) {
@@ -93,20 +97,20 @@ int main(int argc, char* argv[]) {
         }
         // Remove all entities marked for deletion.
         cleanEntities(&gameData.entities);
+
         // Render.
         SDL_RenderClear(gameData.renderer);
         renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.assets))->pointer.texture);
         renderEntities(&gameData);
-        renderDebugMessage(gameData.renderer, getAssetByReference("ssp-regular.otf", (&gameData.assets))->pointer.font,
-                getAssetByReference("ssp-regular.otf", (&gameData.assets))->reference);
-        // renderFPS(gameData.renderer, gameData.assets->registry[7].pointer.font, gameData.fps->currentFPS);
         SDL_RenderPresent(gameData.renderer);
 
+        // Limit fps.
         capFPS(&gameData.fps);
     }
 
+    // Game over, free everything.
     freeGame(&gameData);
     quitModules();
-    printf("Quitting now!\n");
     return 0;
 }
+

@@ -11,8 +11,11 @@
  */
 void buttonLeftClicked(void* e) {
     Entity* entity = (Entity*) e;
-    // e->texture = getAssetByReference("", reg).pointer.texture;
-    Mix_PlayChannel(-1, entity->sound, 0);
+    // Swap colour of button
+    SDL_Texture* temp = entity->textures[0];
+    entity->textures[0] = entity->textures[1];
+    entity->textures[1] = temp;
+    Mix_PlayChannel(-1, entity->sounds[0], 0);
 }
 
 /**
@@ -20,19 +23,18 @@ void buttonLeftClicked(void* e) {
  */
 Entity initButton(AssetRegistry* reg) {
     Entity entity;
-    // Load cat assets make more flexable and specific later.
     if (!initEntity(&entity, reg, "click.png", "click1.ogg")) {
         fprintf(stderr, "Could not initilize button entity.\n");
         return (Entity) {};
     }
-    // Cat specific specifiations
+    entity.textures[1] = getAssetByReference("unclick.png", reg)->pointer.texture;
     // Starting position
     entity.position.x = 200;
     entity.position.y = 200;
     // Width and height
     entity.position.w = 100;
     entity.position.h = 50;
-    // Load cat components.
+    // Load custom components.
     entity.components[LeftClicked].call = &buttonLeftClicked;
     return entity;
 }

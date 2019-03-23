@@ -20,7 +20,7 @@ void addEntity(EntityManager* entityManager, AssetRegistry* assets, Entity (*ini
     // Check if we have any space left for a new entity.
     if (entityManager->current + 1 >= entityManager->maximum) {
         entityManager->maximum *= 2;
-        entityManager->entities = (Entity*) realloc(entityManager, sizeof(Entity) * entityManager->maximum);
+        entityManager->entities = (Entity*) realloc(entityManager->entities, sizeof(Entity) * entityManager->maximum);
     }
     // Create new entity with provided constructor.
     entityManager->entities[entityManager->current] = initEntity(assets);
@@ -34,15 +34,18 @@ void cleanEntities(EntityManager* entityManager) {
     for (int i = 0; i < entityManager->current; i++) {
         // Does this entity need to be removed?
         if (entityManager->entities[i].remove) {
-            // Shift over it
+            // Shift over it.
             entityManager->entities[i] = (Entity) {};
-            for (int j = i; i < (entityManager->current) - 1; j++) {
+            for (int j = i; j < (entityManager->current) - 1; j++) {
                 entityManager->entities[j] = entityManager->entities[j + 1];
             }
+            entityManager->current--;
         }
     }
+    // Shrink if we have removed entities.
     if (entityManager->current < (entityManager->maximum / 2) - 1) {
         entityManager->maximum /= 2;
         entityManager->entities = (Entity*) realloc(entityManager->entities, sizeof(Entity) * entityManager->maximum);
+        printf("Current entities = %d, Maximum = %d\n", entityManager->current, entityManager->maximum);
     }
 }

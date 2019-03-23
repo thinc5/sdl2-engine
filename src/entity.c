@@ -22,7 +22,7 @@ void deleted(void* e) {
  */
 void render(void* e, SDL_Renderer* r) {
     Entity* entity = (Entity*) e;
-    renderTexture(r, entity->texture, &entity->position);
+    renderTexture(r, entity->textures[0], &entity->position);
 }
 
 /**
@@ -46,7 +46,7 @@ bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const cha
             fprintf(stderr, "Unable to find asset for entity: %s\n", textureRef);
             return false;
         }
-        e->texture = asset->pointer.texture;
+        e->textures[0] = asset->pointer.texture;
     }
     if (soundRef != NULL) {
         RegisteredAsset* asset = getAssetByReference(soundRef, reg);
@@ -54,7 +54,7 @@ bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const cha
             fprintf(stderr, "Unable to find asset for entity: %s\n", soundRef);
             return false;
         }
-        e->sound = asset->pointer.sound;
+        e->sounds[0] = asset->pointer.sound;
     }
     e->remove = false;
     e->components[Deleted].call = &deleted;
