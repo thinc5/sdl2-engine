@@ -55,7 +55,7 @@
 /**
  * Entry point for the engine.
  */
-int main(int argc, char* argv[]) {
+int main(int argc, char** argv) {
     // Start all major game components.
     if (!initModules()) {
         return 1;
@@ -113,4 +113,3 @@ int main(int argc, char* argv[]) {
     quitModules();
     return 0;
 }
-

@@ -9,6 +9,5 @@
 #define WINDOW_HEIGHT 810
 
 #define FPS_CAPPED true
-#define FRAME_CAP 60
-
+#define FRAME_CAP 75
 #endif

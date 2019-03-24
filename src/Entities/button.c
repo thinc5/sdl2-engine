@@ -25,7 +25,7 @@ Entity initButton(AssetRegistry* reg) {
     Entity entity;
     if (!initEntity(&entity, reg, "click.png", "click1.ogg")) {
         fprintf(stderr, "Could not initilize button entity.\n");
-        return (Entity) {};
+        return (Entity) { 0 };
     }
     entity.textures[1] = getAssetByReference("unclick.png", reg)->pointer.texture;
     // Starting position

@@ -55,7 +55,7 @@ Entity initCat(AssetRegistry* reg) {
     // Load cat assets make more flexable and specific later.
     if (!initEntity(&cat, reg, "cat4.jpg", "meow1.ogg")) {
         fprintf(stderr, "Could not initialize cat entity.\n");
-        return (Entity) {};
+        return (Entity) { 0 };
     }
     // Cat specific specifications
     // Starting position

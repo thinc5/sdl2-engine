@@ -24,7 +24,7 @@ void startTimer(Timer* t) {
     t->started = true;
     t->paused = false;
     t->startTime = SDL_GetTicks();
-};
+}
 
 /**
  *  Stop the timer.
@@ -32,7 +32,7 @@ void startTimer(Timer* t) {
 void stopTimer(Timer* t) {
     t->started = false;
     t->paused = false;
-};
+}
 
 /**
  * Pause the timer.
