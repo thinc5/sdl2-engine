@@ -9,6 +9,19 @@
 #include "component.h"
 #include "timer.h"
 
+
+/**
+ * Possible stats an entity can have.
+ */
+ typedef enum Stats {
+    HP,
+    MaxHP,
+    Attack,
+    Defence,
+    Speed,
+    NUMBER_OF_STATS
+ } Stats;
+
 /**
  * A simple entity, with a position, texture and movement function.
  */

@@ -74,13 +74,15 @@ int main(int argc, char* argv[]) {
     }
 
     // Populate scene with entities.
-    addEntity(&gameData.entities, &gameData.assets, &initButton);
-    for (int i = 0; i < 1000; i++) {
+    for (int i = 0; i < 500; i++) {
         addEntity(&gameData.entities, &gameData.assets, &initCat);
     }
+    addEntity(&gameData.entities, &gameData.assets, &initButton);
     
     // Main game loop.
     while (gameData.status) {
+
+        // ---------------- Handle user events.
         while (SDL_PollEvent(&gameData.event)) {
             if (gameData.event.type == SDL_QUIT) {
                 gameData.status = false;
@@ -89,7 +91,7 @@ int main(int argc, char* argv[]) {
             eventHandler(&gameData);
         }
 
-        // On tick
+        //----------------- Update state.
         for (int i = 0; i < gameData.entities.current; i++) {
             if (hasComponent(&gameData.entities.entities[i], OnTick)) {
                 gameData.entities.entities[i].components[OnTick].call(&gameData.entities.entities[i]);
@@ -98,13 +100,13 @@ int main(int argc, char* argv[]) {
         // Remove all entities marked for deletion.
         cleanEntities(&gameData.entities);
 
-        // Render.
+        // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
         renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.assets))->pointer.texture);
         renderEntities(&gameData);
         SDL_RenderPresent(gameData.renderer);
 
-        // Limit fps.
+        // --------------- Wait if we have finished too soon.
         capFPS(&gameData.fps);
     }
 

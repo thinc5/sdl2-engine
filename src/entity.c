@@ -36,7 +36,7 @@ bool hasComponent(Entity* e, ComponentType c) {
  * Initalize an entity with a default size, location and with provided texture and sound.
  */
 bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const char* soundRef) {
-    // Initilise all calls as null
+    // Initalize all calls as null
     for (int i = 0; i < COMPONENT_TOTAL; i++) {
         e->components[i].call = NULL;
     }

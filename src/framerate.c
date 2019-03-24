@@ -29,7 +29,7 @@ void capFPS(FrameRateManager* f) {
         // Have we "finished" early?
         if (!timeElapsed(&f->timer, cap)) {
             // Delay until we are ready to continue.
-            // printf("Delaying: %d ms\n", cap - (SDL_GetTicks() - f->timer.startTime));
+            printf("Delaying: %d ms\n", cap - (SDL_GetTicks() - f->timer.startTime));
             SDL_Delay(cap - (SDL_GetTicks() - f->timer.startTime));
         }
         f->timer.startTime = SDL_GetTicks();

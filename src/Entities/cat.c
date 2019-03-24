@@ -38,10 +38,10 @@ void catOnTick(void* e) {
     if (!entity->timers[0].started) {
         startTimer(&entity->timers[0]);
     }
-    if (timeElapsed(&entity->timers[0], 250)) {
+    if (timeElapsed(&entity->timers[0], 100)) {
         // Pick which direction we are moving.
         unsigned int direction = rand() % 4;
-        entity->components[Moved].call(entity, direction, entity->position.w/10);
+        entity->components[Moved].call(entity, direction, 10);
         entity->timers[0].startTime = SDL_GetTicks();
     }
 
@@ -57,18 +57,21 @@ Entity initCat(AssetRegistry* reg) {
         fprintf(stderr, "Could not initialize cat entity.\n");
         return (Entity) {};
     }
-    // Cat specific specifications
-    // Starting position
+
+    //cat.stats[0] = 10;
+
+    // Cat specific specifications.
+    // Starting position.
     cat.position.x = 400;
     cat.position.y = 400;
-    // Width and height
+    // Width and height.
     cat.position.w = 20;
     cat.position.h = 20;
     // Load cat components.
+    cat.timers[0] = initTimer();
     cat.components[Moved].call = &move;
     cat.components[RightClicked].call = &catRightClicked;
     cat.components[Dragged].call = &catDragged;
     cat.components[OnTick].call = &catOnTick;
-    cat.timers[0] = initTimer();
     return cat;
 }

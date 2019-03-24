@@ -108,5 +108,3 @@ void eventHandler(GameData* gameData) {
     }
 }
 
-
-
