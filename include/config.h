@@ -10,5 +10,4 @@
 
 #define FPS_CAPPED true
 #define FRAME_CAP 75
-
 #endif

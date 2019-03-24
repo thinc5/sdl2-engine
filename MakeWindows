@@ -6,12 +6,12 @@ TARGET			= output.exe
 CC				= gcc
 
 # compiler flags
-CFLAGS   		= -std=c99 -Wall -g
+CFLAGS   		= -std=c99 -Wall -pedantic -g
 
 LINKER   		= gcc
 
 # linking flags
-LFLAGS			= -Isrc/include -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+LFLAGS			= -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -Isrc/include
 
 # directories
 SRCDIR   = src
@@ -19,17 +19,18 @@ INCDIR   = include
 OBJDIR   = obj
 BINDIR   = bin
 
-SOURCES  := $(shell find $(SRCDIR)/ -type f -name *.c)
-INCLUDES := $(shell find $(INCDIR)/ -type f -name *.h)
+SOURCES  := $(shell C:\MinGW\msys\1.0\bin\find.exe $(SRCDIR) -name '*.c')
+INCLUDES := $(shell C:\MinGW\msys\1.0\bin\find.exe $(INCDIR) -name '*.h')
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 rm       = rm -rf
 
+$(echo Test: $(SOURCES))
 
 $(shell mkdir -p $(OBJDIR))
 $(shell mkdir -p $(OBJDIR)/Entities)
 $(shell mkdir -p $(OBJDIR)/Components)
 $(BINDIR)/$(TARGET): $(OBJECTS)
-	#@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
+	@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
 	@echo "Linking complete!"
 

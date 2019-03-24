@@ -42,4 +42,4 @@ void capFPS(FrameRateManager* f) {
 int showFPS(FrameRateManager* f) {
     printf("FPS: %d\n", f->currentFPS);
     return f->currentFPS;
-};
+}

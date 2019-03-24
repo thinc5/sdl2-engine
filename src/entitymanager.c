@@ -1,3 +1,5 @@
+#include <stdlib.h>
+
 #include "../include/game.h"
 #include "../include/entity.h"
 #include "../include/entitymanager.h"
@@ -35,7 +37,7 @@ void cleanEntities(EntityManager* entityManager) {
         // Does this entity need to be removed?
         if (entityManager->entities[i].remove) {
             // Shift over it.
-            entityManager->entities[i] = (Entity) {};
+            entityManager->entities[i] = (Entity) { 0 };
             for (int j = i; j < (entityManager->current) - 1; j++) {
                 entityManager->entities[j] = entityManager->entities[j + 1];
             }
