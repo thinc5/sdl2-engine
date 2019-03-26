@@ -8,7 +8,11 @@
 
 ### Linux
 - Install sdl2-dev, sdl2-image, sdl2-ttf and sdl2-mixer from your package manager
-- ` make -f MakeLinux`
+- `make -f MakeLinux`
+
+### macOS
+- Install sdl2, sdl2_image, sdl2_ttf and sdl2_mixer using the Homebrew package manager
+- `make -f MakeMacOS`
 
 ## Running
 Currently only runs when executed from the executables root directory. This will be changed later but it currently relies on it's working environment being its directory so executing it like `./stuff/output.exe` would prevent it from finding its assets.
