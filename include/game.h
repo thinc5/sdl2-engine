@@ -5,22 +5,26 @@
 
 #include <stdbool.h>
 
-#include "../include/assetmanager.h"
-#include "../include/framerate.h"
-
-#include "../include/entitymanager.h"
+#include "framerate.h"
+#include "scene.h"
 
 /**
- * Each texture to be registered.
+ * GameData struct, holds all data such as current scene,
+ * SDL Window/Renderer and more.
  */
 typedef struct GameData {
+    // Is the game still running?
     bool status;
+    // SDL window, renderer and event.
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
+    // Frame rate manager.
     FrameRateManager fps;
-    AssetRegistry assets;
-    EntityManager entities;
+    // Resources required for the main/escape menu and debugging.
+    Scene menu;
+    // Current scene.
+    Scene scene;
 } GameData;
 
 /**

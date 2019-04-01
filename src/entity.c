@@ -12,7 +12,6 @@
  * Defualt deleted component call for all entites.
  */
 void deleted(void* e) {
-    printf("Entity deleted!\n");
     Entity* entity = (Entity*) e;
     entity->remove = true;
 }
@@ -40,6 +39,7 @@ bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const cha
     for (int i = 0; i < COMPONENT_TOTAL; i++) {
         e->components[i].call = NULL;
     }
+    memset(e->stats, -1, sizeof(int));
     if (textureRef != NULL) {
         RegisteredAsset* asset = getAssetByReference(textureRef, reg);
         if (asset == NULL) {

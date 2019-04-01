@@ -67,17 +67,11 @@ int main(int argc, char** argv) {
         return 2;
     }
     // Load game assets.
-    if (!loadAssets(gameData.renderer, &gameData.assets, "./res/debug.manifest")) {
+    if (!loadAssets(gameData.renderer, &gameData.scene.assets, "./res/debug.manifest")) {
         fprintf(stderr, "Unable to load assets.\n");
         SDL_Quit();
         return 3;
     }
-
-    // Populate scene with entities.
-    for (int i = 0; i < 500; i++) {
-        addEntity(&gameData.entities, &gameData.assets, &initCat);
-    }
-    addEntity(&gameData.entities, &gameData.assets, &initButton);
     
     // Main game loop.
     while (gameData.status) {
@@ -88,21 +82,21 @@ int main(int argc, char** argv) {
                 gameData.status = false;
                 break;
             }
-            eventHandler(&gameData);
+            gameData.scene.eventHandler(&gameData);
         }
 
         //----------------- Update state.
-        for (int i = 0; i < gameData.entities.current; i++) {
-            if (hasComponent(&gameData.entities.entities[i], OnTick)) {
-                gameData.entities.entities[i].components[OnTick].call(&gameData.entities.entities[i]);
+        for (int i = 0; i < gameData.scene.entities.current; i++) {
+            if (hasComponent(&gameData.scene.entities.entities[i], OnTick)) {
+                gameData.scene.entities.entities[i].components[OnTick].call(&gameData.scene.entities.entities[i]);
             }
         }
         // Remove all entities marked for deletion.
-        cleanEntities(&gameData.entities);
+        cleanEntities(&gameData.scene.entities);
 
         // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
-        renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.assets))->pointer.texture);
+        renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.scene.assets))->pointer.texture);
         renderEntities(&gameData);
         SDL_RenderPresent(gameData.renderer);
 

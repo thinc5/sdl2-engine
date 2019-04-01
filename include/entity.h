@@ -2,6 +2,8 @@
 #define ENTITY_H
 
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_image.h>
+#include <SDL2/SDL_mixer.h>
 
 #include <stdbool.h>
 
@@ -26,6 +28,7 @@
  * A simple entity, with a position, texture and movement function.
  */
 typedef struct Entity {
+    int stats[NUMBER_OF_STATS];
     SDL_Texture* textures[4];
     Mix_Chunk* sounds[4];
     SDL_Rect position;

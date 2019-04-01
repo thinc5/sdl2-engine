@@ -6,28 +6,6 @@
 #include <stdbool.h>
 
 #include "entity.h"
-#include "game.h"
-
-/**
- * The event type and the function to execute.
- */
-typedef struct Event {
-    char* name;
-    void* handler;
-} Event;
-
-/**
- * Holds all registered keycodes with their events.
- */
-typedef struct EventManager {
-    int total;
-    Event** events;
-} EventManager;
-
-/**
- * Initialize the event manager with basic inputs.
- */
-void initEventManager(EventManager* em);
 
 /**
  * Check the event against the registered events and execute
@@ -36,8 +14,8 @@ void initEventManager(EventManager* em);
 void checkEvent(SDL_Keycode);
 
 /**
- * Handle event and add trigger to 
+ * Process input depending on the context of the current scene.
  */
-void eventHandler(GameData* gameData);
+void defaultHandler(void* game);
 
 #endif

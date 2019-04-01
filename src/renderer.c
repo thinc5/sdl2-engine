@@ -13,9 +13,9 @@
  * Render all renderable entites.
  */
 void renderEntities(GameData* gameData) {
-    for (int i = 0; i < gameData->entities.current; i++) {
-        if (hasComponent(&gameData->entities.entities[i], Render)) {
-            gameData->entities.entities[i].components[Render].call(&gameData->entities.entities[i], gameData->renderer);
+    for (int i = 0; i < gameData->scene.entities.current; i++) {
+        if (hasComponent(&gameData->scene.entities.entities[i], Render)) {
+            gameData->scene.entities.entities[i].components[Render].call(&gameData->scene.entities.entities[i], gameData->renderer);
         }
     } 
 }

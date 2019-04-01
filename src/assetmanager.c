@@ -6,11 +6,22 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../include/assetmanager.h"
 
 /**
- * Load textures.
+ * Initialize the asset manager.
+ */
+bool initAssetManager(AssetRegistry* reg) {
+    reg->currentSize = 0;
+    reg->totalSize = 5;
+    reg->registry = (RegisteredAsset*) malloc(sizeof(RegisteredAsset) * reg->totalSize);
+    return true;
+}
+
+/**
+ * Load assets into the assetmanager.
  */
 bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath) {
     // How many textures are we loading?
@@ -29,9 +40,8 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
     fseek(fp, 0, SEEK_SET);
     memset(buffer, '\0', sizeof(buffer));
     // Allocate space for each of the textures.
-    reg->totalSize = total;
-    reg->registry = (RegisteredAsset*) malloc(sizeof(RegisteredAsset) * reg->totalSize);
-    reg->currentSize = 0;
+    reg->totalSize += total;
+    reg->registry = (RegisteredAsset*) realloc(reg->registry, sizeof(RegisteredAsset) * reg->totalSize);
     // Loop each line and load the texture.
     while(fgets(buffer, sizeof(buffer), fp)) {
         // If last character of buffer is a newline, strip it

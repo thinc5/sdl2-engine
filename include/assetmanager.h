@@ -46,6 +46,11 @@ typedef struct AssetRegistry {
 } AssetRegistry;
 
 /**
+ * Initialize the asset manager.
+ */
+bool initAssetManager(AssetRegistry* reg);
+
+/**
  * Load assets from a newline-delimated plain text file.
  */
 bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* configPath);

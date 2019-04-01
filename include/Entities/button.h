@@ -6,7 +6,7 @@
 #include "../component.h"
 
 /**
- * Initilizes the cat entity and its components.
+ * Initilizes the button entity.
  */
 Entity initButton(AssetRegistry* reg);
 

@@ -29,6 +29,7 @@ $(echo Test: $(SOURCES))
 $(shell mkdir -p $(OBJDIR))
 $(shell mkdir -p $(OBJDIR)/Entities)
 $(shell mkdir -p $(OBJDIR)/Components)
+$(shell mkdir -p $(OBJDIR)/Scenes)
 $(BINDIR)/$(TARGET): $(OBJECTS)
 	@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@

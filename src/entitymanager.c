@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "../include/game.h"
 #include "../include/entity.h"
@@ -7,12 +8,11 @@
 /**
  * Create new entity manager.
  */
-EntityManager initEntityManager(void) {
-    return (EntityManager) {
-        .current = 0,
-        .maximum = 5,
-        .entities = (Entity*) malloc(sizeof(Entity) * 5)
-    };
+bool initEntityManager(EntityManager* entityManager) {
+    entityManager->current = 0;
+    entityManager->maximum = 5;
+    entityManager->entities = (Entity*) malloc(sizeof(Entity) * 5);
+    return true;
 }
 
 /**
@@ -48,6 +48,13 @@ void cleanEntities(EntityManager* entityManager) {
     if (entityManager->current < (entityManager->maximum / 2) - 1) {
         entityManager->maximum /= 2;
         entityManager->entities = (Entity*) realloc(entityManager->entities, sizeof(Entity) * entityManager->maximum);
-        printf("Current entities = %d, Maximum = %d\n", entityManager->current, entityManager->maximum);
+        // DEBUG printf("Current entities = %d, Maximum = %d\n", entityManager->current, entityManager->maximum);
     }
 }
+
+/**
+ * Free entity manager.
+ */
+ void freeEntities(EntityManager* entityManager) {
+    free(entityManager->entities);
+ }
