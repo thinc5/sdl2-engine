@@ -18,6 +18,13 @@
 
 #include "../include/game.h"
 
+enum {
+   CLEAN_EXIT,
+   GAME_COMPONENTS_INIT_FAILED,
+   GAME_MODULES_INIT_FAILED,
+   ASSET_LOAD_FAILED
+} error;
+
 /**
  *  Initialize SDL components.
  */
@@ -58,19 +65,19 @@
 int main(int argc, char** argv) {
     // Start all major game components.
     if (!initModules()) {
-        return 1;
+        return error.GAME_COMPONENTS_INIT_FAILED;
     }
     // Load game components and state.
     GameData gameData;
     if (!initGame(&gameData)) {
         fprintf(stderr, "Unable to initialize game modules.\n");
-        return 2;
+        return error.GAME_MODULES_INIT_FAILED;
     }
     // Load game assets.
     if (!loadAssets(gameData.renderer, &gameData.scene.assets, "./res/debug.manifest")) {
         fprintf(stderr, "Unable to load assets.\n");
         SDL_Quit();
-        return 3;
+        return error.ASSET_LOAD_FAILED;
     }
     
     // Main game loop.
@@ -107,5 +114,5 @@ int main(int argc, char** argv) {
     // Game over, free everything.
     freeGame(&gameData);
     quitModules();
-    return 0;
+    return error.CLEAN_EXIT;
 }
