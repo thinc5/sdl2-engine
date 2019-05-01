@@ -21,9 +21,9 @@ BINDIR   = bin
 
 SOURCES  := $(shell du -a $(SRCDIR) | grep -E '\.(c)$$' | awk '{print $$2}')
 INCLUDES := $(shell du -a $(INCDIR) | grep -E '\.(h)$$' | awk '{print $$2}')
-XTRADIR  := $(shell ls -l include/ | grep "^d" | awk -F" " '{print $$9}')
+XTRADIR  := $(shell ls -d $(INCDIR)/*/ | sed 's/$(INCDIR)/$(OBJDIR)/g')
 
-$(info $(SOURCES))
+$(info $(XTRADIR))
 
 OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 rm       = rm -rf
