@@ -5,17 +5,17 @@
 
 #include <stdbool.h>
 
-#include "entity.h"
+#include "entities/entity.h"
 
 /**
  * Check the event against the registered events and execute
  * associated command.
  */
-void checkEvent(SDL_Keycode);
+void check_event(SDL_Keycode);
 
 /**
  * Process input depending on the context of the current scene.
  */
-void defaultHandler(void* game);
+void default_handler(void* game);
 
 #endif

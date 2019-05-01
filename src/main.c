@@ -7,34 +7,28 @@
 #include <unistd.h>
 #include <stdbool.h>
 
-#include "../include/framerate.h"
-#include "../include/assetmanager.h"
-#include "../include/eventmanager.h"
-#include "../include/renderer.h"
-#include "../include/renderertemplates.h"
+#include "../include/util/framerate.h"
+#include "../include/managers/assetmanager.h"
+#include "../include/managers/eventmanager.h"
+#include "../include/rendering/renderer.h"
+#include "../include/rendering/renderertemplates.h"
 
-#include "../include/Entities/cat.h"
-#include "../include/Entities/button.h"
+#include "../include/entities/cat.h"
+#include "../include/entities/button.h"
 
 #include "../include/game.h"
 
-enum {
-   CLEAN_EXIT,
-   GAME_COMPONENTS_INIT_FAILED,
-   GAME_MODULES_INIT_FAILED,
-   ASSET_LOAD_FAILED
-} error;
 
 /**
  *  Initialize SDL components.
  */
- bool initModules(void) {
+static bool init_modules(void) {
     // Start SDL and components.
-    if (SDL_Init(SDL_INIT_VIDEO|SDL_INIT_AUDIO) != 0) {
+    if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
         fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
         return false;
     }
-    if (IMG_Init(IMG_INIT_JPG|IMG_INIT_PNG) == 0) {
+    if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0) {
         fprintf(stderr, "Unable to initialize SDL_image\n");
         return false;
     }
@@ -44,7 +38,7 @@ enum {
     }
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
         fprintf(stderr, "Unable to initialize SDL_mixer\n");
-        return false;    
+        return false;
     }
     return true;
  }
@@ -52,7 +46,7 @@ enum {
 /**
  * Quit SDL components.
  */
- void quitModules(void) {
+static void quit_modules(void) {
     Mix_Quit();
     TTF_Quit();
     IMG_Quit();
@@ -64,12 +58,12 @@ enum {
  */
 int main(int argc, char** argv) {
     // Start all major game components.
-    if (!initModules()) {
-        return error.GAME_COMPONENTS_INIT_FAILED;
+    if (!init_modules()) {
+        return 1;
     }
     // Load game components and state.
     GameData gameData;
-    if (!initGame(&gameData)) {
+    if (!init_game(&game_data)) {
         fprintf(stderr, "Unable to initialize game modules.\n");
         return error.GAME_MODULES_INIT_FAILED;
     }

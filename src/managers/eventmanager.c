@@ -4,9 +4,9 @@
 #include <stdbool.h>
 
 #include "../include/game.h"
-#include "../include/eventmanager.h"
-#include "../include/entity.h"
-#include "../include/Components/move.h"
+#include "../include/manager/eventmanager.h"
+#include "../include/entities/entity.h"
+#include "../include/components/move.h"
 
 /**
  * Check if provided x and y coordinates are inside of provided rectangle.
