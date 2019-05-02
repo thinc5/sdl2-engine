@@ -52,5 +52,7 @@ dkms.conf
 
 # Misc
 .DS_Store
-vgcore.*
+*vgcore.*
 .vscode
+*.zip
+.vs

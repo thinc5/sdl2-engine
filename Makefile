@@ -73,7 +73,7 @@ debug: $(OBJECTS) $(BINDIR)/$(TARGET)
 # compile objects.
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
-	$(info Compiled $< successfully!)
+	$(info Compiled $<)
 
 
 # link objects.
@@ -81,12 +81,20 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
 	$(info Linking complete!)
 
+
+
+
+.PHONY:	clean release
+
 # are we making a release?
+ifeq ($(OS), WIN)
 release:
-	#@cp 
-
-
-.PHONY:	clean
+	@'C:\Program Files\7-Zip\7z.exe' a -mx=9 release.zip bin\* > /dev/null
+else
+release:
+	@zip bin release.zip
+endif
+	
 
 # clean all building materials.
 clean:
