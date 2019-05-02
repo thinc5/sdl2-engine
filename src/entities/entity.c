@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+#include <string.h>
 
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
