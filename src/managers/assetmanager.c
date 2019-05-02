@@ -8,7 +8,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../include/assetmanager.h"
+#include "../../include/managers/assetmanager.h"
 
 /**
  * Initialize the asset manager.

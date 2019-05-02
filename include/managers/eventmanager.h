@@ -5,7 +5,7 @@
 
 #include <stdbool.h>
 
-#include "entities/entity.h"
+#include "../entities/entity.h"
 
 /**
  * Check the event against the registered events and execute

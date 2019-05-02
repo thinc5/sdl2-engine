@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "../include/renderertemplates.h"
+#include "../../include/rendering/renderertemplates.h"
 
 /**
  * Simple function to draw a message to the screen using a font.

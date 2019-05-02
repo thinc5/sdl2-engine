@@ -5,9 +5,9 @@
 #include <stdbool.h>
 #include <string.h>
 
-#include "../include/renderer.h"
-#include "../include/renderertemplates.h"
-#include "../include/entity.h"
+#include "../../include/rendering/renderer.h"
+#include "../../include/rendering/renderertemplates.h"
+#include "../../include/entities/entity.h"
 
 /**
  * Render all renderable entites.

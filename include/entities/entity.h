@@ -7,9 +7,9 @@
 
 #include <stdbool.h>
 
-#include "assetmanager.h"
-#include "component.h"
-#include "timer.h"
+#include "../managers/assetmanager.h"
+#include "../components/component.h"
+#include "../util/timer.h"
 
 
 /**

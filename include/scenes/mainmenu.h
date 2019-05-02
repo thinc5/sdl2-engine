@@ -1,7 +1,7 @@
 #ifndef MAINMENU_H
 #define MAINMENU_H
 
-#include "../scene.h"
+#include "../scenes/scene.h"
 
 Scene initMainMenu(SDL_Renderer* renderer);
 

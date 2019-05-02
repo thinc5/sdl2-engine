@@ -3,8 +3,8 @@
 
 #include <stdbool.h>
 
-#include "entity.h"
-#include "assetmanager.h"
+#include "../entities/entity.h"
+#include "../managers/assetmanager.h"
 
 /**
  * Holds total number of entites.

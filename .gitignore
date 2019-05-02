@@ -50,6 +50,7 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Misc
 .DS_Store
-
 vgcore.*
+.vscode

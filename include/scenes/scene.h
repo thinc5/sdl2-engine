@@ -1,9 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "assetmanager.h"
-#include "entitymanager.h"
-#include "entity.h"
+#include "../managers/assetmanager.h"
+#include "../managers/entitymanager.h"
+#include "../entities/entity.h"
 
 /**
  * What is the context of this "scene".

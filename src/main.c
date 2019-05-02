@@ -7,15 +7,14 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+#include "../include/debug.h"
 #include "../include/util/framerate.h"
 #include "../include/managers/assetmanager.h"
 #include "../include/managers/eventmanager.h"
 #include "../include/rendering/renderer.h"
 #include "../include/rendering/renderertemplates.h"
-
 #include "../include/entities/cat.h"
 #include "../include/entities/button.h"
-
 #include "../include/game.h"
 
 
@@ -25,19 +24,19 @@
 static bool init_modules(void) {
     // Start SDL and components.
     if (SDL_Init(SDL_INIT_VIDEO | SDL_INIT_AUDIO) != 0) {
-        fprintf(stderr, "Unable to initialize SDL: %s\n", SDL_GetError());
+        ERROR_LOG("Unable to initialize SDL: %s\n", SDL_GetError());
         return false;
     }
     if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0) {
-        fprintf(stderr, "Unable to initialize SDL_image\n");
+        ERROR_LOG("Unable to initialize SDL_image\n");
         return false;
     }
     if (TTF_Init() != 0) {
-        fprintf(stderr, "Unable to initialize SDL_ttf\n");
+        ERROR_LOG("Unable to initialize SDL_ttf\n");
         return false;
     }
     if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 4096) == -1) {
-        fprintf(stderr, "Unable to initialize SDL_mixer\n");
+        ERROR_LOG("Unable to initialize SDL_mixer\n");
         return false;
     }
     return true;
@@ -63,15 +62,15 @@ int main(int argc, char** argv) {
     }
     // Load game components and state.
     GameData gameData;
-    if (!init_game(&game_data)) {
-        fprintf(stderr, "Unable to initialize game modules.\n");
-        return error.GAME_MODULES_INIT_FAILED;
+    if (!init_game(&gameData)) {
+        ERROR_LOG("Unable to initialize game modules.\n");
+        return 1;
     }
     // Load game assets.
     if (!loadAssets(gameData.renderer, &gameData.scene.assets, "./res/debug.manifest")) {
-        fprintf(stderr, "Unable to load assets.\n");
+        ERROR_LOG("Unable to load assets.\n");
         SDL_Quit();
-        return error.ASSET_LOAD_FAILED;
+        return 1;
     }
     
     // Main game loop.
@@ -106,7 +105,7 @@ int main(int argc, char** argv) {
     }
 
     // Game over, free everything.
-    freeGame(&gameData);
-    quitModules();
-    return error.CLEAN_EXIT;
+    free_game(&gameData);
+    quit_modules();
+    return 0;
 }

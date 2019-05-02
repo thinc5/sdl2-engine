@@ -3,10 +3,10 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-#include "../include/entity.h"
-#include "../include/component.h"
-#include "../include/assetmanager.h"
-#include "../include/renderertemplates.h"
+#include "../../include/entities/entity.h"
+#include "../../include/components/component.h"
+#include "../../include/managers/assetmanager.h"
+#include "../../include/rendering/renderertemplates.h"
 
 /**
  * Defualt deleted component call for all entites.

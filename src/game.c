@@ -6,16 +6,16 @@
 #include "../include/config.h"
 #include "../include/game.h"
 
-#include "../include/timer.h"
-#include "../include/entitymanager.h"
+#include "../include/util/timer.h"
+#include "../include/managers/entitymanager.h"
 
-#include "../include/scene.h"
-#include "../include/Scenes/mainmenu.h"
+#include "../include/scenes/scene.h"
+#include "../include/scenes/mainmenu.h"
 
 /**
  * Initilize game and it's required components.
  */
-bool initGame(GameData* gameData) {
+bool init_game(GameData* gameData) {
     // Game is running?
     gameData->status = true;
     // Create the window
@@ -38,7 +38,7 @@ bool initGame(GameData* gameData) {
 /**
  * Free game data.
  */
-void freeGame(GameData* game) {
+void free_game(GameData* game) {
     SDL_DestroyRenderer(game->renderer);
     SDL_DestroyWindow(game->window);
     printf("Freeing assets...\n");

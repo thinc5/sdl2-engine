@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 
-#include "game.h"
+#include "../game.h"
 
 /**
  * Render all renderable entites.

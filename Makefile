@@ -1,48 +1,94 @@
-# executable name
+UNAME			= $(shell uname)
+OS				=
 
-TARGET			= output.out
+# executable name
+TARGET			:= output.out
 
 # compiler to use
-CC			= gcc
+CC				:= gcc
 
 # compiler flags
-CFLAGS   		= -std=c99 -pedantic -Wall -g
+CFLAGS   		:= -std=c99 -Wall -pedantic -g
 
-LINKER   		= gcc
+LINKER   		:= gcc
 
 # linking flags
-LFLAGS			= -Isrc/include -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
+LFLAGS			:= -Isrc/include -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
 
 # directories
-SRCDIR   = src
-INCDIR   = include
-OBJDIR   = obj
-BINDIR   = bin
+SRCDIR   		:= src
+INCDIR			:= include
+OBJDIR			:= obj
+BINDIR			:= bin
 
-SOURCES  := $(shell du -a $(SRCDIR) | grep -E '\.(c)$$' | awk '{print $$2}')
-INCLUDES := $(shell du -a $(INCDIR) | grep -E '\.(h)$$' | awk '{print $$2}')
+
+# helpers
+rm				:= rm -rf
+mkdir			:= mkdir -p
+findc			:= du -a $(SRCDIR) | grep -E '\.(c)$$' | awk '{print $$2}'
+findh			:= du -a $(INCDIR) | grep -E '\.(h)$$' | awk '{print $$2}'
+
+# determine os
+ifeq ($(UNAME), Linux)
+OS				= UNIX
+else ifeq ($(UNAME), MINGW32_NT-6.2)
+OS				= WIN
+else ifeq ($(UNAME), Darwin)
+OS				= UNIX
+else
+$(info "Operating system not supported at this point in time.")
+exit 0
+endif
+
+# override if on windows
+ifeq ($(OS), WIN)
+SHELL 			:= powershell
+TARGET			:= output.exe
+# where is the find command located on your windows machine?
+LFLAGS			:= -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -Isrc/include
+$(info Enviroment: windows)
+else
+$(info Enviroment: unix)
+endif
+
+# source listings
+SOURCES  		:= $(shell $(findc))
+INCLUDES 		:= $(shell $(findh))
+
+# reset shell
+SHELL 			:= sh
+
+# What are my objects?
+OBJECTS  		:= $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
+
+# make subfolders if they do not already exist.
 XTRADIR  := $(shell ls -d $(INCDIR)/*/ | sed 's/$(INCDIR)/$(OBJDIR)/g')
+$(shell $(mkdir) $(OBJDIR) $(XTRADIR))
 
-$(info $(XTRADIR))
+all: $(OBJECTS) $(BINDIR)/$(TARGET)
 
-OBJECTS  := $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
-rm       = rm -rf
+# are we making a debug build?
+debug: CFLAGS += -DDEBUG -g
+debug: $(OBJECTS) $(BINDIR)/$(TARGET)
 
-
-$(shell mkdir -p $(OBJDIR) $(XTRADIR))
-
-$(BINDIR)/$(TARGET): $(OBJECTS)
-	@echo $(SOURCES) $(INCLUDES) $(OBJECTS)
-	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
-	@echo "Linking complete!"
-
+# compile objects
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
 	@$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Compiled "$<" successfully!"
+	$(info Compiled $< successfully!)
 
-.PHONY: clean
+
+# link objects
+$(BINDIR)/$(TARGET): $(OBJECTS)
+	@$(LINKER) $(OBJECTS) $(LFLAGS) -o $@
+	$(info Linking complete!)
+
+
+.PHONY:	clean
+
+# clean all building materials.
 clean:
 	@$(rm) $(OBJDIR)
 	@echo "Cleanup complete!"
 	@$(rm) $(BINDIR)/$(TARGET)
 	@echo "Executable removed!"
+	

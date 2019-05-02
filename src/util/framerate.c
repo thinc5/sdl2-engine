@@ -2,9 +2,9 @@
 
 #include <stdio.h>
 
-#include "../include/timer.h"
-#include "../include/framerate.h"
-#include "../include/config.h"
+#include "../../include/util/timer.h"
+#include "../../include/util/framerate.h"
+#include "../../include/config.h"
 
 /**
  * Initialise the timer using some global constants defined in config.h.

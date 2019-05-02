@@ -2,8 +2,8 @@
 
 #include <stdio.h>
 
-#include "../include/config.h"
-#include "../include/timer.h"
+#include "../../include/config.h"
+#include "../../include/util/timer.h"
 
 /**
  * Initialise a timer.

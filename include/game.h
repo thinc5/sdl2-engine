@@ -5,8 +5,8 @@
 
 #include <stdbool.h>
 
-#include "framerate.h"
-#include "scene.h"
+#include "util/framerate.h"
+#include "scenes/scene.h"
 
 /**
  * GameData struct, holds all data such as current scene,
@@ -30,11 +30,11 @@ typedef struct GameData {
 /**
  * Return initialized GameData struct.
  */
-bool initGame(GameData* gameData);
+bool init_game(GameData* gameData);
 
 /**
  * Free game objects.
  */
-void freeGame(GameData* game);
+void free_game(GameData* game);
 
 #endif

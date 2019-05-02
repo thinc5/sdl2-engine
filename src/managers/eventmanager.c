@@ -3,10 +3,10 @@
 
 #include <stdbool.h>
 
-#include "../include/game.h"
-#include "../include/manager/eventmanager.h"
-#include "../include/entities/entity.h"
-#include "../include/components/move.h"
+#include "../../include/game.h"
+#include "../../include/managers/eventmanager.h"
+#include "../../include/entities/entity.h"
+#include "../../include/components/move.h"
 
 /**
  * Check if provided x and y coordinates are inside of provided rectangle.
@@ -105,7 +105,7 @@ void keyHandler(GameData* gameData) {
 /**
  * Process input depending on the context of the current scene.
  */
-void defaultHandler(void* game) {
+void default_handler(void* game) {
     GameData* gameData = (GameData*) gameData;
     // Default behaviour
     if (gameData->event.key.keysym.sym == SDLK_ESCAPE) {

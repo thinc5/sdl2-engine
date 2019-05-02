@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#include "../include/game.h"
-#include "../include/entity.h"
-#include "../include/entitymanager.h"
+#include "../../include/game.h"
+#include "../../include/entities/entity.h"
+#include "../../include/managers/entitymanager.h"
 
 /**
  * Create new entity manager.

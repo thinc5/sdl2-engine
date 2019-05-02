@@ -1,9 +1,9 @@
 #ifndef E_BUTTON_H
 #define E_BUTTON_H
 
-#include "../assetmanager.h"
-#include "../entity.h"
-#include "../component.h"
+#include "../managers/assetmanager.h"
+#include "../entities/entity.h"
+#include "../components/component.h"
 
 /**
  * Initilizes the button entity.

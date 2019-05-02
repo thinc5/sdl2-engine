@@ -1,6 +1,6 @@
-#include "../include/assetmanager.h"
-#include "../include/entitymanager.h"
-#include "../include/scene.h"
+#include "../../include/managers/assetmanager.h"
+#include "../../include/managers/entitymanager.h"
+#include "../../include/scenes/scene.h"
 
 /**
  * Initialize the scene components.
