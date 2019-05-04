@@ -1,0 +1,140 @@
+#Doesnt work atm, pls use simp.supp to suppress all used libs at your own risk!
+{
+   sdl2_leak_supp
+   Memcheck:Leak
+   fun:*alloc
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+   obj:/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+   obj:/usr/lib/x86_64-linux-gnu/libjack.so.0.1.0
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+   ...
+}
+{
+   sdl2_addr4_supp
+   Memcheck:Addr4
+   obj:/usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so*
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so*
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libjack.so.0.1.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+   ...
+}
+{
+   sdl2_addr8_supp
+   Memcheck:Addr8
+   obj:/usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so*
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so*
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libjack.so.0.1.0
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+   ...
+}
+{
+   sdl2_addr1_supp
+   Memcheck:Addr1
+   obj:/usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+   obj:/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+   obj:/usr/lib/x86_64-linux-gnu/libjack.so.0.1.0
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+}
+{
+   sdl2_cond_supp
+   Memcheck:Cond
+   obj:/usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+   obj:/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+   obj:/usr/lib/x86_64-linux-gnu/libjack.so.0.1.0
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+}
+{
+   sdl2_free_supp
+   Memcheck:Free
+   obj:/usr/lib/x86_64-linux-gnu/dri/i965_dri.so
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+   obj:/usr/lib/x86_64-linux-gnu/libGLX_mesa.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libGLdispatch.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so*
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+   obj:/usr/lib/x86_64-linux-gnu/libglapi.so.0.0.0
+   obj:/usr/lib/x86_64-linux-gnu/libglib-2.0.so.0.5800.3
+   obj:/usr/lib/x86_64-linux-gnu/libjack.so.0.1.0
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+}

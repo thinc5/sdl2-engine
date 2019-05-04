@@ -1,0 +1,86 @@
+{
+   sdl2_leak_supp
+   Memcheck:Leak
+   fun:*alloc
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_addr2_supp
+   Memcheck:Addr4
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_addr4_supp
+   Memcheck:Addr4
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_addr8_supp
+   Memcheck:Addr8
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_addr1_supp
+   Memcheck:Addr1
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_cond_supp
+   Memcheck:Cond
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_free_supp
+   Memcheck:Free
+   ...
+   obj:*/lib*/*.so
+}
+{
+   sdl2_leak_supp
+   Memcheck:Leak
+   fun:*alloc
+   ...
+   obj:*/lib*/*.so.*
+}
+{
+   sdl2_addr2_supp
+   Memcheck:Addr2
+   ...
+   obj:*/lib*/*.so.*
+}
+{
+   sdl2_addr4_supp
+   Memcheck:Addr4
+   ...
+   obj:*/lib*/*.so.*
+}
+{
+   sdl2_addr8_supp
+   Memcheck:Addr8
+   ...
+   obj:*/lib*/*.so.*
+}
+{
+   sdl2_addr1_supp
+   Memcheck:Addr1
+   ...
+   obj:*/lib*/*.so.*
+}
+{
+   sdl2_cond_supp
+   Memcheck:Cond
+   ...
+   obj:*/lib*/*.so.*
+}
+{
+   sdl2_free_supp
+   Memcheck:Free
+   ...
+   obj:*/lib*/*.so.*
+}
