@@ -7,7 +7,7 @@
 /**
  * Initilizes the cat entity.
  */
-Entity initCat(AssetRegistry* reg);
+Entity init_cat(AssetStack* stack);
 
 
 #endif

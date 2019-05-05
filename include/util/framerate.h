@@ -18,16 +18,16 @@ typedef struct FrameRateManager {
 /**
  * Initialise the timer using some global constants defined in config.h.
  */
-FrameRateManager initFPSManager(void);
+FrameRateManager init_fps(void);
 
 /**
  * Maintain capped framerate.
  */
-void capFPS(FrameRateManager* f);
+void cap_fps(FrameRateManager* f);
 
 /**
  * Show the current average fps.
  */
-int getFPS(FrameRateManager* f);
+int get_fps(FrameRateManager* f);
 
 #endif

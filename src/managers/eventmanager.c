@@ -3,6 +3,7 @@
 
 #include <stdbool.h>
 
+#include "../../include/debug.h"
 #include "../../include/game.h"
 #include "../../include/managers/eventmanager.h"
 #include "../../include/entities/entity.h"
@@ -11,7 +12,7 @@
 /**
  * Check if provided x and y coordinates are inside of provided rectangle.
  */
-bool isCollision(int x, int y, SDL_Rect position) {
+static bool is_collision(int x, int y, SDL_Rect position) {
     if (x >= position.x && x <= position.x + position.w &&
             y >= position.y && y <= position.y + position.h) {
         return true;
@@ -23,22 +24,22 @@ bool isCollision(int x, int y, SDL_Rect position) {
  * Default handler for clicks.
  * Handles: left clicks, right clicks, and click and drags.
  */
-void clickHandler(GameData* gameData) {
+void click_handler(GameData* gameData) {
     // Check if an entity was left clicked.
     int x, y;
     SDL_GetMouseState(&x, &y);
     if (gameData->event.button.button == SDL_BUTTON_LEFT) {
         if (gameData->event.type == SDL_MOUSEMOTION) {
-            printf("Mouse left clicked and dragged!\n");
+            INFO_LOG("Mouse left clicked and dragged!\n");
             // Being dragged
             for (int i = 0; i < gameData->scene.entities.current; i++) {
                 Entity* e = &gameData->scene.entities.entities[i];
                 // Can entity even be clicked?
-                if (!hasComponent(e, Dragged)) {
+                if (!has_component(e, Dragged)) {
                     continue;
                 }
                 // Check if entity has been clicked.
-                if (isCollision(x, y, e->position)) {
+                if (is_collision(x, y, e->position)) {
                     // Call entity's clicked function.
                     e->components[Dragged].call(e, x, y);
                 }
@@ -46,10 +47,10 @@ void clickHandler(GameData* gameData) {
         } else {
             for (int i = 0; i < gameData->scene.entities.current; i++) {
                 Entity* e = &gameData->scene.entities.entities[i];
-                if (!hasComponent(e, LeftClicked)) {
+                if (!has_component(e, LeftClicked)) {
                     continue;
                 }
-                if (isCollision(x, y, e->position)) {
+                if (is_collision(x, y, e->position)) {
                     e->components[LeftClicked].call(e);
                 }
             }
@@ -58,11 +59,11 @@ void clickHandler(GameData* gameData) {
         for (int i = 0; i < gameData->scene.entities.current; i++) {
             Entity* e = &gameData->scene.entities.entities[i];
             // Can entity even be clicked?
-            if (!hasComponent(e, RightClicked)) {
+            if (!has_component(e, RightClicked)) {
                 continue;
             }
             // Check if entity has been clicked.
-            if (isCollision(x, y, e->position)) {
+            if (is_collision(x, y, e->position)) {
                 // Call entity's clicked function.
                 e->components[RightClicked].call(e);
             }
@@ -74,7 +75,7 @@ void clickHandler(GameData* gameData) {
  * Default keyboard press handler.
  * Handle arrow keys and delete. 
  */
-void keyHandler(GameData* gameData) {
+void key_handler(GameData* gameData) {
     int x, y = 0;
     switch (gameData->event.key.keysym.sym) {
         case SDLK_LEFT:
@@ -91,7 +92,7 @@ void keyHandler(GameData* gameData) {
             SDL_GetMouseState(&x, &y);
             for (int i = 0; i < gameData->scene.entities.current; i++) {
                 Entity* e = &gameData->scene.entities.entities[i];
-                if (isCollision(x, y, e->position)) {
+                if (is_collision(x, y, e->position)) {
                     // Call entity's clicked function.
                     e->components[Deleted].call(e);
                 }
@@ -114,10 +115,10 @@ void default_handler(void* game) {
     }
     switch (gameData->event.type) {
         case SDL_MOUSEBUTTONDOWN:
-            clickHandler(gameData);
+            click_handler(gameData);
             break;
         case SDL_KEYDOWN:
-            keyHandler(gameData);
+            key_handler(gameData);
             break;
         default:
             break;

@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "../../include/debug.h"
 #include "../../include/managers/assetmanager.h"
 
 /**
@@ -30,7 +31,7 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
     // Open file and count how many lines
     FILE* fp = fopen(filepath, "r");
     if (!fp) {
-        fprintf(stderr, "Unable to find specified asset manifest file.\n");
+        ERROR_LOG("Unable to find specified asset manifest file.\n");
         return false;
     }
     while(fgets(buffer, sizeof(buffer), fp)) {
@@ -51,7 +52,7 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
         }
         if (!loadAsset(renderer, buffer, &reg->registry[reg->currentSize])) {
             // Unable to load?
-            fprintf(stderr, "Could not load file: %s\n", reg->registry[reg->currentSize].reference);
+            ERROR_LOG("Could not load file: %s\n", reg->registry[reg->currentSize].reference);
             memset(buffer, '\0', sizeof(buffer));
             continue;
         }
@@ -62,7 +63,7 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
         memset(buffer, '\0', sizeof(buffer));
     }
     fclose(fp);
-    printf("Loaded %d out of %d assets.\n", reg->currentSize, reg->totalSize);
+    INFO_LOG("Loaded %d out of %d assets.\n", reg->currentSize, reg->totalSize);
     return true;
 }
 
@@ -72,7 +73,7 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
 bool loadAsset(SDL_Renderer* renderer, const char* path, RegisteredAsset* asset) {
     // Set the texture's reference string and check the asset type.
     if (!typeAsset(asset, path)) {
-        fprintf(stderr, "Unable to type asset %s.\n", path);
+        ERROR_LOG("Unable to type asset %s.\n", path);
         return false;
     }
     switch (asset->type) {
@@ -155,7 +156,7 @@ bool freeAsset(RegisteredAsset* asset) {
             Mix_FreeChunk(asset->pointer.sound);
             break;
         default:
-            fprintf(stderr, "Asset type unknown, unable to free.\n");
+            ERROR_LOG("Asset type unknown, unable to free.\n");
             return false;
             break;
     }
@@ -164,7 +165,7 @@ bool freeAsset(RegisteredAsset* asset) {
         free(asset->reference);
         asset->reference = NULL;
     } else {
-        fprintf(stderr, "Reference name not allocated.\n");
+        ERROR_LOG("Reference name not allocated.\n");
         return false;
     }
     return true;
@@ -177,11 +178,11 @@ bool freeAssets(AssetRegistry* reg) {
     int freed = 0;
     for (int i = 0; i < reg->currentSize; i++) {
         if (!freeAsset(&reg->registry[i])) {
-            fprintf(stderr, "Failed to free asset in position %d [%s].\n", i, reg->registry[i].reference);
+            ERROR_LOG("Failed to free asset in position %d [%s].\n", i, reg->registry[i].reference);
         }
         freed++;
     }
-    printf("Freed %d assets out of %d.\n", freed, reg->totalSize);
+    INFO_LOG("Freed %d assets out of %d.\n", freed, reg->totalSize);
     return true;
 }
 

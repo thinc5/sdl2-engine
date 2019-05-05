@@ -7,7 +7,7 @@
 
 #include <stdbool.h>
 
-#include "../managers/assetmanager.h"
+#include "../managers/assetstack.h"
 #include "../components/component.h"
 #include "../util/timer.h"
 
@@ -40,12 +40,12 @@ typedef struct Entity {
 /**
  * Initalize an entity with a default size, location and with provided texture.
  */
-bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const char* soundRef);
+bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* sound);
 
 /**
  * Returns true if the entity has queried component.
  */
-bool hasComponent(Entity* e, ComponentType c);
+bool has_component(Entity* e, ComponentType c);
 
 
 #endif

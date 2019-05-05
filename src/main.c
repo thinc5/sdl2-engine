@@ -9,7 +9,7 @@
 
 #include "../include/debug.h"
 #include "../include/util/framerate.h"
-#include "../include/managers/assetmanager.h"
+#include "../include/managers/assetstack.h"
 #include "../include/managers/eventmanager.h"
 #include "../include/rendering/renderer.h"
 #include "../include/rendering/renderertemplates.h"
@@ -66,12 +66,6 @@ int main(int argc, char** argv) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
-    // Load game assets.
-    if (!loadAssets(gameData.renderer, &gameData.scene.assets, "./res/debug.manifest")) {
-        ERROR_LOG("Unable to load assets.\n");
-        SDL_Quit();
-        return 1;
-    }
     
     // Main game loop.
     while (gameData.status) {
@@ -82,26 +76,26 @@ int main(int argc, char** argv) {
                 gameData.status = false;
                 break;
             }
-            gameData.scene.eventHandler(&gameData);
+            gameData.scene.event_handler(&gameData);
         }
 
         //----------------- Update state.
         for (int i = 0; i < gameData.scene.entities.current; i++) {
-            if (hasComponent(&gameData.scene.entities.entities[i], OnTick)) {
+            if (has_component(&gameData.scene.entities.entities[i], OnTick)) {
                 gameData.scene.entities.entities[i].components[OnTick].call(&gameData.scene.entities.entities[i]);
             }
         }
         // Remove all entities marked for deletion.
-        cleanEntities(&gameData.scene.entities);
+        clean_entities(&gameData.scene.entities);
 
         // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
-        renderBackground(gameData.renderer, getAssetByReference("cat1.jpg", (&gameData.scene.assets))->pointer.texture);
-        renderEntities(&gameData);
+        render_background(gameData.renderer, get_asset_by_ref("cat1.jpg", (&gameData.scene.assets), 0)->pointer.texture);
+        render_entities(&gameData);
         SDL_RenderPresent(gameData.renderer);
 
         // --------------- Wait if we have finished too soon.
-        capFPS(&gameData.fps);
+        cap_fps(&gameData.fps);
     }
 
     // Game over, free everything.

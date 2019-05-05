@@ -1,9 +1,51 @@
 {
-   sdl2_leak_supp
+   test
    Memcheck:Leak
-   fun:*alloc
    ...
-   obj:*/lib*/*.so
+   obj:/usr/lib/x86_64-linux-gnu/pulseaudio/libpulsecommon-12.2.so
+}
+{
+   test
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/ld-2.28.so
+}
+{
+   test
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libX11.so.6.3.0
+}
+{
+   test
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libGLX.so.0.0.0
+}
+{
+   test
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libdbus-1.so.3.19.9
+}
+{
+   test
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libSDL2_mixer-2.0.so.0.2.2
+}
+{
+   test
+   Memcheck:Leak
+   ...
+   obj:/usr/lib/x86_64-linux-gnu/libpulse.so.0.20.3
+}
+{
+   test
+   Memcheck:Leak
+   fun:init_modules
+   ...
+   src:main.c
 }
 {
    sdl2_addr2_supp
@@ -40,13 +82,6 @@
    Memcheck:Free
    ...
    obj:*/lib*/*.so
-}
-{
-   sdl2_leak_supp
-   Memcheck:Leak
-   fun:*alloc
-   ...
-   obj:*/lib*/*.so.*
 }
 {
    sdl2_addr2_supp

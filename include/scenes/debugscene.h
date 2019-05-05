@@ -1,8 +1,8 @@
-#ifndef MAINMENU_H
-#define MAINMENU_H
+#ifndef DEBUGSCENE_H
+#define DEBUGSCENE_H
 
-#include "../scene.h"
+#include "../scenes/scene.h"
 
-Scene initDebugScene(SDL_Renderer* renderer);
+Scene init_debug_scene(SDL_Renderer* renderer);
 
 #endif

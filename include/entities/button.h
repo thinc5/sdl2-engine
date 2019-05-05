@@ -1,14 +1,14 @@
 #ifndef E_BUTTON_H
 #define E_BUTTON_H
 
-#include "../managers/assetmanager.h"
+#include "../managers/assetstack.h"
 #include "../entities/entity.h"
 #include "../components/component.h"
 
 /**
  * Initilizes the button entity.
  */
-Entity initButton(AssetRegistry* reg);
+Entity init_button(AssetStack* stack);
 
 
 #endif

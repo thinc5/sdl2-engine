@@ -6,12 +6,13 @@
 #include <string.h>
 #include <stdbool.h>
 
+#include "../../include/debug.h"
 #include "../../include/rendering/renderertemplates.h"
 
 /**
  * Simple function to draw a message to the screen using a font.
  */
-bool renderFont(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text) {
+bool render_font(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, colour);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
     SDL_FreeSurface(surface);
@@ -24,7 +25,7 @@ bool renderFont(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color
 /**
  * Simple wrapper function for rendering textures to the screen.
  */
-bool renderTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos) {
+bool render_texture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos) {
     if (SDL_RenderCopy(renderer, texture, NULL, dpos) != 0) {
         return false;
     }
@@ -34,7 +35,7 @@ bool renderTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos)
 /**
  * Simple wrapper function for rendering textures to the screen.
  */
-bool renderBackground(SDL_Renderer* renderer, SDL_Texture* texture) {
+bool render_background(SDL_Renderer* renderer, SDL_Texture* texture) {
     if (SDL_RenderCopy(renderer, texture, NULL, NULL) != 0) {
         return false;
     }
@@ -44,7 +45,7 @@ bool renderBackground(SDL_Renderer* renderer, SDL_Texture* texture) {
 /**
  * Draw a pre-designed debug message to the screen.
  */
-bool renderDebugMessage(SDL_Renderer* renderer, TTF_Font* font, char* text) {
+bool render_debug_message(SDL_Renderer* renderer, TTF_Font* font, char* text) {
     int text_size = strlen(text);
     int font_height = TTF_FontHeight(font);
     int font_width = font_height / 2;
@@ -55,13 +56,13 @@ bool renderDebugMessage(SDL_Renderer* renderer, TTF_Font* font, char* text) {
         .h = font_height
     };
     SDL_Color c = {255, 0, 0};
-    return renderFont(renderer, font, &pos, c, text);
+    return render_font(renderer, font, &pos, c, text);
 }
 
 /**
  * Show the fps in the top right corner of the screen.
  */
-bool renderFPS(SDL_Renderer* renderer, TTF_Font* font, int fps) {
+bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps) {
     char text[10];
     sprintf(text, "%d", fps);
     int height, width;
@@ -74,5 +75,5 @@ bool renderFPS(SDL_Renderer* renderer, TTF_Font* font, int fps) {
         .h = font_size
     };
     SDL_Color c = {0, 0, 0};
-    return renderFont(renderer, font, &pos, c, text);
+    return render_font(renderer, font, &pos, c, text);
 }

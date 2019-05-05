@@ -10,7 +10,7 @@
 /**
  * Behaviour of button when left clicked.
  */
-void buttonLeftClicked(void* e) {
+static void button_left_clicked(void* e) {
     Entity* entity = (Entity*) e;
     // Swap colour of button
     SDL_Texture* temp = entity->textures[0];
@@ -22,13 +22,13 @@ void buttonLeftClicked(void* e) {
 /**
  * Initilizes the cat entity and its components.
  */
-Entity initButton(AssetRegistry* reg) {
+Entity init_button(AssetStack* stack) {
     Entity entity;
-    if (!initEntity(&entity, reg, "click.png", "click1.ogg")) {
+    if (!init_entity(&entity, stack, "click.png", "click1.ogg")) {
         ERROR_LOG("Could not initilize button entity.\n");
         return (Entity) { 0 };
     }
-    entity.textures[1] = getAssetByReference("unclick.png", reg)->pointer.texture;
+    entity.textures[1] = get_asset_by_ref("unclick.png", stack, 0)->pointer.texture;
     // Starting position
     entity.position.x = 200;
     entity.position.y = 200;
@@ -36,7 +36,7 @@ Entity initButton(AssetRegistry* reg) {
     entity.position.w = 100;
     entity.position.h = 50;
     // Load custom components.
-    entity.components[LeftClicked].call = &buttonLeftClicked;
+    entity.components[LeftClicked].call = &button_left_clicked;
     return entity;
 }
 

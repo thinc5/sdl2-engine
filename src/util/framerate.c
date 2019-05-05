@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 
+#include "../../include/debug.h"
 #include "../../include/util/timer.h"
 #include "../../include/util/framerate.h"
 #include "../../include/config.h"
@@ -9,27 +10,27 @@
 /**
  * Initialise the timer using some global constants defined in config.h.
  */
-FrameRateManager initFPSManager(void) {
+FrameRateManager init_fps(void) {
     FrameRateManager f = (FrameRateManager) {
         .capped = FPS_CAPPED,
         .cappedFPS = FRAME_CAP,
         .currentFPS = 0,
-        .timer = initTimer(),
+        .timer = init_timer(),
     };
-    startTimer(&f.timer);
+    start_timer(&f.timer);
     return f;
 }
 
 /**
  * Maintain capped framerate.
  */
-void capFPS(FrameRateManager* f) {
+void cap_fps(FrameRateManager* f) {
     if (f->capped) {
         int cap = (1000 / f->cappedFPS);
         // Have we "finished" early?
-        if (!timeElapsed(&f->timer, cap)) {
+        if (!time_elapsed(&f->timer, cap)) {
             // Delay until we are ready to continue.
-            // DEBUG printf("Delaying: %d ms\n", cap - (SDL_GetTicks() - f->timer.startTime));
+            // DEBUG INFO_LOG("Delaying: %d ms\n", cap - (SDL_GetTicks() - f->timer.startTime));
             SDL_Delay(cap - (SDL_GetTicks() - f->timer.startTime));
         }
         f->timer.startTime = SDL_GetTicks();
@@ -39,7 +40,7 @@ void capFPS(FrameRateManager* f) {
 /**
  * Show the current average fps.
  */
-int showFPS(FrameRateManager* f) {
-    printf("FPS: %d\n", f->currentFPS);
+int show_fps(FrameRateManager* f) {
+    INFO_LOG("FPS: %d\n", f->currentFPS);
     return f->currentFPS;
 }

@@ -8,7 +8,7 @@
 /**
  * Initialise a timer.
  */
-Timer initTimer(void) {
+Timer init_timer(void) {
     return (Timer) {
         .started = false,
         .paused = false,
@@ -20,7 +20,7 @@ Timer initTimer(void) {
 /**
  * Start the fps timer.
  */
-void startTimer(Timer* t) {
+void start_timer(Timer* t) {
     t->started = true;
     t->paused = false;
     t->startTime = SDL_GetTicks();
@@ -29,7 +29,7 @@ void startTimer(Timer* t) {
 /**
  *  Stop the timer.
  */
-void stopTimer(Timer* t) {
+void stop_timer(Timer* t) {
     t->started = false;
     t->paused = false;
 }
@@ -37,7 +37,7 @@ void stopTimer(Timer* t) {
 /**
  * Pause the timer.
  */
-void pauseTimer(Timer* t) {
+void pause_timer(Timer* t) {
     if (t->started && !t->paused) {
         t->paused = true;
         t->pausedTime = SDL_GetTicks() - t->startTime;
@@ -47,7 +47,7 @@ void pauseTimer(Timer* t) {
 /**
  * Unpasue the timer.
  */
-void unpauseTimer(Timer* t) {
+void unpause_timer(Timer* t) {
     if (t->paused) {
         t->paused = false;
         t->startTime = SDL_GetTicks() - t->pausedTime;
@@ -58,7 +58,7 @@ void unpauseTimer(Timer* t) {
 /**
  * Return the current ticks of the timer.
  */
-uint32_t getTimerTicks(Timer* t) {
+uint32_t get_timer_ticks(Timer* t) {
     if (t->started) {
         if (t->paused) {
             return t->pausedTime;
@@ -72,10 +72,11 @@ uint32_t getTimerTicks(Timer* t) {
 /**
  * Check if provided time in ms has elapsed already.
  */
-bool timeElapsed(Timer* t, uint32_t ms) {
-    uint32_t elapsed = SDL_GetTicks() - getTimerTicks(t);
+bool time_elapsed(Timer* t, uint32_t ms) {
+    uint32_t elapsed = SDL_GetTicks() - get_timer_ticks(t);
     if (elapsed >= ms) {
         return true;
     }
     return false;
 }
+

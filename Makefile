@@ -24,7 +24,7 @@ OBJDIR			:= obj
 BINDIR			:= bin
 
 # helpers
-rm				:= rm -rf
+rm			:= rm -rf
 mkdir			:= mkdir -p
 findc			:= du -a $(SRCDIR) | grep -E '\.(c)$$' | awk '{print $$2}'
 findh			:= du -a $(INCDIR) | grep -E '\.(h)$$' | awk '{print $$2}'
@@ -44,7 +44,7 @@ endif
 # override if on windows
 ifeq ($(OS), WIN)
 # Not currently needed.
-# SHELL 			:= powershell
+# SHELL 		:= powershell
 TARGET			:= output.exe
 # where is the find command located on your windows machine?
 LFLAGS			:= -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -Isrc/include
@@ -84,7 +84,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 
 
 
-.PHONY:	clean release
+.PHONY:	clean release rebuild
 
 # are we making a release?
 ifeq ($(OS), WIN)
@@ -94,7 +94,9 @@ else
 release:
 	@zip bin release.zip
 endif
-	
+
+# rebuild.
+rebuild:
 
 # clean all building materials.
 clean:

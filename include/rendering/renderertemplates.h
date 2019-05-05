@@ -10,27 +10,27 @@
 /**
  * Simple function to draw a message to the screen using a font.
  */
-bool renderFont(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text);
+bool render_font(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text);
 
 
 /**
  * Simple wrapper function for rendering textures to the screen.
  */
-bool renderTexture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos);
+bool render_texture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos);
 
 /**
  * Render an image as the background.
  */
-bool renderBackground(SDL_Renderer* renderer, SDL_Texture* texture);
+bool render_background(SDL_Renderer* renderer, SDL_Texture* texture);
 
 /**
  * Draw a pre-designed debug message to the screen.
  */
-bool renderDebugMessage(SDL_Renderer* renderer, TTF_Font* font, char* text);
+bool render_debug_message(SDL_Renderer* renderer, TTF_Font* font, char* text);
 
 /**
  * Show the fps in the top right corner of the screen.
  */
-bool renderFPS(SDL_Renderer* renderer, TTF_Font* font, int fps);
+bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps);
 
 #endif

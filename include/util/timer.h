@@ -19,35 +19,35 @@ typedef struct Timer {
 /**
  * Initialise a timer.
  */
-Timer initTimer(void);
+Timer init_timer(void);
 
 /**
  * Start the fps timer.
  */
-void startTimer(Timer* t);
+void start_timer(Timer* t);
 /**
  *  Stop the timer.
  */
-void stopTimer(Timer* t);
+void stop_timer(Timer* t);
 
 /**
  * Pause the timer.
  */
-void pauseTimer(Timer* t);
+void pause_timer(Timer* t);
 
 /**
  * Unpasue the timer.
  */
-void unpauseTimer(Timer* t);
+void unpause_timer(Timer* t);
 
 /**
  * Return the current ticks of the timer.
  */
-uint32_t getTimerTicks(Timer* t);
+uint32_t get_timer_ticks(Timer* t);
 
 /**
  * Check if provided time in ms has elapsed already.
  */
-bool timeElapsed(Timer* t, uint32_t ms);
+bool time_elapsed(Timer* t, uint32_t ms);
 
 #endif

@@ -4,9 +4,10 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../../include/debug.h"
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
-#include "../../include/managers/assetmanager.h"
+#include "../../include/managers/assetstack.h"
 #include "../../include/rendering/renderertemplates.h"
 
 /**
@@ -22,37 +23,30 @@ void deleted(void* e) {
  */
 void render(void* e, SDL_Renderer* r) {
     Entity* entity = (Entity*) e;
-    renderTexture(r, entity->textures[0], &entity->position);
-}
-
-/**
- * Returns true if the entity has queried component.
- */
-bool hasComponent(Entity* e, ComponentType c) {
-    return !(e->components[c].call == NULL);
+    render_texture(r, entity->textures[0], &entity->position);
 }
 
 /**
  * Initalize an entity with a default size, location and with provided texture and sound.
  */
-bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const char* soundRef) {
+bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* sound) {
     // Initalize all calls as null
     for (int i = 0; i < COMPONENT_TOTAL; i++) {
         e->components[i].call = NULL;
     }
     memset(e->stats, -1, sizeof(int));
-    if (textureRef != NULL) {
-        RegisteredAsset* asset = getAssetByReference(textureRef, reg);
+    if (texture != NULL) {
+        RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(texture, stack, 0);
         if (asset == NULL) {
-            fprintf(stderr, "Unable to find asset for entity: %s\n", textureRef);
+            INFO_LOG("Unable to find asset for entity: %s\n", texture);
             return false;
         }
         e->textures[0] = asset->pointer.texture;
     }
-    if (soundRef != NULL) {
-        RegisteredAsset* asset = getAssetByReference(soundRef, reg);
+    if (sound != NULL) {
+        RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(sound, stack, 0);
         if (asset == NULL) {
-            fprintf(stderr, "Unable to find asset for entity: %s\n", soundRef);
+            ERROR_LOG("Unable to find asset for entity: %s\n", sound);
             return false;
         }
         e->sounds[0] = asset->pointer.sound;
@@ -61,5 +55,12 @@ bool initEntity(Entity* e, AssetRegistry* reg, const char* textureRef, const cha
     e->components[Deleted].call = &deleted;
     e->components[Render].call = &render;
     return true;
+}
+
+/**
+ * Returns true if the entity has queried component.
+ */
+bool has_component(Entity* e, ComponentType c) {
+    return !(e->components[c].call == NULL);
 }
 

@@ -3,6 +3,6 @@
 
 #include "../scenes/scene.h"
 
-Scene initMainMenu(SDL_Renderer* renderer);
+Scene init_main_menu(SDL_Renderer* renderer);
 
 #endif

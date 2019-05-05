@@ -1,16 +1,19 @@
-#include "../../include/managers/assetmanager.h"
+#include "../../include/debug.h"
+#include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/scenes/scene.h"
 
 /**
  * Initialize the scene components.
  */
-bool initScene(Scene* scene) {
-    if (!initAssetManager(&scene->assets)) {
+bool init_scene(Scene* scene) {
+    if (!init_asset_stack(&scene->assets)) {
+	ERROR_LOG("Unable to create asset stack.\n");
         return false;
     }
-    if (!initEntityManager(&scene->entities)) {
-        freeAssets(&scene->assets);
+    if (!init_entity_manager(&scene->entities)) {
+	ERROR_LOG("Unable to create entitiy manager.\n");
+        free_asset_stack(&scene->assets);
         return false;
     }
     return true;
@@ -19,7 +22,9 @@ bool initScene(Scene* scene) {
 /**
  * Free a scene.
  */
-void freeScene(Scene* scene) {
-    freeAssets(&scene->assets);
-    freeEntities(&scene->entities);
+void free_scene(Scene* scene) {
+    // Free all remaining entities.
+    free_entities(&scene->entities);
+    // Free the top chunk of assets.
+    pop_asset_chunk(&scene->assets);
 }

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 
 #include "../entities/entity.h"
-#include "../managers/assetmanager.h"
+#include "../managers/assetstack.h"
 
 /**
  * Holds total number of entites.
@@ -18,21 +18,21 @@ typedef struct EntiyManager {
 /**
  * Create new entity manager.
  */
-bool initEntityManager(EntityManager* entityManager);
+bool init_entity_manager(EntityManager* entityManager);
 
 /**
  * Add a new entity to the manager if there is space, if not allocate more space for new entitiy.
  */
-void addEntity(EntityManager* entitiyManager, AssetRegistry* assets, Entity (*initEntity)(AssetRegistry* assets));
+void add_entity(EntityManager* entitiyManager, AssetStack* assets, Entity (*init_entity)(AssetStack* assets));
 
 /**
  * Remove all entites that are marked to delete then shift all right of the removed entity left to conserve space.
  */
-void cleanEntities(EntityManager* entityManager);
+void clean_entities(EntityManager* entityManager);
 
 /**
  * Free entity manager.
  */
- void freeEntities(EntityManager* entityManager);
+void free_entities(EntityManager* entityManager);
 
 #endif

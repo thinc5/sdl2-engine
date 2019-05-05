@@ -12,6 +12,6 @@
 /**
  * Render all renderable entites.
  */
-void renderEntities(GameData* gameData);
+void render_entities(GameData* gameData);
 
 #endif
