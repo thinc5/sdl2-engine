@@ -77,3 +77,4 @@ bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps) {
     SDL_Color c = {0, 0, 0};
     return render_font(renderer, font, &pos, c, text);
 }
+

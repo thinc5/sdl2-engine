@@ -16,6 +16,7 @@
 #include "../include/entities/cat.h"
 #include "../include/entities/button.h"
 #include "../include/game.h"
+#include "../include/scenes/scene.h"
 
 
 /**
@@ -52,6 +53,19 @@ static void quit_modules(void) {
     SDL_Quit();
  }
 
+#ifdef DEBUG
+/**
+ * Debug function to show location of mouse.
+ */
+static void mouse_dbg(SDL_Renderer* renderer, TTF_Font* fnt) {
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    char mouse[40];
+    sprintf(mouse, "MPOS: x %d y %d", x, y);
+    render_debug_message(renderer, fnt, mouse);
+}
+#endif
+
 /**
  * Entry point for the engine.
  */
@@ -60,6 +74,7 @@ int main(int argc, char** argv) {
     if (!init_modules()) {
         return 1;
     }
+    
     // Load game components and state.
     GameData gameData;
     if (!init_game(&gameData)) {
@@ -67,32 +82,52 @@ int main(int argc, char** argv) {
         return 1;
     }
     
+    // Debug Assets
+    SDL_Texture* bg = get_asset_by_ref("cat1.jpg",
+            (&gameData.scene->assets), 0)->pointer.texture;
+
+    #ifdef DEBUG
+    TTF_Font* fnt = get_asset_by_ref("ssp-regular.otf",
+            &gameData.scene->assets, 0)->pointer.font;
+    #endif
+    
+    // Scene in focus.
+    Scene* currentScene = gameData.menu;
+
     // Main game loop.
     while (gameData.status) {
-
         // ---------------- Handle user events.
         while (SDL_PollEvent(&gameData.event)) {
             if (gameData.event.type == SDL_QUIT) {
                 gameData.status = false;
                 break;
             }
-            gameData.scene.event_handler(&gameData);
+            currentScene->event_handler(&gameData, currentScene);
         }
 
         //----------------- Update state.
-        for (int i = 0; i < gameData.scene.entities.current; i++) {
-            if (has_component(&gameData.scene.entities.entities[i], OnTick)) {
-                gameData.scene.entities.entities[i].components[OnTick].call(&gameData.scene.entities.entities[i]);
+        for (int i = 0; i < currentScene->entities.current; i++) {
+            if (has_component(&currentScene->entities.entities[i],
+                    OnTick)) {
+                currentScene->entities.entities[i].components[OnTick]
+                        .call(&currentScene->entities.entities[i]);
             }
         }
+
         // Remove all entities marked for deletion.
-        clean_entities(&gameData.scene.entities);
+        clean_entities(&currentScene->entities);
 
         // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
-        render_background(gameData.renderer, get_asset_by_ref("cat1.jpg", (&gameData.scene.assets), 0)->pointer.texture);
-        render_entities(&gameData);
-        SDL_RenderPresent(gameData.renderer);
+        
+	render_background(gameData.renderer, bg);
+        render_entities(&gameData, currentScene);
+        
+	#ifdef DEBUG
+	mouse_dbg(gameData.renderer, fnt);
+        #endif
+
+	SDL_RenderPresent(gameData.renderer);
 
         // --------------- Wait if we have finished too soon.
         cap_fps(&gameData.fps);
@@ -103,3 +138,4 @@ int main(int argc, char** argv) {
     quit_modules();
     return 0;
 }
+

@@ -8,10 +8,12 @@
 #include <stdbool.h>
 
 #include "../game.h"
+#include "../scenes/scene.h"
 
 /**
  * Render all renderable entites.
  */
-void render_entities(GameData* gameData);
+void render_entities(GameData* game, Scene* scene);
 
 #endif
+

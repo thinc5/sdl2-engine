@@ -24,7 +24,7 @@ typedef struct Scene {
     AssetStack assets;
     EntityManager entities;
     // Need to cast as GameData
-    void (*event_handler)(void* gameData);
+    void (*event_handler)(void* gameData, void* scene);
 } Scene;
 
 /**

@@ -29,12 +29,6 @@ Entity init_button(AssetStack* stack) {
         return (Entity) { 0 };
     }
     entity.textures[1] = get_asset_by_ref("unclick.png", stack, 0)->pointer.texture;
-    // Starting position
-    entity.position.x = 200;
-    entity.position.y = 200;
-    // Width and height
-    entity.position.w = 100;
-    entity.position.h = 50;
     // Load custom components.
     entity.components[LeftClicked].call = &button_left_clicked;
     return entity;
