@@ -12,7 +12,7 @@
 #include "../include/scenes/debugscene.h"
 
 /**
- * Initilize game and it's required components.
+ * Initialize game and it's required components.
  */
 bool init_game(GameData* gameData) {
     // Game is running?
@@ -21,7 +21,7 @@ bool init_game(GameData* gameData) {
     // Create the window.
     gameData->window = SDL_CreateWindow(WINDOW_TITLE,
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-	    WINDOW_WIDTH, WINDOW_HEIGHT, SDL_WINDOW_RESIZABLE),
+	        WINDOW_WIDTH, WINDOW_HEIGHT, 0); //SDL_WINDOW_RESIZABLE);
     
     // Create the renderer.
     gameData->renderer = SDL_CreateRenderer(gameData->window, -1,
