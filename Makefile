@@ -1,35 +1,32 @@
+#-------------- Variables
 # determine os
 UNAME			= $(shell uname)
 OS				=
-
 # executable name
 TARGET			:= output.out
-
 # compiler to use
 CC				:= gcc
-
 # compiler flags
 CFLAGS   		:= -std=c99 -Wall -pedantic -g
-
 # linker to use
 LINKER   		:= gcc
-
 # linking flags
 LFLAGS			:= -Isrc/include -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer
-
 # directories
 SRCDIR   		:= src
 INCDIR			:= include
 OBJDIR			:= obj
 BINDIR			:= bin
 
-# helpers
+
+#-------------- Helper scripts
 rm			:= rm -rf
 mkdir			:= mkdir -p
 findc			:= du -a $(SRCDIR) | grep -E '\.(c)$$' | awk '{print $$2}'
 findh			:= du -a $(INCDIR) | grep -E '\.(h)$$' | awk '{print $$2}'
 
-# determine os
+
+#-------------- Determine OS
 ifeq ($(UNAME), Linux)
 OS				= UNIX
 else ifeq ($(UNAME), MINGW32_NT-6.2)
@@ -52,7 +49,8 @@ endif
 
 $(info Environment: $(OS))
 
-# source listings
+
+#-------------- Populate build sources
 SOURCES  		:= $(shell $(findc))
 INCLUDES 		:= $(shell $(findh))
 
@@ -63,12 +61,21 @@ OBJECTS  		:= $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 XTRADIR  := $(shell ls -d $(INCDIR)/*/ | sed 's/$(INCDIR)/$(OBJDIR)/g')
 $(shell $(mkdir) $(OBJDIR) $(XTRADIR))
 
-# default build.
-all: $(OBJECTS) $(BINDIR)/$(TARGET)
 
-# are we making a debug build?
+#-------------- Rules
+# default rules
+all: build
+
+# debug build?
 debug: CFLAGS += -DDEBUG -g
-debug: $(OBJECTS) $(BINDIR)/$(TARGET)
+debug: build
+
+# compile and link
+build: $(OBJECTS) $(BINDIR)/$(TARGET)
+
+# rebuild.
+rebuild: clean
+	$(MAKE) build
 
 # compile objects.
 $(OBJECTS): $(OBJDIR)/%.o : $(SRCDIR)/%.c
@@ -82,9 +89,7 @@ $(BINDIR)/$(TARGET): $(OBJECTS)
 	$(info Linking complete!)
 
 
-
-
-.PHONY:	clean release rebuild
+.PHONY:	clean release
 
 # are we making a release?
 ifeq ($(OS), WIN)
@@ -94,9 +99,6 @@ else
 release:
 	@zip bin release.zip
 endif
-
-# rebuild.
-rebuild:
 
 # clean all building materials.
 clean:
