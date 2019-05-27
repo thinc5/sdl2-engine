@@ -7,7 +7,7 @@ TARGET			:= output.out
 # compiler to use
 CC				:= gcc
 # compiler flags
-CFLAGS   		:= -std=c99 -Wall -pedantic -g
+CFLAGS   		:= -std=c99 -Wall -pedantic
 # linker to use
 LINKER   		:= gcc
 # linking flags
@@ -69,6 +69,10 @@ all: build
 # debug build?
 debug: CFLAGS += -DDEBUG -g
 debug: build
+
+# enable profiling with gprof
+gprof: CFLAGS += -pg
+gprof: build
 
 # compile and link
 build: $(OBJECTS) $(BINDIR)/$(TARGET)
