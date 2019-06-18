@@ -1,6 +1,8 @@
 #ifndef SCENE_H
 #define SCENE_H
 
+#include <SDL2/SDL.h>
+
 #include "../managers/assetstack.h"
 #include "../managers/entitymanager.h"
 #include "../entities/entity.h"
@@ -36,5 +38,10 @@ bool init_scene(Scene* scene);
  * Free a scene.
  */
 void free_scene(Scene* scene);
+
+/**
+ * Load a new scene and replace current scene.
+ */
+void replace_scene(Scene* current, Scene* next);
 
 #endif

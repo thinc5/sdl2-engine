@@ -1,3 +1,5 @@
+#include <stdbool.h>
+
 #include "../../include/debug.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
@@ -34,8 +36,9 @@ void free_scene(Scene* scene) {
 /**
  * Load a new scene and replace current scene.
  */
-void replace_scene(Scene* current, Scene* (*next)()) {
+void replace_scene(Scene* current, Scene* next) {
     // Free scene and load next.
     free_scene(current);
-    current = next();
+    free(current);
+    current = next;
 }

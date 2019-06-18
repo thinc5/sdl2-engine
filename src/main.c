@@ -17,6 +17,7 @@
 #include "../include/entities/button.h"
 #include "../include/game.h"
 #include "../include/scenes/scene.h"
+#include "../include/scenes/debugscene.h"
 
 
 /**
@@ -102,6 +103,12 @@ int main(int argc, char** argv) {
                 gameData.status = false;
                 break;
             }
+            // Testing unloading/reloading scenes.
+            if (gameData.event.key.keysym.sym == SDLK_F1) {
+                // Load next level.
+                free_scene(gameData.scene);
+                init_debug_scene(gameData.renderer, gameData.scene);
+            }
             currentScene->event_handler(&gameData, currentScene);
         }
 
@@ -120,14 +127,14 @@ int main(int argc, char** argv) {
         // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
         
-	render_background(gameData.renderer, bg);
+	    render_background(gameData.renderer, bg);
         render_entities(&gameData, currentScene);
         
-	#ifdef DEBUG
-	mouse_dbg(gameData.renderer, fnt);
+	    #ifdef DEBUG
+	    mouse_dbg(gameData.renderer, fnt);
         #endif
 
-	SDL_RenderPresent(gameData.renderer);
+	    SDL_RenderPresent(gameData.renderer);
 
         // --------------- Wait if we have finished too soon.
         cap_fps(&gameData.fps);
