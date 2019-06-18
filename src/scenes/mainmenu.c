@@ -13,8 +13,7 @@
 /**
  * Constructor for the main menu.
  */
-bool init_main_menu(SDL_Renderer* renderer, SDL_Window* window,
-        Scene* scene) {
+bool init_main_menu(SDL_Renderer* renderer, Scene* scene) {
     if (!init_scene(scene)) {
         INFO_LOG("Unable to init menu.\n");
         return false;
@@ -30,11 +29,11 @@ bool init_main_menu(SDL_Renderer* renderer, SDL_Window* window,
     
     // Add our buttons! 
     add_entity(&scene->entities, &scene->assets, &init_button,
-            transform_rect(window, 0.4f, 0.2f, 1.0f, 0.5f));
+            transform_rect(renderer, 0.4f, 0.2f, 1.0f, 0.5f));
     add_entity(&scene->entities, &scene->assets, &init_button,
-            transform_rect(window, 0.4f, 0.2f, 1.0f, 1.0f)); 
+            transform_rect(renderer, 0.4f, 0.2f, 1.0f, 1.0f)); 
     add_entity(&scene->entities, &scene->assets, &init_button,
-            transform_rect(window, 0.4f, 0.2f, 1.0f, 1.5f));
+            transform_rect(renderer, 0.4f, 0.2f, 1.0f, 1.5f));
     
     // Add event handler and window type.
     scene->event_handler = &default_handler;

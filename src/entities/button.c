@@ -16,16 +16,17 @@ static void button_left_clicked(void* e) {
     SDL_Texture* temp = entity->textures[0];
     entity->textures[0] = entity->textures[1];
     entity->textures[1] = temp;
+    // Play click sound
     Mix_PlayChannel(-1, entity->sounds[0], 0);
 }
 
 /**
- * Initilizes the cat entity and its components.
+ * Initializes the cat entity and its components.
  */
 Entity init_button(AssetStack* stack) {
     Entity entity;
     if (!init_entity(&entity, stack, "click.png", "click1.ogg")) {
-        ERROR_LOG("Could not initilize button entity.\n");
+        ERROR_LOG("Could not initialize button entity.\n");
         return (Entity) { 0 };
     }
     entity.textures[1] = get_asset_by_ref("unclick.png", stack, 0)->pointer.texture;

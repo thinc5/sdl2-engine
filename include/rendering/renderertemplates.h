@@ -33,4 +33,9 @@ bool render_debug_message(SDL_Renderer* renderer, TTF_Font* font, char* text);
  */
 bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps);
 
+/**
+ * Draw a loading notification box.
+ */
+bool render_loading_box(SDL_Renderer* renderer, TTF_Font* font);
+
 #endif

@@ -38,7 +38,7 @@ typedef struct Entity {
 } Entity;
 
 /**
- * Initalize an entity with a default size, location and with provided texture.
+ * Initialize an entity with a default size, location and with provided texture.
  */
 bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* sound);
 

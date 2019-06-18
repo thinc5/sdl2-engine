@@ -5,8 +5,6 @@
 
 #include "../scenes/scene.h"
 
-bool init_main_menu(SDL_Renderer* renderer, SDL_Window* window,
-        Scene* scene);
+bool init_main_menu(SDL_Renderer* renderer, Scene* scene);
 
 #endif
-

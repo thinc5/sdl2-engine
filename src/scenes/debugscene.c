@@ -12,8 +12,7 @@
 /**
  * Constructor for the debug testing scene.
  */
-bool init_debug_scene(SDL_Renderer* renderer, SDL_Window* window,
-        Scene* scene) {
+bool init_debug_scene(SDL_Renderer* renderer, Scene* scene) {
     if (!init_scene(scene)) {
         return false;
     }
@@ -28,7 +27,7 @@ bool init_debug_scene(SDL_Renderer* renderer, SDL_Window* window,
     // Populate scene with entities. 
     for (int i = 0; i < 50; i++) {
         add_entity(&scene->entities, &scene->assets, &init_cat,
-	        transform_rect(window, 0.2f, 0.1f, 0.5f, 1.5f));
+	        transform_rect(renderer, 0.2f, 0.1f, 0.5f, 1.5f));
     }
     
     scene->event_handler = &default_handler;

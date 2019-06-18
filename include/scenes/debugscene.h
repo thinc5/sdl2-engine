@@ -5,7 +5,6 @@
 
 #include "../scenes/scene.h"
 
-bool init_debug_scene(SDL_Renderer* renderer, SDL_Window* window,
-        Scene* scene);
+bool init_debug_scene(SDL_Renderer* renderer, Scene* scene);
 
 #endif

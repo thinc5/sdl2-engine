@@ -11,7 +11,7 @@
 #include "../../include/rendering/renderertemplates.h"
 
 /**
- * Defualt deleted component call for all entites.
+ * Default deleted component call for all entities.
  */
 void deleted(void* e) {
     Entity* entity = (Entity*) e;
@@ -19,7 +19,7 @@ void deleted(void* e) {
 }
 
 /**
- * Defualt render call for all entites.
+ * Default render call for all entities.
  */
 void render(void* e, SDL_Renderer* r) {
     Entity* entity = (Entity*) e;
@@ -27,14 +27,15 @@ void render(void* e, SDL_Renderer* r) {
 }
 
 /**
- * Initalize an entity with a default size, location and with provided texture and sound.
+ * Initialize an entity with a default size, location and with provided texture and sound.
  */
 bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* sound) {
-    // Initalize all calls as null
+    // Initialize all components as null.
     for (int i = 0; i < COMPONENT_TOTAL; i++) {
         e->components[i].call = NULL;
     }
     memset(e->stats, -1, sizeof(int));
+    // Grab assets.
     if (texture != NULL) {
         RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(texture, stack, 0);
         if (asset == NULL) {
@@ -51,6 +52,7 @@ bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* 
         }
         e->sounds[0] = asset->pointer.sound;
     }
+    // Set components.
     e->remove = false;
     e->components[Deleted].call = &deleted;
     e->components[Render].call = &render;

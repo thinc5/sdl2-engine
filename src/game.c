@@ -40,10 +40,9 @@ bool init_game(GameData* gameData) {
     // Scenes.
     gameData->menu = (Scene*) malloc(sizeof(Scene));
     gameData->scene = (Scene*) malloc(sizeof(Scene));
-    if (!init_main_menu(gameData->renderer, gameData->window,
-            gameData->menu) || !init_debug_scene(gameData->renderer,
-            gameData->window, gameData->scene)) {
-	return false;
+    if (!init_main_menu(gameData->renderer, gameData->menu) ||
+            !init_debug_scene(gameData->renderer, gameData->scene)) {
+	    return false;
     }
     return true;
 }

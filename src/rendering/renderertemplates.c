@@ -8,6 +8,7 @@
 
 #include "../../include/debug.h"
 #include "../../include/rendering/renderertemplates.h"
+#include "../../include/util/camera.h"
 
 /**
  * Simple function to draw a message to the screen using a font.
@@ -78,3 +79,14 @@ bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps) {
     return render_font(renderer, font, &pos, c, text);
 }
 
+/**
+ * Draw a loading notification box.
+ */
+bool render_loading_box(SDL_Renderer* renderer, TTF_Font* font) {
+    // Size of screen.
+    int height, width;
+    SDL_GetRendererOutputSize(renderer, &width, &height);
+    SDL_Rect pos = transform_rect(renderer, 0.2, 0.1, 0, 0);
+    SDL_Color c = {0, 0, 0};
+    return render_font(renderer, font, &pos, c, "Loading...");
+}

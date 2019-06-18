@@ -3,6 +3,8 @@
 #include "../../include/managers/entitymanager.h"
 #include "../../include/scenes/scene.h"
 
+#include "../../include/rendering/renderertemplates.h"
+
 /**
  * Initialize the scene components.
  */
@@ -12,7 +14,7 @@ bool init_scene(Scene* scene) {
         return false;
     }
     if (!init_entity_manager(&scene->entities)) {
-	ERROR_LOG("Unable to create entitiy manager.\n");
+	ERROR_LOG("Unable to create entity manager.\n");
         free_asset_stack(&scene->assets);
         return false;
     }
@@ -27,4 +29,13 @@ void free_scene(Scene* scene) {
     free_entities(&scene->entities);
     // Free the top chunk of assets.
     pop_asset_chunk(&scene->assets);
+}
+
+/**
+ * Load a new scene and replace current scene.
+ */
+void replace_scene(Scene* current, Scene* (*next)()) {
+    // Free scene and load next.
+    free_scene(current);
+    current = next();
 }
