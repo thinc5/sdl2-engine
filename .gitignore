@@ -34,6 +34,7 @@
 *.i*86
 *.x86_64
 *.hex
+*.wasm
 
 # Debug files
 *.dSYM/
@@ -56,3 +57,5 @@ dkms.conf
 .vscode
 *.zip
 .vs
+index.html
+index.js

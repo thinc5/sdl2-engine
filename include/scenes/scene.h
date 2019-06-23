@@ -27,6 +27,7 @@ typedef struct Scene {
     EntityManager entities;
     // Need to cast as GameData
     void (*event_handler)(void* gameData, void* scene);
+    SDL_Texture* bg;
 } Scene;
 
 /**

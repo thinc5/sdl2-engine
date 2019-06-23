@@ -37,4 +37,6 @@ bool init_game(GameData* gameData);
  */
 void free_game(GameData* game);
 
+GameData gameData;
+
 #endif

@@ -37,6 +37,7 @@ bool init_main_menu(SDL_Renderer* renderer, Scene* scene) {
     
     // Add event handler and window type.
     scene->event_handler = &default_handler;
+    scene->bg = get_asset_by_ref("cat1.jpg", &scene->assets,0)->pointer.texture;
     scene->type = MainMenu;
     
     INFO_LOG("Main menu scene created.\n");

@@ -76,24 +76,21 @@ int main(int argc, char** argv) {
         return 1;
     }
     
-    // Load game components and state.
-    GameData gameData;
     if (!init_game(&gameData)) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
     
-    // Debug Assets
-    SDL_Texture* bg = get_asset_by_ref("cat1.jpg",
-            (&gameData.scene->assets), 0)->pointer.texture;
+    // Scene in focus.
+    Scene* currentScene = gameData.menu;
 
     #ifdef DEBUG
     TTF_Font* fnt = get_asset_by_ref("ssp-regular.otf",
-            &gameData.scene->assets, 0)->pointer.font;
+            &gameData.menu->assets, 0)->pointer.font;
+    if (fnt == NULL) {
+        return -1;
+    }
     #endif
-    
-    // Scene in focus.
-    Scene* currentScene = gameData.menu;
 
     // Main game loop.
     while (gameData.status) {
@@ -106,8 +103,12 @@ int main(int argc, char** argv) {
             // Testing unloading/reloading scenes.
             if (gameData.event.key.keysym.sym == SDLK_F1) {
                 // Load next level.
-                free_scene(gameData.scene);
+                if (currentScene->type != MainMenu) {
+                    free(gameData.scene);
+                }
+                gameData.scene = (Scene*) malloc(sizeof(Scene));
                 init_debug_scene(gameData.renderer, gameData.scene);
+                currentScene = gameData.scene;
             }
             currentScene->event_handler(&gameData, currentScene);
         }
@@ -127,7 +128,7 @@ int main(int argc, char** argv) {
         // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
         
-	    render_background(gameData.renderer, bg);
+	    render_background(gameData.renderer, currentScene->bg);
         render_entities(&gameData, currentScene);
         
 	    #ifdef DEBUG

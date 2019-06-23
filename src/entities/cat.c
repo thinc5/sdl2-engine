@@ -57,9 +57,7 @@ Entity init_cat(AssetStack* stack) {
         ERROR_LOG("Could not initialize cat entity.\n");
         return (Entity) { 0 };
     }
-
     //cat.stats[0] = 10;
-
     // Cat specific specifications.
     // Starting position.
     cat.position.x = 400;
@@ -70,6 +68,7 @@ Entity init_cat(AssetStack* stack) {
     // Load cat components.
     cat.timers[0] = init_timer();
     cat.components[Moved].call = &move;
+    cat.components[LeftClicked] = cat.components[Deleted];
     cat.components[RightClicked].call = &cat_right_clicked;
     cat.components[Dragged].call = &cat_dragged;
     cat.components[OnTick].call = &cat_on_tick;

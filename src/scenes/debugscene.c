@@ -1,4 +1,6 @@
 #include <stdbool.h>
+#include <math.h>
+#include <stdio.h>
 
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
@@ -26,10 +28,13 @@ bool init_debug_scene(SDL_Renderer* renderer, Scene* scene) {
 
     // Populate scene with entities. 
     for (int i = 0; i < 50; i++) {
+        float x = ((float) rand() / (float) RAND_MAX / 1);
+        float y = ((float) rand() / (float) RAND_MAX / 1);
+        printf("%f\n", x);
         add_entity(&scene->entities, &scene->assets, &init_cat,
-	        transform_rect(renderer, 0.2f, 0.1f, 0.5f, 1.5f));
+	        transform_rect(renderer, 0.1, 0.1, x, y));
     }
-    
+    scene->bg = get_asset_by_ref("cat3.jpg", &scene->assets,0)->pointer.texture;
     scene->event_handler = &default_handler;
     scene->type = MainMenu;
     

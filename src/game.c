@@ -39,10 +39,9 @@ bool init_game(GameData* gameData) {
     
     // Scenes.
     gameData->menu = (Scene*) malloc(sizeof(Scene));
-    gameData->scene = (Scene*) malloc(sizeof(Scene));
-    if (!init_main_menu(gameData->renderer, gameData->menu) ||
-            !init_debug_scene(gameData->renderer, gameData->scene)) {
-	    return false;
+    //gameData->scene = (Scene*) malloc(sizeof(Scene));
+    if (!init_main_menu(gameData->renderer, gameData->menu)) {
+        return false;
     }
     return true;
 }
@@ -55,9 +54,11 @@ void free_game(GameData* game) {
     SDL_DestroyRenderer(game->renderer);
     SDL_DestroyWindow(game->window);
     INFO_LOG("Freeing assets...\n");
-    free_scene(game->scene);
+    if (game->scene != NULL) {
+        free_scene(game->scene);
+        free(game->scene);
+    }
     free_scene(game->menu);
-    free(game->scene);
     free(game->menu);
 }
 

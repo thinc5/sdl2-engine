@@ -1,11 +1,11 @@
 #-------------- Variables
 # determine os
 UNAME			= $(shell uname)
-OS				=
+OS			=
 # executable name
 TARGET			:= output.out
 # compiler to use
-CC				:= gcc
+CC			:= gcc
 # compiler flags
 CFLAGS   		:= -std=c99 -Wall -pedantic
 # linker to use
@@ -68,10 +68,12 @@ all: build
 
 # debug build?
 debug: CFLAGS += -DDEBUG -g
+debug: LFLAGS += -DDEBUG -g
 debug: build
 
 # enable profiling with gprof
 gprof: CFLAGS += -pg
+gprof: LFLAGS += -pg
 gprof: build
 
 # compile and link

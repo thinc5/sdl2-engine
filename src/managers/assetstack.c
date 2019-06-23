@@ -106,12 +106,15 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
 bool pop_asset_chunk(AssetStack* stack) {
     // Free all assets from the top most chunk.
     AssetNode* current = stack->heads[stack->allocations];
-    while(current != NULL) {
+    while(current != NULL && current->asset != NULL) {
         free_asset(current->asset);
-	free(current->asset);
+	    free(current->asset);
         AssetNode* temp = current->next;
         free(current);
         current = temp;
+        if (current->next == NULL) {
+            break;
+        }
     }
     // Re-allocate the list of heads.
     if (stack->allocations != 0) {
@@ -145,7 +148,7 @@ bool free_asset_stack(AssetStack* stack) {
  */
 RegisteredAsset* get_asset_by_ref(const char* reference, AssetStack* stack, int chunk) {
     // If the provided chunk is out of our range we return NULL.
-    if (chunk < 0 || chunk > stack->allocations) {
+    if (chunk < 0 || stack == NULL || chunk > stack->allocations) {
         return NULL;
     }
     AssetNode* node = stack->heads[chunk];
