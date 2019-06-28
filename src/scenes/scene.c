@@ -20,6 +20,8 @@ bool init_scene(Scene* scene) {
         free_asset_stack(&scene->assets);
         return false;
     }
+    scene->bg = NULL;
+    scene->cursor = NULL;
     return true;
 }
 

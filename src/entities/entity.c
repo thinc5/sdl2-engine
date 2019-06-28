@@ -21,9 +21,9 @@ void deleted(void* e) {
 /**
  * Default render call for all entities.
  */
-void render(void* e, SDL_Renderer* r) {
+void render(void* e) {
     Entity* entity = (Entity*) e;
-    render_texture(r, entity->textures[0], &entity->position);
+    render_texture(entity->textures[0], &entity->position);
 }
 
 /**

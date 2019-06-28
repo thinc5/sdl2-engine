@@ -13,7 +13,7 @@
 /**
  * Render all renderable entites.
  */
-void render_entities(GameData* game, Scene* scene);
+void render_entities(Scene* scene);
 
 #endif
 

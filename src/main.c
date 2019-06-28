@@ -58,12 +58,12 @@ static void quit_modules(void) {
 /**
  * Debug function to show location of mouse.
  */
-static void mouse_dbg(SDL_Renderer* renderer, TTF_Font* fnt) {
+static void mouse_dbg(TTF_Font* fnt) {
     int x, y;
     SDL_GetMouseState(&x, &y);
     char mouse[40];
     sprintf(mouse, "MPOS: x %d y %d", x, y);
-    render_debug_message(renderer, fnt, mouse);
+    render_debug_message(fnt, mouse);
 }
 #endif
 
@@ -112,7 +112,7 @@ int main(int argc, char** argv) {
             }
             currentScene->event_handler(&gameData, currentScene);
         }
-
+        
         //----------------- Update state.
         for (int i = 0; i < currentScene->entities.current; i++) {
             if (has_component(&currentScene->entities.entities[i],
@@ -128,11 +128,12 @@ int main(int argc, char** argv) {
         // --------------- Render state.
         SDL_RenderClear(gameData.renderer);
         
-	    render_background(gameData.renderer, currentScene->bg);
-        render_entities(&gameData, currentScene);
-        
+	    render_background(currentScene);
+        render_entities(currentScene);
+        render_cursor(currentScene);
+
 	    #ifdef DEBUG
-	    mouse_dbg(gameData.renderer, fnt);
+	    mouse_dbg(fnt);
         #endif
 
 	    SDL_RenderPresent(gameData.renderer);

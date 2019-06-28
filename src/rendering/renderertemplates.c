@@ -7,18 +7,19 @@
 #include <stdbool.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/rendering/renderertemplates.h"
 #include "../../include/util/camera.h"
 
 /**
  * Simple function to draw a message to the screen using a font.
  */
-bool render_font(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text) {
+bool render_font(TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text) {
     SDL_Surface* surface = TTF_RenderText_Solid(font, text, colour);
-    SDL_Texture* texture = SDL_CreateTextureFromSurface(renderer, surface);
+    SDL_Texture* texture = SDL_CreateTextureFromSurface(gameData.renderer, surface);
     SDL_FreeSurface(surface);
     // Draw to renderer
-    bool result = SDL_RenderCopy(renderer, texture, NULL, pos);
+    bool result = SDL_RenderCopy(gameData.renderer, texture, NULL, pos);
     SDL_DestroyTexture(texture);
     return result;
 }
@@ -26,8 +27,8 @@ bool render_font(SDL_Renderer* renderer, TTF_Font* font, SDL_Rect* pos, SDL_Colo
 /**
  * Simple wrapper function for rendering textures to the screen.
  */
-bool render_texture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos) {
-    if (SDL_RenderCopy(renderer, texture, NULL, dpos) != 0) {
+bool render_texture(SDL_Texture* texture, SDL_Rect* dpos) {
+    if (SDL_RenderCopy(gameData.renderer, texture, NULL, dpos) != 0) {
         return false;
     }
     return true;
@@ -36,8 +37,9 @@ bool render_texture(SDL_Renderer* renderer, SDL_Texture* texture, SDL_Rect* dpos
 /**
  * Simple wrapper function for rendering textures to the screen.
  */
-bool render_background(SDL_Renderer* renderer, SDL_Texture* texture) {
-    if (SDL_RenderCopy(renderer, texture, NULL, NULL) != 0) {
+bool render_background(Scene* currentScene) {
+    if (SDL_RenderCopy(gameData.renderer, currentScene->bg,
+            NULL, NULL) != 0) {
         return false;
     }
     return true;
@@ -46,7 +48,7 @@ bool render_background(SDL_Renderer* renderer, SDL_Texture* texture) {
 /**
  * Draw a pre-designed debug message to the screen.
  */
-bool render_debug_message(SDL_Renderer* renderer, TTF_Font* font, char* text) {
+bool render_debug_message(TTF_Font* font, char* text) {
     int text_size = strlen(text);
     int font_height = TTF_FontHeight(font);
     int font_width = font_height / 2;
@@ -57,17 +59,17 @@ bool render_debug_message(SDL_Renderer* renderer, TTF_Font* font, char* text) {
         .h = font_height
     };
     SDL_Color c = {255, 0, 0};
-    return render_font(renderer, font, &pos, c, text);
+    return render_font(font, &pos, c, text);
 }
 
 /**
  * Show the fps in the top right corner of the screen.
  */
-bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps) {
+bool render_fps(TTF_Font* font, int fps) {
     char text[10];
     sprintf(text, "%d", fps);
     int height, width;
-    SDL_GetRendererOutputSize(renderer, &width, &height);
+    SDL_GetRendererOutputSize(gameData.renderer, &width, &height);
     int font_size = TTF_FontHeight(font);
     SDL_Rect pos = {
         .x = width - ((font_size/2) * 4) - 5,
@@ -76,17 +78,39 @@ bool render_fps(SDL_Renderer* renderer, TTF_Font* font, int fps) {
         .h = font_size
     };
     SDL_Color c = {0, 0, 0};
-    return render_font(renderer, font, &pos, c, text);
+    return render_font(font, &pos, c, text);
 }
 
 /**
  * Draw a loading notification box.
  */
-bool render_loading_box(SDL_Renderer* renderer, TTF_Font* font) {
+bool render_loading_box(TTF_Font* font) {
     // Size of screen.
     int height, width;
-    SDL_GetRendererOutputSize(renderer, &width, &height);
-    SDL_Rect pos = transform_rect(renderer, 0.2, 0.1, 0, 0);
+    SDL_GetRendererOutputSize(gameData.renderer, &width, &height);
+    SDL_Rect pos = transform_rect(gameData.renderer, 0.2, 0.1, 0, 0);
     SDL_Color c = {0, 0, 0};
-    return render_font(renderer, font, &pos, c, "Loading...");
+    return render_font(font, &pos, c, "Loading...");
 }
+
+/**
+ * Render cursor.
+ */
+bool render_cursor(Scene* currentScene) {
+    // Render cursor if applicable
+        if (currentScene->cursor != NULL) {
+            int x, y;
+            SDL_GetMouseState(&x, &y);
+            SDL_Rect rect = {
+                .x = x,
+                .y = y,
+                .w = 50,
+                .h = 50
+            };
+            // TODO: Fix the transparent rendering of cursor with Colour Keying
+            //SDL_BlitSurface(currentScene->cursor, NULL, gameData.renderer, &rect);
+            render_texture(currentScene->cursor, &rect);
+        }
+        return true;
+}
+

@@ -28,6 +28,7 @@ typedef struct Scene {
     // Need to cast as GameData
     void (*event_handler)(void* gameData, void* scene);
     SDL_Texture* bg;
+    SDL_Texture* cursor;
 } Scene;
 
 /**

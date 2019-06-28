@@ -5,6 +5,7 @@
 #include <stdbool.h>
 #include <string.h>
 
+#include "../../include/game.h"
 #include "../../include/rendering/renderer.h"
 #include "../../include/rendering/renderertemplates.h"
 #include "../../include/entities/entity.h"
@@ -13,11 +14,11 @@
 /**
  * Render all renderable entites.
  */
-void render_entities(GameData* game, Scene* scene) {
-    for (int i = 0; i < scene->entities.current; i++) {
-        if (has_component(&scene->entities.entities[i], Render)) {
-            scene->entities.entities[i].components[Render]
-                    .call(&scene->entities.entities[i], game->renderer);
+void render_entities(Scene* currentScene) {
+    for (int i = 0; i < currentScene->entities.current; i++) {
+        if (has_component(&currentScene->entities.entities[i], Render)) {
+            currentScene->entities.entities[i].components[Render]
+                    .call(&currentScene->entities.entities[i]);
         }
     }
 }
