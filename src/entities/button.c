@@ -28,13 +28,16 @@ static void button_left_clicked(void* e) {
 /**
  * Initializes the cat entity and its components.
  */
-Entity init_button(AssetStack* stack) {
+Entity init_button(void) {
     Entity entity;
-    if (!init_entity(&entity, stack, "click.png", "click1.ogg")) {
+    INFO_LOG("Button time\n");
+    if (!init_entity(&entity, "click.png", "click1.ogg")) {
         ERROR_LOG("Could not initialize button entity.\n");
         return (Entity) { 0 };
     }
-    entity.textures[1] = get_asset_by_ref("unclick.png", stack, 0)->pointer.texture;
+
+    entity.textures[1] = get_asset_by_ref("unclick.png", 0)->pointer.texture;
+    
     // Load custom components.
     entity.components[LeftClicked].call = &button_left_clicked;
     return entity;

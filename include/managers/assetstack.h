@@ -49,7 +49,7 @@ bool free_asset_stack(AssetStack* stack);
 /**
  * If an asset is found with provided reference, return pointer to asset, else return NULL.
  */
-RegisteredAsset* get_asset_by_ref(const char* reference, AssetStack* stack, int chunk);
+RegisteredAsset* get_asset_by_ref(const char* reference, int chunk);
 
 /**
  * Linearly traverse the stack for debug purposes.

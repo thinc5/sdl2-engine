@@ -21,7 +21,7 @@ void init_debug_scene(void) {
         return;
     }
     // Load assets for the main menu.
-    if (!push_asset_chunk(gameData.renderer, &gameData.scene->assets,
+    if (!push_asset_chunk(gameData.renderer, &gameData.assets,
                 "./res/debug.manifest")) {
         free_scene(gameData.scene);
         gameData.scene = NULL;
@@ -32,11 +32,10 @@ void init_debug_scene(void) {
         float x = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         float y = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         //INFO_LOG("%f %f\n", x, y);
-        add_entity(&gameData.scene->entities, &gameData.scene->assets, &init_cat,
-	            transform_rect(0.1, 0.1, x, y));
+        add_entity(&gameData.scene->entities, &init_cat, transform_rect(0.1, 0.1, x, y));
     }
-    gameData.scene->bg = get_asset_by_ref("cat3.jpg", &gameData.scene->assets,0)->pointer.texture;
-    gameData.scene->cursor = get_asset_by_ref("cursor.png", &gameData.scene->assets,0)->pointer.texture;
+    gameData.scene->bg = get_asset_by_ref("cat3.jpg", 0)->pointer.texture;
+    gameData.scene->cursor = get_asset_by_ref("cursor.png", 1)->pointer.texture;
     gameData.scene->event_handler = &default_handler;
     gameData.scene->type = Debug;
 }

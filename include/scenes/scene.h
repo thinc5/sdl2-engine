@@ -24,8 +24,7 @@ typedef enum SceneType {
 typedef struct Scene {
     // Type of scene.
     SceneType type;
-    // Assets required for scene.
-    AssetStack assets;
+    // Entities present in scene.
     EntityManager entities;
     // Need to cast as GameData
     void (*event_handler)();

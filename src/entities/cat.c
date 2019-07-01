@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
 #include "../../include/util/timer.h"
@@ -45,27 +46,29 @@ static void cat_on_tick(void* e) {
         entity->components[Moved].call(entity, direction, 10);
         entity->timers[0].startTime = SDL_GetTicks();
     }
-
 }
 
 /**
  * Initializes the cat entity and its components.
  */
-Entity init_cat(AssetStack* stack) {
+Entity init_cat(void) {
     Entity cat;
     // Load cat assets make more flexable and specific later.
-    if (!init_entity(&cat, stack, "cat4.jpg", "meow1.ogg")) {
+    if (!init_entity(&cat, "cat4.jpg", "meow1.ogg")) {
         ERROR_LOG("Could not initialize cat entity.\n");
         return (Entity) { 0 };
     }
     //cat.stats[0] = 10;
     // Cat specific specifications.
+    
     // Starting position.
     cat.position.x = 400;
     cat.position.y = 400;
+
     // Width and height.
     cat.position.w = 20;
     cat.position.h = 20;
+
     // Load cat components.
     cat.timers[0] = init_timer();
     cat.components[Moved].call = &move;
@@ -73,5 +76,6 @@ Entity init_cat(AssetStack* stack) {
     cat.components[RightClicked].call = &cat_right_clicked;
     cat.components[Dragged].call = &cat_dragged;
     cat.components[OnTick].call = &cat_on_tick;
+
     return cat;
 }

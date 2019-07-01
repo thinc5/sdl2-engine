@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/asset.h"
 
@@ -28,15 +29,18 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
         stack->tail->next = (AssetNode*) malloc(sizeof(AssetNode));
         stack->tail = stack->tail->next;
     }
+
     // Set the tail's next node to NULL.
     stack->tail->next = NULL;
     AssetNode* node = stack->tail;
     node->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
+
     // Set the texture's reference string and check the asset type.
     if (!type_asset(node->asset, asset_path)) {
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
     }
+
     switch (node->asset->type) {
         case Texture:
             node->asset->pointer.texture = IMG_LoadTexture(renderer, asset_path);
@@ -72,16 +76,19 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
     if (fp == NULL) {
         return false;
     }
+
     // Is this the first allocation for the stack?
     if (stack->allocations == -1) {
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
-        stack->allocations++;
     // Increase the size of the head array.
     } else {
-        stack->allocations++;
         stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*) * (stack->allocations + 1));
     }
+
+    stack->allocations++;
     stack->heads[stack->allocations] = NULL;
+    INFO_LOG("Stack allocations: %d\n", stack->allocations);
+
     // Read each line of the file and add a new node for each loaded asset.
     while(fgets(asset_path, sizeof(asset_path), fp)) {
         int blen = strlen(asset_path);
@@ -94,9 +101,9 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
         }
         memset(asset_path, '\0', sizeof(asset_path));
     }
+
     // Close file.
     fclose(fp);
-    INFO_LOG("Head: %lu\n", (unsigned long) stack->heads[0]);
     return true;
 }
 
@@ -117,8 +124,8 @@ bool pop_asset_chunk(AssetStack* stack) {
         }
     }
     // Re-allocate the list of heads.
-    if (stack->allocations != 0) {
-        stack->allocations--;
+    INFO_LOG("Stack allocations: %d\n", stack->allocations);
+    if (stack->allocations > 1) {
         stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(RegisteredAsset*));
         // Set the tail pointer.
         AssetNode* tail = stack->heads[stack->allocations];
@@ -127,9 +134,10 @@ bool pop_asset_chunk(AssetStack* stack) {
         };
     } else {
         // Free all data.
-        stack->allocations = -1;
         free(stack->heads);
     }
+    stack->allocations--;
+    INFO_LOG("Stack allocations: %d\n", stack->allocations);
     return true;
 }
 
@@ -137,7 +145,7 @@ bool pop_asset_chunk(AssetStack* stack) {
  * Free all the assets on the stack.
  */
 bool free_asset_stack(AssetStack* stack) {
-    while(stack->allocations > -1) {
+    while(stack->allocations > 0) {
         pop_asset_chunk(stack);
     }
     return true;
@@ -146,16 +154,16 @@ bool free_asset_stack(AssetStack* stack) {
 /**
  * If an asset is found with provided reference, return pointer to asset, else return NULL.
  */
-RegisteredAsset* get_asset_by_ref(const char* reference, AssetStack* stack, int chunk) {
+RegisteredAsset* get_asset_by_ref(const char* reference, int chunk) {
     // If the provided chunk is out of our range we return NULL.
-    if (chunk < 0 || stack == NULL || chunk > stack->allocations) {
+    if (chunk < 0 || chunk > gameData.assets.allocations) {
         return NULL;
     }
-    AssetNode* node = stack->heads[chunk];
+    AssetNode* node = gameData.assets.heads[chunk];
     while (node != NULL) {
         if (strcmp(node->asset->reference, reference) == 0) {
             return (RegisteredAsset*) node->asset;
-	}
+	    }
         node = node->next;
     }
     return NULL;

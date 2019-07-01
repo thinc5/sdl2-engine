@@ -15,16 +15,24 @@
 typedef struct GameData {
     // Is the game still running?
     bool status;
+
     // SDL window, renderer and event.
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Event event;
+
+    // Assets required for scene.
+    AssetStack assets;
+
     // Frame rate manager.
     FrameRateManager fps;
+
     // Resources required for the main/escape menu and debugging.
     Scene* menu;
+
     // Other scene.
     Scene* scene;
+    
     // Currently selected scene.
     Scene* currentScene;
 } GameData;

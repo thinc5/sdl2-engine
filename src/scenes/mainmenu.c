@@ -14,28 +14,22 @@
  */
 void init_main_menu(void) {
     if (!init_scene(gameData.menu)) {
-        INFO_LOG("Unable to init menu.\n");
+        ERROR_LOG("Unable to init menu.\n");
         gameData.menu = NULL;
         return;
     }
-    
     // Load assets for the main menu.
-    if (!push_asset_chunk(gameData.renderer, &gameData.menu->assets,
+    if (!push_asset_chunk(gameData.renderer, &gameData.assets,
                 "./res/mainmenu.manifest")) {
         free_scene(gameData.scene);
-	    INFO_LOG("Failed to load the scene.\n");
+	    ERROR_LOG("Failed to load the scene.\n");
         gameData.menu = NULL;
         return;
     }
-    
-    add_entity(&gameData.menu->entities, &gameData.menu->assets, &init_button,
-            transform_rect(0.4f, 0.2f, 1.0f, 1.0f));
-    
+    add_entity(&gameData.menu->entities, &init_button, transform_rect(0.4f, 0.2f, 1.0f, 1.0f));
     // Add event handler and window type.
     gameData.menu->event_handler = &default_handler;
-    gameData.menu->bg = get_asset_by_ref("cat1.jpg", &gameData.menu->assets,0)->pointer.texture;
+    gameData.menu->bg = get_asset_by_ref("cat1.jpg", 0)->pointer.texture;
     gameData.menu->type = MainMenu;
-    
-    INFO_LOG("Main menu scene created.\n");
 }
 

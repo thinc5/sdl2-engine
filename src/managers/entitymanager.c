@@ -1,6 +1,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
+#include "../../include/debug.h"
 #include "../../include/game.h"
 #include "../../include/entities/entity.h"
 #include "../../include/managers/entitymanager.h"
@@ -19,15 +20,15 @@ bool init_entity_manager(EntityManager* entityManager) {
  * Add a new entity to the manager if there is space, if not allocate
  * more space for new entity.
  */
-void add_entity(EntityManager* entityManager, AssetStack* assets, Entity (*init_entity)(AssetStack* assets), SDL_Rect rect) {
+void add_entity(EntityManager* entityManager, Entity (*init_entity)(void), SDL_Rect rect) {
     // Check if we have any space left for a new entity.
     if (entityManager->current + 1 >= entityManager->maximum) {
         entityManager->maximum *= 2;
         entityManager->entities = (Entity*) realloc(entityManager->entities,
-	        sizeof(Entity) * entityManager->maximum);
+	            sizeof(Entity) * entityManager->maximum);
     }
     // Create new entity with provided constructor.
-    entityManager->entities[entityManager->current] = init_entity(assets);
+    entityManager->entities[entityManager->current] = init_entity();
     // Set the width and height.
     entityManager->entities[entityManager->current].position = rect;
     entityManager->current++;
@@ -61,4 +62,5 @@ void clean_entities(EntityManager* entityManager) {
  */
 void free_entities(EntityManager* entityManager) {
     free(entityManager->entities);
- }
+}
+

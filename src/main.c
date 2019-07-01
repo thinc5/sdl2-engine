@@ -19,6 +19,18 @@
 #include "../include/scenes/scene.h"
 #include "../include/scenes/debugscene.h"
 
+#ifdef DEBUG
+/**
+ * Debug function to show location of mouse.
+ */
+static void mouse_dbg(TTF_Font* fnt) {
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    char mouse[40];
+    sprintf(mouse, "MPOS: x %d y %d", x, y);
+    render_debug_message(fnt, mouse);
+}
+#endif
 
 /**
  *  Initialize SDL components.
@@ -42,7 +54,7 @@ static bool init_modules(void) {
         return false;
     }
     return true;
- }
+}
 
 /**
  * Quit SDL components.
@@ -52,26 +64,7 @@ static void quit_modules(void) {
     TTF_Quit();
     IMG_Quit();
     SDL_Quit();
- }
-
- #ifdef DEBUG
-// TTF_Font* fnt = get_asset_by_ref("ssp-regular.otf",
-//         &gameData.menu->assets, 0)->pointer.font;
-// if (fnt == NULL) {
-//     return -1;
-// }
-
-/**
- * Debug function to show location of mouse.
- */
-static void mouse_dbg(TTF_Font* fnt) {
-    int x, y;
-    SDL_GetMouseState(&x, &y);
-    char mouse[40];
-    sprintf(mouse, "MPOS: x %d y %d", x, y);
-    render_debug_message(fnt, mouse);
 }
-#endif
 
 /**
  * Handle the user events.
@@ -115,8 +108,7 @@ static void render_state(void) {
     render_entities(gameData.currentScene);
     render_cursor(gameData.currentScene);
     #ifdef DEBUG
-    mouse_dbg(get_asset_by_ref("ssp-regular.otf",
-            &gameData.menu->assets, 0)->pointer.font);
+    mouse_dbg(get_asset_by_ref("ssp-regular.otf", 0)->pointer.font);
     #endif
     SDL_RenderPresent(gameData.renderer);
     //INFO_LOG("Rendered\n");
@@ -126,15 +118,12 @@ static void render_state(void) {
  * Entry point for the engine.
  */
 int main(int argc, char** argv) {
-    // Start all SDL components.
-    if (!init_modules()) {
-        return 1;
-    }
-    // Load the game.
-    if (!init_game(&gameData)) {
+    // Start all SDL components and load the game.
+    if (!init_modules() || !init_game(&gameData)) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
+
     // Main game loop.
     INFO_LOG("Game Loop\n");
     while (gameData.status) {
@@ -147,6 +136,7 @@ int main(int argc, char** argv) {
         // --------------- Wait if we have finished too soon.
         cap_fps(&gameData.fps);
     }
+
     // Clean up.
     free_game(&gameData);
     quit_modules();

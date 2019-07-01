@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
 #include "../../include/managers/assetstack.h"
@@ -29,29 +30,32 @@ void render(void* e) {
 /**
  * Initialize an entity with a default size, location and with provided texture and sound.
  */
-bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* sound) {
+bool init_entity(Entity* e, const char* texture, const char* sound) {
     // Initialize all components as null.
     for (int i = 0; i < COMPONENT_TOTAL; i++) {
         e->components[i].call = NULL;
     }
     memset(e->stats, -1, sizeof(int));
+    
     // Grab assets.
     if (texture != NULL) {
-        RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(texture, stack, 0);
+        RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(texture, 0);
         if (asset == NULL) {
-            INFO_LOG("Unable to find asset for entity: %s\n", texture);
+            ERROR_LOG("Unable to find asset for entity: %s\n", texture);
             return false;
         }
         e->textures[0] = asset->pointer.texture;
     }
+    
     if (sound != NULL) {
-        RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(sound, stack, 0);
+        RegisteredAsset* asset = (RegisteredAsset*) get_asset_by_ref(sound, 0);
         if (asset == NULL) {
             ERROR_LOG("Unable to find asset for entity: %s\n", sound);
             return false;
         }
         e->sounds[0] = asset->pointer.sound;
     }
+
     // Set components.
     e->remove = false;
     e->components[Deleted].call = &deleted;

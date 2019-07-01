@@ -5,9 +5,9 @@
 #include "../../include/components/component.h"
 
 /**
- * Initilizes the cat entity.
+ * Initializes the cat entity.
  */
-Entity init_cat(AssetStack* stack);
-
+Entity init_cat(void);
 
 #endif
+

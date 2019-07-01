@@ -40,7 +40,7 @@ typedef struct Entity {
 /**
  * Initialize an entity with a default size, location and with provided texture.
  */
-bool init_entity(Entity* e, AssetStack* stack, const char* texture, const char* sound);
+bool init_entity(Entity* e, const char* texture, const char* sound);
 
 /**
  * Returns true if the entity has queried component.

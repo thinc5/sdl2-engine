@@ -6,9 +6,9 @@
 #include "../components/component.h"
 
 /**
- * Initilizes the button entity.
+ * Initializes the button entity.
  */
-Entity init_button(AssetStack* stack);
-
+Entity init_button(void);
 
 #endif
+

@@ -7,9 +7,9 @@
 #include "../managers/assetstack.h"
 
 /**
- * Holds total number of entites.
+ * Holds total number of entities.
  */
-typedef struct EntiyManager {
+typedef struct EntityManager {
     unsigned int current;
     unsigned int maximum;
     Entity* entities;
@@ -23,7 +23,7 @@ bool init_entity_manager(EntityManager* entityManager);
 /**
  * Add a new entity to the manager if there is space, if not allocate more space for new entitiy.
  */
-void add_entity(EntityManager* entitiyManager, AssetStack* assets, Entity (*init_entity)(AssetStack* assets), SDL_Rect rect);
+void add_entity(EntityManager* entityManager, Entity (*init_entity)(void), SDL_Rect rect);
 
 /**
  * Remove all entites that are marked to delete then shift all right of the removed entity left to conserve space.
