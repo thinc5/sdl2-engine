@@ -88,7 +88,7 @@ bool render_loading_box(TTF_Font* font) {
     // Size of screen.
     int height, width;
     SDL_GetRendererOutputSize(gameData.renderer, &width, &height);
-    SDL_Rect pos = transform_rect(gameData.renderer, 0.2, 0.1, 0, 0);
+    SDL_Rect pos = transform_rect(0.2, 0.1, 0, 0);
     SDL_Color c = {0, 0, 0};
     return render_font(font, &pos, c, "Loading...");
 }

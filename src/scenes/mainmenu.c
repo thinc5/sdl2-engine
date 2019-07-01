@@ -29,7 +29,7 @@ void init_main_menu(void) {
     }
     
     add_entity(&gameData.menu->entities, &gameData.menu->assets, &init_button,
-            transform_rect(gameData.renderer, 0.4f, 0.2f, 1.0f, 1.0f));
+            transform_rect(0.4f, 0.2f, 1.0f, 1.0f));
     
     // Add event handler and window type.
     gameData.menu->event_handler = &default_handler;

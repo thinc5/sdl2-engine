@@ -19,11 +19,12 @@ typedef enum SceneType {
 } SceneType;
 
 /**
- * Scene specific assets, entities,
- * the type of scene.
+ * Scene abstraction, each game "view" is considered a scene.
  */
 typedef struct Scene {
+    // Type of scene.
     SceneType type;
+    // Assets required for scene.
     AssetStack assets;
     EntityManager entities;
     // Need to cast as GameData

@@ -7,6 +7,7 @@
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
 #include "../../include/util/timer.h"
+#include "../../include/util/camera.h"
 #include "../../include/entities/cat.h"
 #include "../../include/components/move.h"
 

@@ -2,6 +2,7 @@
 
 #include "../../include/debug.h"
 #include "../../include/game.h"
+#include "../../include/util/camera.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/scenes/scene.h"
@@ -40,6 +41,11 @@ void free_scene(Scene* scene) {
   * Switch scenes.
   */
 void change_scene(void (*next)(void)) {
+    // Draw loading notification :)
+    SDL_Rect pos = transform_rect(0.4f, 0.2f, 1.0f, 1.0f);
+    render_texture(get_asset_by_ref("loading.png",
+            &gameData.menu->assets,0)->pointer.texture, &pos);
+    SDL_RenderPresent(gameData.renderer);
     if (gameData.currentScene->type != MainMenu) {
         free(gameData.scene);
     }
