@@ -10,5 +10,10 @@
  */
 Entity init_button(void);
 
+/**
+ * Initializes the cat entity and its components.
+ */
+Entity init_play_button(void);
+
 #endif
 

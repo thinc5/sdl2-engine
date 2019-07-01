@@ -81,7 +81,7 @@ static void handle_events(void) {
     //INFO_LOG("Events Polled\n");
 }
 
- /**
+/**
   * Update game state.
   */
 static void update_state(void) {
@@ -123,7 +123,6 @@ int main(int argc, char** argv) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
-
     // Main game loop.
     INFO_LOG("Game Loop\n");
     while (gameData.status) {
@@ -136,7 +135,6 @@ int main(int argc, char** argv) {
         // --------------- Wait if we have finished too soon.
         cap_fps(&gameData.fps);
     }
-
     // Clean up.
     free_game(&gameData);
     quit_modules();

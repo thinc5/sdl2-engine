@@ -48,3 +48,4 @@ void free_scene(Scene* scene);
 void change_scene(void (*next)(void));
 
 #endif
+

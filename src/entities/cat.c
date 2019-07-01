@@ -60,15 +60,12 @@ Entity init_cat(void) {
     }
     //cat.stats[0] = 10;
     // Cat specific specifications.
-    
     // Starting position.
     cat.position.x = 400;
     cat.position.y = 400;
-
     // Width and height.
     cat.position.w = 20;
     cat.position.h = 20;
-
     // Load cat components.
     cat.timers[0] = init_timer();
     cat.components[Moved].call = &move;
@@ -76,6 +73,6 @@ Entity init_cat(void) {
     cat.components[RightClicked].call = &cat_right_clicked;
     cat.components[Dragged].call = &cat_dragged;
     cat.components[OnTick].call = &cat_on_tick;
-
     return cat;
 }
+

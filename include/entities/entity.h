@@ -47,5 +47,10 @@ bool init_entity(Entity* e, const char* texture, const char* sound);
  */
 bool has_component(Entity* e, ComponentType c);
 
+/**
+ * Default render call for all entities.
+ */
+void render(void* e);
 
 #endif
+

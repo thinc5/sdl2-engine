@@ -1,11 +1,11 @@
 #-------------- Variables
 # determine os
 UNAME			= $(shell uname)
-OS			=
+OS				=
 # executable name
 TARGET			:= output.out
 # compiler to use
-CC			:= gcc
+CC				:= gcc
 # compiler flags
 CFLAGS   		:= -std=c99 -Wall -pedantic
 # linker to use
@@ -20,7 +20,7 @@ BINDIR			:= bin
 
 
 #-------------- Helper scripts
-rm			:= rm -rf
+rm				:= rm -rf
 mkdir			:= mkdir -p
 findc			:= du -a $(SRCDIR) | grep -E '\.(c)$$' | awk '{print $$2}'
 findh			:= du -a $(INCDIR) | grep -E '\.(h)$$' | awk '{print $$2}'
