@@ -54,7 +54,13 @@ static void quit_modules(void) {
     SDL_Quit();
  }
 
-#ifdef DEBUG
+ #ifdef DEBUG
+// TTF_Font* fnt = get_asset_by_ref("ssp-regular.otf",
+//         &gameData.menu->assets, 0)->pointer.font;
+// if (fnt == NULL) {
+//     return -1;
+// }
+
 /**
  * Debug function to show location of mouse.
  */
@@ -68,81 +74,80 @@ static void mouse_dbg(TTF_Font* fnt) {
 #endif
 
 /**
+ * Handle the user events.
+ */
+static void handle_events(void) {
+    //INFO_LOG("Polling Events\n");
+    while (SDL_PollEvent(&gameData.event)) {
+        if (gameData.event.type == SDL_QUIT) {
+            gameData.status = false;
+            break;
+        }
+        gameData.currentScene->event_handler();
+    }
+    //INFO_LOG("Events Polled\n");
+}
+
+ /**
+  * Update game state.
+  */
+static void update_state(void) {
+    //INFO_LOG("Updating State\n");
+    for (int i = 0; i < gameData.currentScene->entities.current; i++) {
+        if (has_component(&gameData.currentScene->entities.entities[i],
+                OnTick)) {
+            gameData.currentScene->entities.entities[i].components[OnTick]
+                    .call(&gameData.currentScene->entities.entities[i]);
+        }
+    }
+    // Remove all entities marked for deletion.
+    clean_entities(&gameData.currentScene->entities);
+    //INFO_LOG("State Updated\n");
+}
+
+/**
+ * Render game state.
+ */
+static void render_state(void) {
+    //INFO_LOG("Rendering\n");
+    SDL_RenderClear(gameData.renderer);
+	render_background(gameData.currentScene);
+    render_entities(gameData.currentScene);
+    render_cursor(gameData.currentScene);
+    #ifdef DEBUG
+    mouse_dbg(get_asset_by_ref("ssp-regular.otf",
+            &gameData.menu->assets, 0)->pointer.font);
+    #endif
+    SDL_RenderPresent(gameData.renderer);
+    //INFO_LOG("Rendered\n");
+}
+
+/**
  * Entry point for the engine.
  */
 int main(int argc, char** argv) {
-    // Start all major game components.
+    // Start all SDL components.
     if (!init_modules()) {
         return 1;
     }
-    
+    // Load the game.
     if (!init_game(&gameData)) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
-    
-    // Scene in focus.
-    Scene* currentScene = gameData.menu;
-
-    #ifdef DEBUG
-    TTF_Font* fnt = get_asset_by_ref("ssp-regular.otf",
-            &gameData.menu->assets, 0)->pointer.font;
-    if (fnt == NULL) {
-        return -1;
-    }
-    #endif
-
     // Main game loop.
+    INFO_LOG("Game Loop\n");
     while (gameData.status) {
         // ---------------- Handle user events.
-        while (SDL_PollEvent(&gameData.event)) {
-            if (gameData.event.type == SDL_QUIT) {
-                gameData.status = false;
-                break;
-            }
-            // Testing unloading/reloading scenes.
-            if (gameData.event.key.keysym.sym == SDLK_F1) {
-                // Load next level.
-                if (currentScene->type != MainMenu) {
-                    free(gameData.scene);
-                }
-                gameData.scene = (Scene*) malloc(sizeof(Scene));
-                init_debug_scene(gameData.renderer, gameData.scene);
-                currentScene = gameData.scene;
-            }
-            currentScene->event_handler(&gameData, currentScene);
-        }
-        
+        handle_events();
         //----------------- Update state.
-        for (int i = 0; i < currentScene->entities.current; i++) {
-            if (has_component(&currentScene->entities.entities[i],
-                    OnTick)) {
-                currentScene->entities.entities[i].components[OnTick]
-                        .call(&currentScene->entities.entities[i]);
-            }
-        }
-
-        // Remove all entities marked for deletion.
-        clean_entities(&currentScene->entities);
-
+        update_state();
         // --------------- Render state.
-        SDL_RenderClear(gameData.renderer);
-        
-	    render_background(currentScene);
-        render_entities(currentScene);
-        render_cursor(currentScene);
-
-	    #ifdef DEBUG
-	    mouse_dbg(fnt);
-        #endif
-
-	    SDL_RenderPresent(gameData.renderer);
-
+        render_state();
         // --------------- Wait if we have finished too soon.
         cap_fps(&gameData.fps);
     }
-
-    // Game over, free everything.
+    // Clean up.
     free_game(&gameData);
     quit_modules();
     return 0;

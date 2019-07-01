@@ -11,8 +11,9 @@
  * What is the context of this "scene".
  */
 typedef enum SceneType {
-    ExcMenu,
+    EscMenu,
     MainMenu,
+    Debug,
     TileSelect,
     Battle
 } SceneType;
@@ -26,7 +27,7 @@ typedef struct Scene {
     AssetStack assets;
     EntityManager entities;
     // Need to cast as GameData
-    void (*event_handler)(void* gameData, void* scene);
+    void (*event_handler)();
     SDL_Texture* bg;
     SDL_Texture* cursor;
 } Scene;
@@ -41,9 +42,9 @@ bool init_scene(Scene* scene);
  */
 void free_scene(Scene* scene);
 
-/**
- * Load a new scene and replace current scene.
- */
-void replace_scene(Scene* current, Scene* next);
+ /**
+  * Switch scenes.
+  */
+void change_scene(void (*next)(void));
 
 #endif

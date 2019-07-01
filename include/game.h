@@ -23,8 +23,10 @@ typedef struct GameData {
     FrameRateManager fps;
     // Resources required for the main/escape menu and debugging.
     Scene* menu;
-    // Current scene.
+    // Other scene.
     Scene* scene;
+    // Currently selected scene.
+    Scene* currentScene;
 } GameData;
 
 /**

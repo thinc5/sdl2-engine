@@ -11,7 +11,7 @@
 /**
  * Process input depending on the context of the current scene.
  */
-void default_handler(void* game, void* scene);
+void default_handler(void);
 
 #endif
 

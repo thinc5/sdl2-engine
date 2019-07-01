@@ -3,6 +3,9 @@
 #include <stdio.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
+#include "../../include/scenes/scene.h"
+#include "../../include/scenes/debugscene.h"
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
 #include "../../include/entities/button.h"
@@ -18,6 +21,8 @@ static void button_left_clicked(void* e) {
     entity->textures[1] = temp;
     // Play click sound
     Mix_PlayChannel(-1, entity->sounds[0], 0);
+    // Load target.
+    change_scene(&init_debug_scene);
 }
 
 /**

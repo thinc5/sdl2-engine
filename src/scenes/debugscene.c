@@ -1,8 +1,8 @@
-#include <stdbool.h>
 #include <math.h>
 #include <stdio.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/managers/eventmanager.h"
@@ -15,30 +15,30 @@
 /**
  * Constructor for the debug testing scene.
  */
-bool init_debug_scene(SDL_Renderer* renderer, Scene* scene) {
-    if (!init_scene(scene)) {
-        return false;
+void init_debug_scene(void) {
+    if (!init_scene(gameData.scene)) {
+        gameData.scene = NULL;
+        return;
     }
 
     // Load assets for the main menu.
-    if (!push_asset_chunk(renderer, &scene->assets,
-            "./res/debug.manifest")) {
-        free_scene(scene);
-        return false;
+    if (!push_asset_chunk(gameData.renderer, &gameData.scene->assets,
+                "./res/debug.manifest")) {
+        free_scene(gameData.scene);
+        gameData.scene = NULL;
+        return;
     }
 
     // Populate scene with entities.
     for (int i = 0; i < 50; i++) {
         float x = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         float y = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
-        INFO_LOG("%f %f\n", x, y);
-        add_entity(&scene->entities, &scene->assets, &init_cat,
-	            transform_rect(renderer, 0.1, 0.1, x, y));
+        //INFO_LOG("%f %f\n", x, y);
+        add_entity(&gameData.scene->entities, &gameData.scene->assets, &init_cat,
+	            transform_rect(gameData.renderer, 0.1, 0.1, x, y));
     }
-    scene->bg = get_asset_by_ref("cat3.jpg", &scene->assets,0)->pointer.texture;
-    scene->cursor = get_asset_by_ref("cursor.png", &scene->assets,0)->pointer.texture;
-    scene->event_handler = &default_handler;
-    scene->type = MainMenu;
-    
-    return scene;
+    gameData.scene->bg = get_asset_by_ref("cat3.jpg", &gameData.scene->assets,0)->pointer.texture;
+    gameData.scene->cursor = get_asset_by_ref("cursor.png", &gameData.scene->assets,0)->pointer.texture;
+    gameData.scene->event_handler = &default_handler;
+    gameData.scene->type = Debug;
 }

@@ -1,6 +1,7 @@
 #include <stdbool.h>
 
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/scenes/scene.h"
@@ -35,12 +36,15 @@ void free_scene(Scene* scene) {
     pop_asset_chunk(&scene->assets);
 }
 
-/**
- * Load a new scene and replace current scene.
- */
-void replace_scene(Scene* current, Scene* next) {
-    // Free scene and load next.
-    free_scene(current);
-    free(current);
-    current = next;
-}
+ /**
+  * Switch scenes.
+  */
+void change_scene(void (*next)(void)) {
+    if (gameData.currentScene->type != MainMenu) {
+        free(gameData.scene);
+    }
+    gameData.scene = (Scene*) malloc(sizeof(Scene));
+    next();
+    gameData.currentScene = gameData.scene;
+ }
+

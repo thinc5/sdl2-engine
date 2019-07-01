@@ -1,6 +1,5 @@
-#include <stdbool.h>
-
 #include "../../include/debug.h"
+#include "../../include/game.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/managers/eventmanager.h"
@@ -13,34 +12,30 @@
 /**
  * Constructor for the main menu.
  */
-bool init_main_menu(SDL_Renderer* renderer, Scene* scene) {
-    if (!init_scene(scene)) {
+void init_main_menu(void) {
+    if (!init_scene(gameData.menu)) {
         INFO_LOG("Unable to init menu.\n");
-        return false;
+        gameData.menu = NULL;
+        return;
     }
     
     // Load assets for the main menu.
-    if (!push_asset_chunk(renderer, &scene->assets,
-            "./res/mainmenu.manifest")) {
-        free_scene(scene);
-	INFO_LOG("Failed to load the scene.\n");
-        return false;
+    if (!push_asset_chunk(gameData.renderer, &gameData.menu->assets,
+                "./res/mainmenu.manifest")) {
+        free_scene(gameData.scene);
+	    INFO_LOG("Failed to load the scene.\n");
+        gameData.menu = NULL;
+        return;
     }
     
-    // Add our buttons! 
-    add_entity(&scene->entities, &scene->assets, &init_button,
-            transform_rect(renderer, 0.4f, 0.2f, 1.0f, 0.5f));
-    add_entity(&scene->entities, &scene->assets, &init_button,
-            transform_rect(renderer, 0.4f, 0.2f, 1.0f, 1.0f)); 
-    add_entity(&scene->entities, &scene->assets, &init_button,
-            transform_rect(renderer, 0.4f, 0.2f, 1.0f, 1.5f));
+    add_entity(&gameData.menu->entities, &gameData.menu->assets, &init_button,
+            transform_rect(gameData.renderer, 0.4f, 0.2f, 1.0f, 1.0f));
     
     // Add event handler and window type.
-    scene->event_handler = &default_handler;
-    scene->bg = get_asset_by_ref("cat1.jpg", &scene->assets,0)->pointer.texture;
-    scene->type = MainMenu;
+    gameData.menu->event_handler = &default_handler;
+    gameData.menu->bg = get_asset_by_ref("cat1.jpg", &gameData.menu->assets,0)->pointer.texture;
+    gameData.menu->type = MainMenu;
     
     INFO_LOG("Main menu scene created.\n");
-    return true;
 }
 
