@@ -48,6 +48,6 @@ void init_debug_scene(void) {
     state->score = 0;
     state->last_time = SDL_GetTicks();
     add_entity(&gameData.scene->entities, &init_cat_state,
-            transform_rect(0.2, 0.1, 0.2, 0));
+            transform_rect(0.2, 0.2, 0.2, 0.2));
 }
 

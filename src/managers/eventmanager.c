@@ -5,20 +5,10 @@
 
 #include "../../include/debug.h"
 #include "../../include/game.h"
+#include "../../include/util/camera.h"
 #include "../../include/managers/eventmanager.h"
 #include "../../include/entities/entity.h"
 #include "../../include/components/move.h"
-
-/**
- * Check if provided x and y coordinates are inside of provided rectangle.
- */
-static bool is_collision(int x, int y, SDL_Rect position) {
-    if (x >= position.x && x <= position.x + position.w &&
-            y >= position.y && y <= position.y + position.h) {
-        return true;
-    }
-    return false;
-}
 
 /**
  * Default handler for clicks.
@@ -28,8 +18,7 @@ static void click_handler(GameData* gameData) {
     // Check if an entity was left clicked.
     int x, y;
     SDL_GetMouseState(&x, &y);
-    // INFO_LOG("Cick at x: %d, y:%d\n", x, y);
-    
+    INFO_LOG("Cick at x: %d, y:%d\n", x, y);
     if (gameData->event.button.button == SDL_BUTTON_LEFT) {
         if (gameData->event.type == SDL_MOUSEMOTION) {
             INFO_LOG("Mouse left clicked and dragged!\n");
