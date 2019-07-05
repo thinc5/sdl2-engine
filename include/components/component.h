@@ -12,6 +12,7 @@ typedef enum ComponentType {
     Dragged,
     Moved,
     Deleted,
+    Specific,
     COMPONENT_TOTAL,
 } ComponentType;
 

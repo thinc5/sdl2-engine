@@ -1,3 +1,5 @@
+#include <SDL2/SDL.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -11,6 +13,7 @@
 #include "../../include/entities/cat.h"
 #include "../../include/entities/button.h"
 #include "../../include/util/camera.h"
+#include "../../include/entities/cat_state.h"
 
 /**
  * Constructor for the debug testing scene.
@@ -38,5 +41,13 @@ void init_debug_scene(void) {
     gameData.scene->cursor = get_asset_by_ref("cursor.png", 1)->pointer.texture;
     gameData.scene->event_handler = &default_handler;
     gameData.scene->type = Debug;
+    // Init state.
+    gameData.scene->state = (void*) malloc(sizeof(CatState));
+    CatState* state = (CatState*) gameData.scene->state;
+    state->remaining_time = 60 * 1000;  // 60 Seconds..
+    state->score = 0;
+    state->last_time = SDL_GetTicks();
+    add_entity(&gameData.scene->entities, &init_cat_state,
+            transform_rect(0.2, 0.1, 0.2, 0));
 }
 

@@ -9,8 +9,26 @@
 #include "../../include/components/component.h"
 #include "../../include/util/timer.h"
 #include "../../include/util/camera.h"
+#include "../../include/entities/cat_state.h"
 #include "../../include/entities/cat.h"
 #include "../../include/components/move.h"
+
+/**
+ * Add score to the counter.
+ */
+static void add_score(uint8_t score) {
+    CatState* state = (CatState*) gameData.scene->state;
+    state->score += score;
+}
+
+/**
+ * Catch the cat...
+ */
+static void cat_left_clicked(void* e) {
+    Entity* entity = (Entity*) e;
+    entity->components[Deleted].call();
+    add_score(5);
+}
 
 /**
  * Behaviour of cat when clicked.
@@ -59,17 +77,10 @@ Entity init_cat(void) {
         return (Entity) { 0 };
     }
     //cat.stats[0] = 10;
-    // Cat specific specifications.
-    // Starting position.
-    cat.position.x = 400;
-    cat.position.y = 400;
-    // Width and height.
-    cat.position.w = 20;
-    cat.position.h = 20;
     // Load cat components.
     cat.timers[0] = init_timer();
     cat.components[Moved].call = &move;
-    cat.components[LeftClicked] = cat.components[Deleted];
+    cat.components[LeftClicked].call = &cat_left_clicked;
     cat.components[RightClicked].call = &cat_right_clicked;
     cat.components[Dragged].call = &cat_dragged;
     cat.components[OnTick].call = &cat_on_tick;

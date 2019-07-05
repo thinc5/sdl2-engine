@@ -4,12 +4,8 @@
 #include "../scenes/scene.h"
 
 /**
- * The debug scene's state struct.
+ * Initialize the debug scene.
  */
-typedef struct CatState {
-    uint32_t score;
-} CatState;
-
 void init_debug_scene(void);
 
 #endif
