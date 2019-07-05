@@ -20,9 +20,6 @@ bool init_asset_stack(AssetStack* stack) {
  * Push and asset onto the stack.
  */
 static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* asset_path) {
-    if (stack->heads == NULL) {
-        stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
-    }
     if (stack->heads[stack->allocations] == NULL) {
         // If we dont have a node at our current head make one.
         stack->heads[stack->allocations] = (AssetNode*) malloc(sizeof(AssetNode));
@@ -79,16 +76,15 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
     if (fp == NULL) {
         return false;
     }
-
     // Is this the first allocation for the stack?
     if (stack->allocations == -1) {
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
     // Increase the size of the head array.
-    } else {
+    } else if  (stack->allocations < 0) {
         stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*) * (stack->allocations + 1));
     }
-
     stack->allocations++;
+    // We dont have a head for the most recent 
     stack->heads[stack->allocations] = NULL;
     INFO_LOG("Stack allocations: %d\n", stack->allocations);
 
@@ -172,6 +168,7 @@ RegisteredAsset* get_asset_by_ref(const char* reference, int chunk) {
     return NULL;
 }
 
+#ifdef DEBUG
 /**
  * Linearly traverse the stack for debug purposes.
  */
@@ -189,4 +186,5 @@ void debug_asset_stack(AssetStack stack) {
         start = start->next;
     }
 }
+#endif
 
