@@ -35,7 +35,7 @@ void init_debug_scene(void) {
         float x = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         float y = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         //INFO_LOG("%f %f\n", x, y);
-        add_entity(&gameData.scene->entities, &init_cat, transform_rect(0.1, 0.1, x, y));
+        add_entity(&gameData.scene->entities, &init_cat, transform_rect(0.1f, 0.1f, x, y));
     }
     gameData.scene->bg = get_asset_by_ref("cat3.jpg", 0)->pointer.texture;
     gameData.scene->cursor = get_asset_by_ref("cursor.png", 1)->pointer.texture;
@@ -44,10 +44,11 @@ void init_debug_scene(void) {
     // Init state.
     gameData.scene->state = (void*) malloc(sizeof(CatState));
     CatState* state = (CatState*) gameData.scene->state;
-    state->remaining_time = 60 * 1000;  // 60 Seconds..
+    // 
+    state->remaining_time = 10 * 1000;  // 60 Seconds..
     state->score = 0;
     state->last_time = SDL_GetTicks();
     add_entity(&gameData.scene->entities, &init_cat_state,
-            transform_rect(0.2, 0.2, 0.2, 0.2));
+            transform_rect(0.2f, 0.2f, 0.1f, 0.1f));
 }
 

@@ -28,7 +28,6 @@ void init_main_menu(void) {
     }
     // Add entities.
     add_entity(&gameData.menu->entities, &init_play_button, transform_rect(0.4f, 0.2f, 1.0f, 0.6f));
-    add_entity(&gameData.menu->entities, &init_button, transform_rect(0.4f, 0.2f, 1.0f, 1.4f));
     // Add event handler and window type.
     gameData.menu->event_handler = &default_handler;
     gameData.menu->bg = get_asset_by_ref("cat1.jpg", 0)->pointer.texture;

@@ -37,6 +37,8 @@ bool init_game(GameData* gameData) {
     gameData->menu = (Scene*) malloc(sizeof(Scene));
     init_main_menu();
     gameData->currentScene = gameData->menu;
+    // Allocate space for the other scenes.
+    gameData->scene = (Scene*) malloc(sizeof(Scene));
     return true;
 }
 
@@ -49,10 +51,8 @@ void free_game(GameData* game) {
     SDL_DestroyWindow(game->window);
     // Free scenes.
     INFO_LOG("Freeing assets...\n");
-    if (game->scene != NULL) {
-        free_scene(game->scene);
-        free(game->scene);
-    }
+    free_scene(game->scene);
+    free(game->scene);
     INFO_LOG("Freed scene\n");
     free_scene(game->menu);
     free(game->menu);

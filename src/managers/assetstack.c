@@ -20,6 +20,9 @@ bool init_asset_stack(AssetStack* stack) {
  * Push and asset onto the stack.
  */
 static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* asset_path) {
+    if (stack->heads == NULL) {
+        stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
+    }
     if (stack->heads[stack->allocations] == NULL) {
         // If we dont have a node at our current head make one.
         stack->heads[stack->allocations] = (AssetNode*) malloc(sizeof(AssetNode));

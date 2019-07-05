@@ -6,6 +6,7 @@
 #include "../../include/debug.h"
 #include "../../include/game.h"
 #include "../../include/rendering/renderertemplates.h"
+#include "../../include/scenes/mainmenu.h"
 #include "../../include/entities/entity.h"
 #include "../../include/entities/cat_state.h"
 
@@ -13,6 +14,7 @@
  * Render the state of the cat debug scene.
  */
 static void render_cat_state(void* e) {
+    // Get font and the UI entity.
     TTF_Font* font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     Entity* entity = (Entity*) e;
     SDL_Color c = {255, 255, 255};
@@ -34,6 +36,14 @@ static void render_cat_state(void* e) {
  */
 static void cat_state_on_tick(void) {
     CatState* state = (CatState*) gameData.scene->state;
+    // Have we run out of time?
+    int32_t remaining = state->remaining_time - (SDL_GetTicks() - state->last_time);
+    // INFO_LOG("Remaining time: %d\n", remaining);
+    if (remaining < 0) {
+        // Load main menu.
+        change_scene(&init_main_menu);
+    }
+    // Decrease timer.
     state->remaining_time -= SDL_GetTicks() - state->last_time;
     state->last_time = SDL_GetTicks();
 }
