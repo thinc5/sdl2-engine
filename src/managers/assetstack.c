@@ -29,18 +29,15 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
         stack->tail->next = (AssetNode*) malloc(sizeof(AssetNode));
         stack->tail = stack->tail->next;
     }
-
     // Set the tail's next node to NULL.
     stack->tail->next = NULL;
     AssetNode* node = stack->tail;
     node->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
-
     // Set the texture's reference string and check the asset type.
     if (!type_asset(node->asset, asset_path)) {
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
     }
-
     switch (node->asset->type) {
         case Texture:
             node->asset->pointer.texture = IMG_LoadTexture(renderer, asset_path);
@@ -87,7 +84,6 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
     // We dont have a head for the most recent 
     stack->heads[stack->allocations] = NULL;
     INFO_LOG("Stack allocations: %d\n", stack->allocations);
-
     // Read each line of the file and add a new node for each loaded asset.
     while(fgets(asset_path, sizeof(asset_path), fp)) {
         int blen = strlen(asset_path);
@@ -100,7 +96,6 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
         }
         memset(asset_path, '\0', sizeof(asset_path));
     }
-
     // Close file.
     fclose(fp);
     return true;
