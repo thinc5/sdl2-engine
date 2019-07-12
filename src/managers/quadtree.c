@@ -1,127 +1,209 @@
 #include <SDL2/SDL.h>
 
+#include <stdbool.h>
+
 #include "../managers/quadtree.h"
 #include "../util/camera.h"
 
+// ---------------- Helper functions ----------------
+
 /**
- * Initialize the new QuadTree node.
+ * Create a node.
  */
-void init_quad(QuadTree* quad) {
-    quad->node = NULL;
-    quad->topLeft = NULL;
-    quad->topRight = NULL;
-    quad->botLeft = NULL;
-    quad->botRight = NULL;
+static void init_quad_node(QuadTreeNode* node, SDL_Rect bounds) {
+    // Allocate the root node.
+    node = (QuadTreeNode*) malloc(sizeof(QuadTreeNode));
+    // Children nodes.
+    for (int i = 0; i < MAX_CHILDREN; i++) {
+        node->children[i] = NULL;
+    }
+    // Set the bounds.
+    node->bounds = bounds;
 }
 
 /**
- * Traverse the QuadTree and find elements at a given position.
+ * Free a node.
  */
-Entity* find_entity(QuadTree* root, SDL_Rect* pos) {
-    if (!is_inside(*pos, root->bounds)) {
+static void free_quad_node(QuadTreeNode* node) {
+    for (int i = 0; i < MAX_CHILDREN; i++) {
+        free_quad_node(node->children[i]);
+    }
+    free(node);
+    node = NULL;
+}
+
+/**
+ * Is this node a leaf? (No children, degree 0)
+ */
+static bool is_node_leaf(QuadTreeNode* node) {
+    return node->children[TOPLEFT] == NULL &&
+            node->children[TOPRIGHT] == NULL &&
+            node->children[BOTLEFT] == NULL &&
+            node->children[BOTRIGHT] == NULL;
+}
+
+/**
+ * Is this node empty?
+ */
+static bool is_node_empty(QuadTreeNode* node) {
+    return is_leaf(node) && node->entity == NULL;
+}
+
+/**
+ * Is this node a leaf and occupied?
+ */
+static bool is_node_occupied(QuadTreeNode* node) {
+    return is_node_leaf(node) && node->entity != NULL;
+}
+
+/**
+ * Get the next node to search.
+ */
+static Child get_dir(SDL_Point centre, SDL_Point point) {
+    if (point.x == centre.x && point.y == centre.y) {
+        return MAX_CHILDREN;
+    }
+    // Left.
+    if (point.x < centre.x) {
+        // Bottom.
+        if (point.y < centre.y) {
+            return BOTLEFT;
+        // Top.
+        } else  {
+            return TOPLEFT;
+        }
+    // Right.
+    } else {
+        // Bottom.
+        if (point.y < centre.y) {
+            return BOTRIGHT;
+        // Top.
+        } else  {
+            return TOPRIGHT;
+        }
+    }
+    return MAX_CHILDREN;
+}
+
+/**
+ * Turn a leaf into a branch and relocate the entity.
+ */
+static void subdivide_node(QuadTreeNode* node) {
+    SDL_Point centre = get_rect_centre(node->bounds);
+    node->children[TOPLEFT] = (QuadTreeNode*) malloc(sizeof(QuadTreeNode));
+    node->children[TOPRIGHT] = (QuadTreeNode*) malloc(sizeof(QuadTreeNode));
+    node->children[BOTLEFT] = (QuadTreeNode*) malloc(sizeof(QuadTreeNode));
+    node->children[BOTRIGHT] = (QuadTreeNode*) malloc(sizeof(QuadTreeNode));
+    Child dir = get_dir(centre, get_rect_centre(node->entity->position));
+    node->children[dir] = node->entity;
+    node->entity = NULL;
+}
+
+/**
+ * Restore a node when there is only one or no entities.
+ * Turns branch into a leaf.
+ */
+static void restore_node(QuadTreeNode* node) {
+    Entity* j = NULL;
+    // Find our entity to pull up.
+    for (int i = 0; i < MAX_CHILDREN; i++) {
+        if (node->children[i]->entity != NULL) {
+            if (j != NULL) {
+                return;
+            }
+            j = node->children[i]->entity;
+        }
+    }
+    // Free the child nodes.
+    for (int i = 0; i < MAX_CHILDREN; i++) {
+        free_quad_node(node->children[i]);
+    }
+    // Set the entity.
+    node->entity = j;
+}
+
+// ---------------- Main functions ----------------
+
+/**
+ * Initialize the quad tree node.
+ */
+void init_quad_tree(QuadTree* quad, SDL_Rect bounds) {
+    // Size of the quad tree.
+    quad->size = 0;
+    // Initialize the root node.
+    init_quad_node(quad->root, bounds);
+}
+
+/**
+ * Free quad tree.
+ */
+void free_quad_tree(QuadTree* quad) {
+    free_quad(quad->root);
+}
+
+/**
+ * Does this node have any children?
+ * Returns the pointer to stored entity on success, and NULL
+ * if no entity was found.
+ */
+Entity* find_entity(QuadTreeNode* node, SDL_Rect point) {
+    // Does this node exist?
+    if (!node) {
         return NULL;
     }
-    if (root->node != NULL) {
-        return;
+    // Is this a leaf?
+    if (is_node_occupied(node)) {
+        // Check if any entities intersect with the point.
+        return node->entity;
     }
-    if ((root->topLeft->bounds.x + root->botRight->bounds.x) / 2
-            >= pos->x) {
-        // Indicates topLeft side.
-        if ((root->topLeft->bounds.y + root->botRight->bounds.y) / 2
-                >= pos->x) {
-            if (root->topLeft == NULL) {
-                return NULL;
+    // Where do we search next?
+    SDL_Point centre = get_rect_centre(node->bounds);
+    SDL_Point p = get_rect_centre(point);
+    // Get direction.
+    Child dir = get_dir(centre, p);
+    switch (dir) {
+        case MAX_CHILDREN:
+            // No direction.
+            return NULL;
+        case TOPLEFT:
+            if (node->children[TOPLEFT] != NULL) {
+                find_entity(node->children[TOPLEFT], point);
             }
-            return find_entity(root->topLeft, pos);
-        // Indicates botLeft side.
-        } else {
-            if (root->botLeft == NULL) {
-                return NULL;
+            break;
+        case TOPRIGHT:
+            if (node->children[TOPRIGHT] != NULL) {
+                find_entity(node->children[TOPRIGHT], point);
             }
-            return find_entity(root->botLeft, pos);
-        }
-    } else {
-        // Top right.
-        if ((root->topLeft->bounds.y + root->botRight->bounds.x) / 2
-                >= pos->y) { 
-            if (root->topRight == NULL) {
-                return NULL;
+            break;
+        case BOTLEFT:
+            if (node->children[BOTLEFT] != NULL) {
+                find_entity(node->children[BOTLEFT], point);
             }
-            return find_entity(root->topRight, pos);
-        // Bot right. 
-        } else { 
-            if (root->botRight == NULL) {
-                return NULL;
+            break;
+        case BOTRIGHT:
+            if (node->children[BOTRIGHT] != NULL) {
+                find_entity(node->children[BOTRIGHT], point);
             }
-            return find_entity(root->botRight, pos);
-        } 
+            break;
     }
+    return NULL;
 }
 
 /**
- * Insert a new node into the QuadTree.
+ * Insert an entity into the quad tree.
  */
-void insert_node(QuadTree* root, Entity* entity) {
-    if (entity == NULL) {
+void insert_entity(QuadTreeNode* node, Entity* entity) {
+    SDL_Point point = get_rect_centre(entity->position);
+    // Is this point even able to be inserted? (Within the bounds?)
+    if (!is_point_inside(node->bounds, point)) {
         return;
     }
-    if (!is_inside(entity->position, root->bounds)) {
+    // Do we have space in the node to add the entity?
+    if (node->entity == NULL) {
+        node->entity = entity;
         return;
     }
-    // We cannot subdivide this quad further
-    if (abs(root->topLeft->bounds.x - root->botRight->bounds.x) <= 1 && 
-            abs(root->topLeft->bounds.y - root->botRight->bounds.y) <= 1) { 
-        
-        if (root->node == NULL) 
-            root->node = entity; 
-        return; 
-    }
-    if ((root->topLeft->bounds.x + root->botRight->bounds.x) / 2
-            >= entity->position.x) { 
-        // Indicates topLeftTree 
-        if ((root->topLeft->bounds.y + root->botRight->bounds.y) / 2
-                >= entity->position.y) { 
-            if (root->topLeft == NULL) {
-                root->topLeft = (QuadTree*) malloc(sizeof(QuadTree)); 
-                Point(topLeft.x, topLeft.y), 
-                Point((topLeft.x + botRight.x) / 2, (topLeft.y + botRight.y) / 2));
-            }
-            insert_node(root->topLeft, entity); 
-        } else { 
-            if (botLeftTree == NULL) 
-                botLeftTree = new Quad( 
-                    Point(topLeft.x, 
-                        (topLeft.y + botRight.y) / 2), 
-                    Point((topLeft.x + botRight.x) / 2, 
-                        botRight.y)); 
-            botLeftTree->insert(node); 
-        } 
-    } else { 
-        // Indicates topRightTree 
-        if ((topLeft.y + botRight.y) / 2 >= node->pos.y) 
-        { 
-            if (topRightTree == NULL) 
-                topRightTree = new Quad( 
-                    Point((topLeft.x + botRight.x) / 2, 
-                        topLeft.y), 
-                    Point(botRight.x, 
-                        (topLeft.y + botRight.y) / 2)); 
-            topRightTree->insert(node); 
-        } else { 
-            if (botRightTree == NULL) 
-                botRightTree = new Quad( 
-                    Point((topLeft.x + botRight.x) / 2, 
-                        (topLeft.y + botRight.y) / 2), 
-                    Point(botRight.x, botRight.y)); 
-            botRightTree->insert(node); 
-        } 
-    } 
-}
+    // We need to subdivide.
 
-/**
- * Insert a new node into the QuadTree.
- */
-void insert_remove(QuadTree* root) {
-    return;
 }
 

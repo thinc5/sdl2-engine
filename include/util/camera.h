@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <stdbool.h>
+
 /**
  * Given an SDL_Rect and the desired scaling (1f is the centre) modify
  * the x and y coords to match the desired location.
@@ -23,6 +25,16 @@ bool is_overlap(SDL_Rect dest, SDL_Rect position);
  * Check if provided rect is entirely within the second rect.
  */
 bool is_inside(SDL_Rect within, SDL_Rect container);
+
+/**
+ * Get the center of a rectangle as a SDL_Point.
+ */
+SDL_Point get_rect_centre(SDL_Rect rect);
+
+/**
+ * Returns true if the point is within the provided rectangle.
+ */
+bool is_point_inside(SDL_Rect within, SDL_Point point);
 
 #endif
 

@@ -5,37 +5,56 @@
 
 #include "../entities/entity.h"
 
-typedef struct QuadTree {
-    // The bounds of this Quad Tree.
+/**
+ * Child positions.
+ */
+typedef enum Child {
+    TOPLEFT,
+    TOPRIGHT,
+    BOTLEFT,
+    BOTRIGHT,
+    MAX_CHILDREN
+} Child;
+
+/**
+ * The node of the tree.
+ */
+typedef struct QuadTreeNode {
+    // The bounds of this node.
     SDL_Rect bounds;
     // The entity stored in this node.
-    Entity* node;
+    Entity* entity;
     // The children of this node.
-    QuadTree* topLeft;
-    QuadTree* topRight;
-    QuadTree* botLeft;
-    QuadTree* botRight;
+    QuadTreeNode* children[MAX_CHILDREN];
+} QuadTreeNode;
+
+/**
+ * The quad tree.
+ */
+typedef struct QuadTree {
+    // The root.
+    QuadTreeNode* root;
+    // Number of nodes.
+    uint16_t size;
 } QuadTree;
 
 /**
  * Initialize the new QuadTree node.
  */
-void init_quad(QuadTree* quad);
+void init_quad_tree(QuadTree* quad, SDL_Rect bounds);
 
 /**
- * Traverse the QuadTree and find elements at a given position.
+ * Does this node have any children?
+ * Returns the pointer to stored entity on success, and NULL
+ * if no entity was found.
  */
-Entity* find_entity(QuadTree* root, SDL_Rect* pos);
+Entity* find_entity(QuadTreeNode* node, SDL_Rect point)
 
 /**
  * Insert a new node into the QuadTree.
  */
 void insert_node(QuadTree* root, Entity* entity);
 
-/**
- * Insert a new node into the QuadTree.
- */
-void insert_remove(QuadTree* root);
 
 #endif
 
