@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <stdbool.h>
+
 #include "../entities/entity.h"
 
 /**
@@ -25,7 +27,7 @@ typedef struct QuadTreeNode {
     // The entity stored in this node.
     Entity* entity;
     // The children of this node.
-    QuadTreeNode* children[MAX_CHILDREN];
+    struct QuadTreeNode* children[MAX_CHILDREN];
 } QuadTreeNode;
 
 /**
@@ -44,16 +46,21 @@ typedef struct QuadTree {
 void init_quad_tree(QuadTree* quad, SDL_Rect bounds);
 
 /**
+ * Free quad tree.
+ */
+void free_quad_tree(QuadTree* quad);
+
+/**
  * Does this node have any children?
  * Returns the pointer to stored entity on success, and NULL
  * if no entity was found.
  */
-Entity* find_entity(QuadTreeNode* node, SDL_Rect point)
+Entity* find_entity(QuadTreeNode* node, SDL_Rect point);
 
 /**
- * Insert a new node into the QuadTree.
+ * Insert an entity into the quad tree.
  */
-void insert_node(QuadTree* root, Entity* entity);
+bool insert_entity(QuadTreeNode* node, Entity* entity);
 
 
 #endif

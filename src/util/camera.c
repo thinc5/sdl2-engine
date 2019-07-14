@@ -58,7 +58,7 @@ bool is_inside(SDL_Rect within, SDL_Rect container) {
  */
 SDL_Point get_rect_centre(SDL_Rect rect) {
     return (SDL_Point) { rect.x + (rect.w / 2), rect.y + (rect.h / 2) }; 
-};
+}
 
 /**
  * Returns true if the point is within the provided rectangle.
