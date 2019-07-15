@@ -40,8 +40,10 @@ void free_scene(Scene* scene) {
     scene->cursor = NULL;
     // Free the scene state.
     INFO_LOG("Freeing scene state.\n");
-    free(scene->state);
-    scene->state = NULL;
+    if (scene->state != NULL) {
+        free(scene->state);
+        scene->state = NULL;
+    }
     INFO_LOG("Freeing scene asset chunk.\n");
     // Free the top chunk of assets.
     pop_asset_chunk(&gameData.assets);
@@ -58,10 +60,18 @@ void change_scene(void (*next)(void)) {
     // Check if we need to free the scene.
     if (gameData.currentScene->type != MainMenu) {
         free_scene(gameData.scene);
+        free(gameData.scene);
+        gameData.scene = NULL;
+        // Dont do this, we keep the scene allocated; gameData.scene = NULL;
     }
-    // Load the new scene.
-    next();
-    // Change the pointer to the new scene.
-    gameData.currentScene = gameData.scene;
+    // Check if we are returning to main menu (already loaded);
+    if (next != NULL) {
+        gameData.scene = (Scene*) malloc(sizeof(Scene));
+        next();
+        // Change the pointer to the new scene.
+        gameData.currentScene = gameData.scene;
+    } else {
+        gameData.currentScene = gameData.menu;
+    }
 }
 

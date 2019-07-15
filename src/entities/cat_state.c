@@ -17,7 +17,7 @@ static void render_cat_state(void* e) {
     // Get font and the UI entity.
     TTF_Font* font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     Entity* entity = (Entity*) e;
-    SDL_Color c = {255, 255, 255};
+    SDL_Color c = {0, 0, 0};
     SDL_Rect pos = entity->position;
     CatState* state = gameData.scene->state;
     char time[15];
@@ -41,7 +41,8 @@ static void cat_state_on_tick(void) {
     // INFO_LOG("Remaining time: %d\n", remaining);
     if (remaining < 0) {
         // Load main menu.
-        change_scene(&init_main_menu);
+        change_scene(NULL);
+        return;
     }
     // Decrease timer.
     state->remaining_time -= SDL_GetTicks() - state->last_time;
