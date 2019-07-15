@@ -12,6 +12,7 @@
 #include "../../include/entities/cat_state.h"
 #include "../../include/entities/cat.h"
 #include "../../include/components/move.h"
+#include "../../include/game.h"
 
 /**
  * Add score to the counter.
@@ -50,6 +51,15 @@ static void cat_dragged(void *e, int x, int y) {
 }
 
 /**
+ * Cat move function.
+ */
+static void cat_move(void* e, Direction d) {
+    CatState* state = gameData.scene->state;
+    Entity* cat = e;
+    move(cat, d, 5, state->bounds);
+}
+
+/**
  * On tick.
  * Limit time via a local timer initialized using a static variable.
  */
@@ -61,7 +71,7 @@ static void cat_on_tick(void* e) {
     if (time_elapsed(&entity->timers[0], 100)) {
         // Pick which direction we are moving.
         unsigned int direction = rand() % 4;
-        entity->components[Moved].call(entity, direction, 10);
+        entity->components[Moved].call(entity, direction);
         entity->timers[0].startTime = SDL_GetTicks();
     }
 }
@@ -79,7 +89,7 @@ Entity init_cat(void) {
     //cat.stats[0] = 10;
     // Load cat components.
     cat.timers[0] = init_timer();
-    cat.components[Moved].call = &move;
+    cat.components[Moved].call = &cat_move;
     cat.components[LeftClicked].call = &cat_left_clicked;
     cat.components[RightClicked].call = &cat_right_clicked;
     cat.components[Dragged].call = &cat_dragged;

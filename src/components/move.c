@@ -7,43 +7,44 @@
 /**
  * Move an entity a set distance in a provided direction.
  */
-void move(void* e, Direction d, int pixels) {
-    SDL_Rect screen_pos = {0, 0, 0, 0};
-    SDL_GL_GetDrawableSize(gameData.window, &screen_pos.w, &screen_pos.h);
+void move(void* e, Direction d, int pixels, SDL_Rect bounds) {
+    if (bounds.w == 0) {
+        SDL_GL_GetDrawableSize(gameData.window, &bounds.w, &bounds.h);
+    }
     // INFO_LOG("Window = %d %d\n", screen_pos.w, screen_pos.h);
     Entity* entity = (Entity*) e;
     SDL_Rect new_pos = entity->position;
     switch (d) {
         case UP:
             new_pos.y -= pixels;
-            if (is_inside(new_pos, screen_pos)) {
+            if (is_inside(new_pos, bounds)) {
                 entity->position = new_pos;
             } else {
-                entity->position.y = screen_pos.y;
+                entity->position.y = bounds.y;
             }
             break;
         case DOWN:
             new_pos.y += pixels;
-            if (is_inside(new_pos, screen_pos)) {
+            if (is_inside(new_pos, bounds)) {
                 entity->position = new_pos;
             } else {
-                entity->position.y = screen_pos.h - entity->position.h;
+                entity->position.y = bounds.h - entity->position.h;
             }
             break;
         case LEFT:
             new_pos.x -= pixels;
-            if (is_inside(new_pos, screen_pos)) {
+            if (is_inside(new_pos, bounds)) {
                 entity->position = new_pos;
             } else {
-                entity->position.x = screen_pos.x;
+                entity->position.x = bounds.x;
             }
             break;
         case RIGHT:
             new_pos.x += pixels;
-            if (is_inside(new_pos, screen_pos)) {
+            if (is_inside(new_pos, bounds)) {
                 entity->position = new_pos;
             } else {
-                entity->position.x = screen_pos.w - entity->position.w;
+                entity->position.x = bounds.w - entity->position.w;
             }
             break;
         default:

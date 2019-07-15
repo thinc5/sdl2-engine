@@ -54,7 +54,7 @@ void free_scene(Scene* scene) {
  */
 void change_scene(void (*next)(void)) {
     // Draw loading notification :)
-    SDL_Rect pos = transform_rect(0.4f, 0.2f, 1.0f, 1.0f);
+    SDL_Rect pos = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 0.4f, 0.2f);
     render_texture(get_asset_by_ref("loading.png", 0)->pointer.texture, &pos);
     SDL_RenderPresent(gameData.renderer);
     // Check if we need to free the scene.

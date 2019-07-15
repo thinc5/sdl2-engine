@@ -5,22 +5,26 @@
 #include "../../include/util/camera.h"
 
 /**
- * Given an SDL_Rect and the desired scaling (1f is the centre) modify
+ * Given an SDL_Rect and the desired scaling (0.0f is the centre, 1.0f the edge) modify
  * the x and y coords to match the desired location.
  */
-SDL_Rect transform_rect(float wscale, float hscale, float xscale, float yscale) {
-    SDL_Rect rect;
-    // Get the size of the window.
-    int w, h;
-    SDL_GetRendererOutputSize(gameData.renderer, &w, &h);
-    w = w/2;
-    h = h/2;
+SDL_Rect transform_rect(SDL_Rect within, float x, float y, float width, float height) {
+    // Are we using the screen size?
+    if (within.w == 0 && within.h == 0) {
+        // Get the size of the window.
+        SDL_GetRendererOutputSize(gameData.renderer, &within.w, &within.h);
+    }
+    SDL_Point centre = get_rect_centre(within);
+    x = x * -1;
+    y = y * -1;
+    // Calculate width and height.
+    int w = (width * centre.x);
+    int h = (height * centre.y);
     // Ensure that the scale will center the rectangle at the desired location.
-    rect.w = (int)(w * wscale);
-    rect.h = (int)(h * wscale);
-    rect.x = (int)(w * xscale) - (int)(rect.w/2);
-    rect.y = (int)(h * yscale) - (int)(rect.h/2);
-    return rect;
+    SDL_Rect new = { .x = ((x + 1.0f) * centre.x) - (w / 2), .y = ((y + 1.0f) * centre.y) - (h / 2),
+            .w = w, .h = h};
+    INFO_LOG("%d %d %d %d\n", new.x, new.y, new.w, new.h);
+    return new;
 }
 
 /**

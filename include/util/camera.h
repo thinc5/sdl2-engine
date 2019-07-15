@@ -6,10 +6,10 @@
 #include <stdbool.h>
 
 /**
- * Given an SDL_Rect and the desired scaling (1f is the centre) modify
+ * Given an SDL_Rect and the desired scaling (0.0f is the centre, 1.0f the edge) modify
  * the x and y coords to match the desired location.
  */
-SDL_Rect transform_rect(float wscale, float hscale, float xscale, float yscale);
+SDL_Rect transform_rect(SDL_Rect within, float x, float y, float width, float height);
 
 /**
  * Check if provided x and y coordinates are inside of provided rectangle.

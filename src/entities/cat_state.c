@@ -20,6 +20,7 @@ static void render_cat_state(void* e) {
     SDL_Color c = {0, 0, 0};
     SDL_Rect pos = entity->position;
     CatState* state = gameData.scene->state;
+    SDL_RenderDrawRect(gameData.renderer, &state->bounds);
     char time[15];
     uint32_t remaining_time = (int) (state->remaining_time / 1000);
     sprintf(time, "Time: %4u", remaining_time);

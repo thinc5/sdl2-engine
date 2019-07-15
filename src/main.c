@@ -27,7 +27,7 @@ static void mouse_dbg(TTF_Font* fnt) {
     int x, y;
     SDL_GetMouseState(&x, &y);
     char mouse[40];
-    sprintf(mouse, "MPOS: x %d y %d", x, y);
+    sprintf(mouse, "MPOS: x %d y %d x %d y %d", x, y);
     render_debug_message(fnt, mouse);
 }
 #endif

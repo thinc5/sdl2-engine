@@ -34,7 +34,7 @@ void init_quadtree_scene(void) {
         float x = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         float y = ((float) (rand() % 2) + ((float) rand() / RAND_MAX));
         //INFO_LOG("%f %f\n", x, y);
-        add_entity(&gameData.scene->entities, &init_cat, transform_rect(0.1f, 0.1f, x, y));
+        add_entity(&gameData.scene->entities, &init_cat, transform_rect((SDL_Rect) { 0 }, x, y, 0.1f, 0.1f));
     }
     gameData.scene->event_handler = &default_handler;
     gameData.scene->type = Debug;

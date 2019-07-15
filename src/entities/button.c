@@ -66,10 +66,6 @@ static void quit_button_render(void* e) {
     Entity* entity = (Entity*) e;
     SDL_Color c = {0, 0, 0};
     SDL_Rect pos = entity->position;
-    pos.x = pos.x * 1.05;
-    pos.w = pos.w * 0.8;
-    pos.y = pos.y * 1.1;
-    pos.h = pos.h * 0.8;
     render_font(get_asset_by_ref("ssp-regular.otf", 0)->pointer.font, &pos, c, "Quit");
 }
 

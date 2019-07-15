@@ -1,6 +1,8 @@
 #ifndef CAT_STATE_H
 #define CAT_STATE_H
 
+#include <SDL2/SDL.h>
+
 #include <stdint.h>
 
 #include "../../include/entities/entity.h"
@@ -14,6 +16,8 @@ typedef struct CatState {
     // Remaining time.
     uint32_t remaining_time;
     uint32_t last_time;
+    // Game box
+    SDL_Rect bounds;
 } CatState;
 
 Entity init_cat_state(void);
