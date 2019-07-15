@@ -37,7 +37,7 @@ void init_debug_scene(void) {
         //INFO_LOG("%f %f\n", x, y);
         add_entity(&gameData.scene->entities, &init_cat, transform_rect(0.1f, 0.1f, x, y));
     }
-    gameData.scene->bg = get_asset_by_ref("cat3.jpg", 0)->pointer.texture;
+    gameData.scene->bg = get_asset_by_ref("debug-bg.png", 0)->pointer.texture;
     gameData.scene->cursor = get_asset_by_ref("cursor.png", 1)->pointer.texture;
     gameData.scene->event_handler = &default_handler;
     gameData.scene->type = Debug;

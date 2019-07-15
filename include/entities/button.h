@@ -15,5 +15,10 @@ Entity init_button(void);
  */
 Entity init_play_button(void);
 
+/**
+ * Quit game.
+ */
+Entity init_quit_button(void);
+
 #endif
 

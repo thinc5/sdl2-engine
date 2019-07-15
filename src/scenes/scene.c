@@ -22,6 +22,7 @@ bool init_scene(Scene* scene) {
     // No background or cursor by default.
     scene->bg = NULL;
     scene->cursor = NULL;
+    scene->state = NULL;
     return true;
 }
 
@@ -31,12 +32,14 @@ bool init_scene(Scene* scene) {
 void free_scene(Scene* scene) {
     // Free all remaining entities.
     free_entities(&scene->entities);
+    INFO_LOG("Freeing entities.\n");
     // Remove event handler pointer.
     scene->event_handler = NULL;
     // Remove references to bg and cursor.
     scene->bg = NULL;
     scene->cursor = NULL;
     // Free the scene state.
+    INFO_LOG("Freeing scene state.\n");
     free(scene->state);
     scene->state = NULL;
     INFO_LOG("Freeing scene asset chunk.\n");

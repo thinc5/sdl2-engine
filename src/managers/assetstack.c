@@ -20,8 +20,8 @@ bool init_asset_stack(AssetStack* stack) {
  * Push and asset onto the stack.
  */
 static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* asset_path) {
-    if (stack->heads[stack->allocations] == NULL) {
-        // If we dont have a node at our current head make one.
+    // If we dont have a node at our current head make one.
+    if (stack->heads[stack->allocations] == NULL) { 
         stack->heads[stack->allocations] = (AssetNode*) malloc(sizeof(AssetNode));
         stack->tail = stack->heads[stack->allocations];
     } else {
@@ -32,8 +32,9 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
     // Set the tail's next node to NULL.
     stack->tail->next = NULL;
     AssetNode* node = stack->tail;
+    // Allocate space for the asset.
     node->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
-    // Set the texture's reference string and check the asset type.
+    // Attempt to load the asset.
     if (!type_asset(node->asset, asset_path)) {
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
@@ -78,7 +79,7 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
     // Increase the size of the head array.
     } else if  (stack->allocations < 0) {
-        stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*) * (stack->allocations + 1));
+        stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(AssetNode*));
     }
     stack->allocations++;
     // We dont have a head for the most recent 
@@ -98,6 +99,10 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
     }
     // Close file.
     fclose(fp);
+    for (int i = 0; i < stack->allocations + 1; i++) {
+        INFO_LOG("head: %lu ", (unsigned long) stack->heads[i]);
+    }
+    INFO_LOG("\n");
     return true;
 }
 
@@ -106,21 +111,28 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
  */
 bool pop_asset_chunk(AssetStack* stack) {
     // Free all assets from the top most chunk.
+    INFO_LOG("Free head: %lu\n", (unsigned long) stack->heads[stack->allocations]);
     AssetNode* current = stack->heads[stack->allocations];
-    while(current != NULL && current->asset != NULL) {
+    while(current != NULL) {
+        // INFO_LOG("Freeing %s\n", current->asset->reference);
+        // Free the asset within the RegisteredAsset.
         free_asset(current->asset);
+        // Free the RegisteredAsset.
 	    free(current->asset);
+        // Get the pointer to the next asset.
+        current->asset = NULL;
         AssetNode* temp = current->next;
+        // Free the AssetNode.
         free(current);
+        // Set our temp as our next asset.
         current = temp;
-        if (current->next == NULL) {
-            break;
-        }
     }
-    // Re-allocate the list of heads.
-    INFO_LOG("Stack allocations: %d\n", stack->allocations);
-    if (stack->allocations > 1) {
-        stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(RegisteredAsset*));
+    // Shrink the array of heads.
+    stack->allocations--;
+    INFO_LOG("New allocations: %d\n", stack->allocations);
+    // Is it greater than 1 (do we even have any left?)
+    if (stack->allocations > -1) {
+        stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(AssetNode*));
         // Set the tail pointer.
         AssetNode* tail = stack->heads[stack->allocations];
         while(tail->next != NULL) {
@@ -129,9 +141,9 @@ bool pop_asset_chunk(AssetStack* stack) {
     } else {
         // Free all data.
         free(stack->heads);
+        stack->heads = NULL;
+        stack->tail = NULL;
     }
-    stack->allocations--;
-    INFO_LOG("Stack allocations: %d\n", stack->allocations);
     return true;
 }
 

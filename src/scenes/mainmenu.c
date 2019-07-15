@@ -18,7 +18,7 @@ void init_main_menu(void) {
         gameData.menu = NULL;
         return;
     }
-    // Load assets for the main menu.
+    // Load assets for the main menu
     if (!push_asset_chunk(gameData.renderer, &gameData.assets,
                 "./res/mainmenu.manifest")) {
         free_scene(gameData.scene);
@@ -28,9 +28,11 @@ void init_main_menu(void) {
     }
     // Add entities.
     add_entity(&gameData.menu->entities, &init_play_button, transform_rect(0.4f, 0.2f, 1.0f, 0.6f));
+
+    add_entity(&gameData.menu->entities, &init_quit_button, transform_rect(0.4f, 0.2f, 1.0f, 1.4f));
     // Add event handler and window type.
     gameData.menu->event_handler = &default_handler;
-    gameData.menu->bg = get_asset_by_ref("cat1.jpg", 0)->pointer.texture;
+    gameData.menu->bg = get_asset_by_ref("debug-bg.png", 0)->pointer.texture;
     gameData.menu->type = MainMenu;
 }
 

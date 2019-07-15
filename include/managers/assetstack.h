@@ -14,7 +14,7 @@
  */
 typedef struct AssetNode {
     RegisteredAsset* asset;
-    void* next;
+    struct AssetNode* next;
 } AssetNode;
 
 /**

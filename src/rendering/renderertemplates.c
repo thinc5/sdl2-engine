@@ -95,6 +95,7 @@ bool render_loading_box(TTF_Font* font) {
 
 /**
  * Render cursor.
+ * TODO: Transparency on cursor.
  */
 bool render_cursor(Scene* currentScene) {
     // Render cursor if applicable
@@ -102,10 +103,10 @@ bool render_cursor(Scene* currentScene) {
             int x, y;
             SDL_GetMouseState(&x, &y);
             SDL_Rect rect = {
-                .x = x,
-                .y = y,
-                .w = 50,
-                .h = 50
+                .x = x - 15,
+                .y = y - 15,
+                .w = 30,
+                .h = 30
             };
             // TODO: Fix the transparent rendering of cursor with Colour Keying
             //SDL_BlitSurface(currentScene->cursor, NULL, gameData.renderer, &rect);
