@@ -7,11 +7,11 @@ C was my first choice of language due to performance, flexibility and in all hon
 
 ## Compilation
 
-### Windows
-- Requires mingw32, gcc, make, sdl2(mingw32), sdl_image(mingw32), sdl_ttf(mingw32) and sdl_mixer(mingw32).
-
 ### Linux
 - Install sdl2-dev, sdl2-image, sdl2-ttf and sdl2-mixer from your package manager.
+
+### Windows
+- Requires mingw32, gcc, make, sdl2(mingw32), sdl_image(mingw32), sdl_ttf(mingw32) and sdl_mixer(mingw32).
 
 ### macOS
 - Install sdl2, sdl2_image, sdl2_ttf and sdl2_mixer using the homebrew package manager.
@@ -27,22 +27,28 @@ Despite the numerous warnings I read online about the entity component system I 
 As such, everything visible except the cursor and the background are "entities" and those entities are only visible if they implement the Render component.
 To put this in simple terms; each entity has a static array of function pointers called components.
 
-typedef struct Entity {
+```C
+typedef struct Entity {  
     SDL_Texture* texture;
     Mix_Chunk* sounds[4];
     SDL_Rect position;
-    **Component components[COMPONENT_TOTAL];**
+    Component components[COMPONENT_TOTAL];
     Timer* timers;
     bool remove;
 } Entity;
+```
 
 A component looks like this:
 
+```C
 typedef struct Component {
     void (*call)(); 
-} Component; 
+} Component;
+```
 
 This corresponds to an enum with some generic (not finalized) labels.
+
+```C
 typedef enum ComponentType {
     Render,
     OnTick,
@@ -54,17 +60,21 @@ typedef enum ComponentType {
     Specific,
     COMPONENT_TOTAL,
 } ComponentType;
+```
 
 This proves a simple way to change functionality between entities whilst using the same struct.
 
 One of the simplest examples of this is going back to the render function.
 Assuming the data structure we chose to hold our entities can be iterated over in a for loop, we can render all the entities easily like;
+
+```C
 for (entity in entities) {
   // Does this entity implement the Render component?
   if (hasComponent(entity, Render)) {
     entity.components[Render].call();
   }
 }
+```
 
 This concept expands to the OnTick component for changing state and the various other generic types.
  
