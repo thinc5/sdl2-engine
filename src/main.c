@@ -84,17 +84,25 @@ static void handle_events(void) {
 /**
   * Update game state.
   */
-static void update_state(void) {
+static void update_state(QuadTreeNode* node) {
     //INFO_LOG("Updating State\n");
-    for (int i = 0; i < gameData.currentScene->entities.current; i++) {
-        if (has_component(&gameData.currentScene->entities.entities[i],
-                OnTick)) {
-            gameData.currentScene->entities.entities[i].components[OnTick]
-                    .call(&gameData.currentScene->entities.entities[i]);
+    if (is_node_leaf(node)) {
+        if (has_component(node->entity, OnTick)) {
+            node->entity->components[OnTick].call();
+        }
+    }
+    // Is it an empty node?
+    if (is_node_empty(node)) {
+        return;
+    }
+    // Is it a branch?
+    if (!is_node_leaf(node)) {
+        for (int i = 0; i < MAX_CHILDREN; i++) {
+            update_state(node->children[i]);
         }
     }
     // Remove all entities marked for deletion.
-    clean_entities(&gameData.currentScene->entities);
+    // clean_entities(&gameData.currentScene->entities);
     //INFO_LOG("State Updated\n");
 }
 
@@ -129,7 +137,7 @@ int main(int argc, char** argv) {
         // ---------------- Handle user events.
         handle_events();
         //----------------- Update state.
-        update_state();
+        update_state(gameData.currentScene->entities.root);
         // --------------- Render state.
         render_state();
         // --------------- Wait if we have finished too soon.

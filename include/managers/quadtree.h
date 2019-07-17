@@ -60,8 +60,23 @@ Entity* find_entity(QuadTreeNode* node, SDL_Rect point);
 /**
  * Insert an entity into the quad tree.
  */
-bool insert_entity(QuadTreeNode* node, Entity* entity);
+bool insert_entity(QuadTreeNode* node, Entity (*init_entity)(void),
+        SDL_Rect position);
 
+/**
+ * Place entity.
+ */
+bool place_entity(QuadTreeNode* node, Entity* entity);
+
+/**
+ * Is this node a leaf? (No children, degree 0)
+ */
+bool is_node_leaf(QuadTreeNode* node);
+
+/**
+ * Is this node empty?
+ */
+bool is_node_empty(QuadTreeNode* node);
 
 #endif
 

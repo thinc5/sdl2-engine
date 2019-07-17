@@ -2,6 +2,9 @@
 
 #include <stdbool.h>
 
+#include "../../include/debug.h"
+#include "../../include/game.h"
+
 #include "../../include/managers/quadtree.h"
 #include "../../include/util/camera.h"
 
@@ -26,7 +29,12 @@ static void init_quad_node(QuadTreeNode* node, SDL_Rect bounds) {
  */
 static void free_quad_node(QuadTreeNode* node) {
     for (int i = 0; i < MAX_CHILDREN; i++) {
-        free_quad_node(node->children[i]);
+        if (node->children[i] != NULL) {
+            free_quad_node(node->children[i]);
+        }
+    }
+    if (node->entity != NULL) {
+        free(node->entity);
     }
     free(node);
     node = NULL;
@@ -35,7 +43,7 @@ static void free_quad_node(QuadTreeNode* node) {
 /**
  * Is this node a leaf? (No children, degree 0)
  */
-static bool is_node_leaf(QuadTreeNode* node) {
+bool is_node_leaf(QuadTreeNode* node) {
     return node->children[TOPLEFT] == NULL &&
             node->children[TOPRIGHT] == NULL &&
             node->children[BOTLEFT] == NULL &&
@@ -45,7 +53,7 @@ static bool is_node_leaf(QuadTreeNode* node) {
 /**
  * Is this node empty?
  */
-static bool is_node_empty(QuadTreeNode* node) {
+bool is_node_empty(QuadTreeNode* node) {
     return is_node_leaf(node) && node->entity == NULL;
 }
 
@@ -109,7 +117,68 @@ static void subdivide_node(QuadTreeNode* node, Entity* entity) {
     node->children[dir]->entity = node->entity;
     node->entity = NULL;
     // Insert the new entity.
-    insert_entity(node, entity);
+    place_entity(node, entity);
+}
+
+/**
+ * Place entity.
+ */
+bool place_entity(QuadTreeNode* node, Entity* entity) {
+    SDL_Point point = get_rect_centre(entity->position);
+    INFO_LOG("Entity being placed at %d %d.\n", point.x, point.y);
+    // Is this point even able to be inserted? (Within the bounds?)
+    if (!is_point_inside(node->bounds, point)) {
+        INFO_LOG("Entity not inside.\n");
+        return false;
+    }
+    // Do we have space in the current node to add entity?
+    if (is_node_leaf(node) && node->entity == NULL) {
+        // Place entity and return.
+        node->entity = entity;
+        INFO_LOG("Entity placed!\n");
+        return true;
+    }
+    // Are we on a branch or a leaf?
+    if (!is_node_leaf(node)) {
+        // We can try and find a place to put the entity.
+        Child dir = get_dir(get_rect_centre(node->bounds),
+                get_rect_centre(entity->position));
+        switch (dir) {
+            case MAX_CHILDREN:
+                return false;
+            case TOPLEFT:
+                if (node->children[TOPLEFT]->entity == NULL) {
+                    node->children[TOPLEFT]->entity = entity;
+                    return true;
+                } else {
+                    return place_entity(node->children[TOPLEFT], entity);
+                }
+            case TOPRIGHT:
+                if (node->children[TOPRIGHT]->entity == NULL) {
+                    node->children[TOPRIGHT]->entity = entity;
+                    return true;
+                } else {
+                    return place_entity(node->children[TOPRIGHT], entity);
+                }
+            case BOTLEFT:
+                if (node->children[BOTLEFT]->entity == NULL) {
+                    node->children[BOTLEFT]->entity = entity;
+                    return true;
+                } else {
+                    return place_entity(node->children[BOTLEFT], entity);
+                }
+            case BOTRIGHT:
+                if (node->children[BOTRIGHT]->entity == NULL) {
+                    node->children[BOTRIGHT]->entity = entity;
+                    return true;
+                } else {
+                    return place_entity(node->children[BOTRIGHT], entity);
+                }
+        }
+    }
+    // We need to subdivide.
+    subdivide_node(node, entity);
+    return true;
 }
 
 /**
@@ -141,6 +210,10 @@ static void restore_node(QuadTreeNode* node) {
  * Initialize the quad tree node.
  */
 void init_quad_tree(QuadTree* quad, SDL_Rect bounds) {
+    // Were we supplied a size for our tree?
+    if (bounds.w == 0 && bounds.h == 0) {
+        SDL_GetWindowSize(gameData.window, &bounds.w, &bounds.h);
+    }
     // Size of the quad tree.
     quad->size = 0;
     // Initialize the root node.
@@ -205,57 +278,11 @@ Entity* find_entity(QuadTreeNode* node, SDL_Rect point) {
 /**
  * Insert an entity into the quad tree.
  */
-bool insert_entity(QuadTreeNode* node, Entity* entity) {
-    SDL_Point point = get_rect_centre(entity->position);
-    // Is this point even able to be inserted? (Within the bounds?)
-    if (!is_point_inside(node->bounds, point)) {
-        return false;
-    }
-    // Do we have space in the current node to add entitiy?
-    if (node->entity == NULL) {
-        // Place entity and return.
-        node->entity = entity;
-        return true;
-    }
-    // Are we on a branch or a leaf?
-    if (!is_node_leaf(node)) {
-        // We can try and find a place to put the entity.
-        Child dir = get_dir(get_rect_centre(node->bounds), get_rect_centre(entity->position));
-        switch (dir) {
-            case MAX_CHILDREN:
-                return false;
-            case TOPLEFT:
-                if (node->children[TOPLEFT]->entity == NULL) {
-                    node->children[TOPLEFT]->entity = entity;
-                    return true;
-                } else {
-                    return insert_entity(node->children[TOPLEFT], entity);
-                }
-            case TOPRIGHT:
-                if (node->children[TOPRIGHT]->entity == NULL) {
-                    node->children[TOPRIGHT]->entity = entity;
-                    return true;
-                } else {
-                    return insert_entity(node->children[TOPRIGHT], entity);
-                }
-            case BOTLEFT:
-                if (node->children[BOTLEFT]->entity == NULL) {
-                    node->children[BOTLEFT]->entity = entity;
-                    return true;
-                } else {
-                    return insert_entity(node->children[BOTLEFT], entity);
-                }
-            case BOTRIGHT:
-                if (node->children[BOTRIGHT]->entity == NULL) {
-                    node->children[BOTRIGHT]->entity = entity;
-                    return true;
-                } else {
-                    return insert_entity(node->children[BOTRIGHT], entity);
-                }
-        }
-    }
-    // We need to subdivide.
-    subdivide_node(node, entity);
-    return true;
+bool insert_entity(QuadTreeNode* node, Entity (*init_entity)(void), SDL_Rect position) {
+    Entity* entity = (Entity*) malloc(sizeof(Entity));
+    *entity = init_entity();
+    entity->position = position;
+    INFO_LOG("Entity created! %d\n", entity->position.x);
+    return place_entity(node, entity);
 }
 

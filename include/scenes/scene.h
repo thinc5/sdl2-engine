@@ -6,7 +6,7 @@
 #include <stdbool.h>
 
 #include "../managers/assetstack.h"
-#include "../managers/entitymanager.h"
+#include "../managers/quadtree.h"
 #include "../entities/entity.h"
 
 /**
@@ -27,7 +27,7 @@ typedef struct Scene {
     // Type of scene.
     SceneType type;
     // Entities present in scene.
-    EntityManager entities;
+    QuadTree entities;
     // The scene specific event handler.
     void (*event_handler)();
     // Optional components of the scene.

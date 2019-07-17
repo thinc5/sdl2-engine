@@ -11,6 +11,39 @@
 #include "../../include/components/move.h"
 
 /**
+ * Check if a component is present and if its activation condition has been met.
+ */
+static void check_component_condition(QuadTreeNode* node, ComponentType component,
+        bool (*condition)(Entity* entity)) {
+    if (is_node_leaf(node)) {
+        if (has_component(node->entity, component)) {
+            if (condition(node->entity)) {
+                node->entity->components[Render].call();
+            }
+        }
+    }
+    // Is it an empty node?
+    if (is_node_empty(node)) {
+        return;
+    }
+    // Is it a branch?
+    if (!is_node_leaf(node)) {
+        for (int i = 0; i < MAX_CHILDREN; i++) {
+            check_component_condition(node->children[i], component, condition);
+        }
+    }
+}
+
+/**
+ * Is the mouse over the selected entity?
+ */
+static bool is_clicked(Entity* entity) {
+    int x, y;
+    SDL_GetMouseState(&x, &y);
+    return is_collision(x, y, entity->position);
+}
+
+/**
  * Default handler for clicks.
  * Handles: left clicks, right clicks, and click and drags.
  */
@@ -22,46 +55,25 @@ static void click_handler(GameData* gameData) {
     if (gameData->event.button.button == SDL_BUTTON_LEFT) {
         if (gameData->event.type == SDL_MOUSEMOTION) {
             INFO_LOG("Mouse left clicked and dragged!\n");
-            // Being dragged
-            for (int i = 0; i < gameData->currentScene->entities.current; i++) {
-                Entity* e = &gameData->currentScene->entities.entities[i];
-                // Can entity even be clicked?
-                if (!has_component(e, Dragged)) {
-                    continue;
-                }
-                // Check if entity has been clicked.
-                if (is_collision(x, y, e->position)) {
-                    // Call entity's clicked function.
-                    e->components[Dragged].call(e, x, y);
-		    return;
-                }
-            }   
+            // // Being dragged
+            // for (int i = 0; i < gameData->currentScene->entities.current; i++) {
+            //     Entity* e = &gameData->currentScene->entities.entities[i];
+            //     // Can entity even be clicked?
+            //     if (!has_component(e, Dragged)) {
+            //         continue;
+            //     }
+            //     // Check if entity has been clicked.
+            //     if (is_collision(x, y, e->position)) {
+            //         // Call entity's clicked function.
+            //         e->components[Dragged].call(e, x, y);
+		    //         return;
+            //     }
+            // }
         } else {
-            for (int i = 0; i < gameData->currentScene->entities.current; i++) {
-                Entity* e = &gameData->currentScene->entities.entities[i];
-                if (!has_component(e, LeftClicked)) {
-                    continue;
-                }
-                if (is_collision(x, y, e->position)) {
-                    e->components[LeftClicked].call(e);
-		    return;
-                }
-            }
+            check_component_condition(gameData->currentScene->entities.root, LeftClicked, &is_clicked);
         }
     } else if (gameData->event.button.button == SDL_BUTTON_RIGHT) {
-        for (int i = 0; i < gameData->currentScene->entities.current; i++) {
-            Entity* e = &gameData->currentScene->entities.entities[i];
-            // Can entity even be clicked?
-            if (!has_component(e, RightClicked)) {
-                continue;
-            }
-            // Check if entity has been clicked.
-            if (is_collision(x, y, e->position)) {
-                // Call entity's clicked function.
-                e->components[RightClicked].call(e);
-		return;
-            }
-        }
+        check_component_condition(gameData->currentScene->entities.root, RightClicked, &is_clicked);
     }
 }
 
@@ -71,7 +83,7 @@ static void click_handler(GameData* gameData) {
  */
 static void key_handler(GameData* gameData) {
     // INFO_LOG("Key: %s\n", SDL_GetKeyName(gameData->event.key.keysym.sym));
-    int x, y = 0;
+    // int x, y = 0;
     switch (gameData->event.key.keysym.sym) {
         case SDLK_LEFT:
             // Implement after we have selection.
@@ -82,18 +94,18 @@ static void key_handler(GameData* gameData) {
             break;
         case SDLK_DOWN:
             break;
-        case SDLK_DELETE:
-            // If hovering over an entity delete it.
-            SDL_GetMouseState(&x, &y);
-            for (int i = 0; i < gameData->currentScene->entities.current; i++) {
-                Entity* e = &gameData->currentScene->entities.entities[i];
-                if (is_collision(x, y, e->position)) {
-                    // Call entity's clicked function.
-                    e->components[Deleted].call(e);
-		    return;
-                }
-            }
-            break;
+        // case SDLK_DELETE:
+        //     // If hovering over an entity delete it.
+        //     SDL_GetMouseState(&x, &y);
+        //     for (int i = 0; i < gameData->currentScene->entities.current; i++) {
+        //         Entity* e = &gameData->currentScene->entities.entities[i];
+        //         if (is_collision(x, y, e->position)) {
+        //             // Call entity's clicked function.
+        //             e->components[Deleted].call(e);
+		//     return;
+        //         }
+        //     }
+        //     break;
         default:
             break;
     }

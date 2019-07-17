@@ -5,7 +5,7 @@
 #include "../../include/game.h"
 #include "../../include/util/camera.h"
 #include "../../include/managers/assetstack.h"
-#include "../../include/managers/entitymanager.h"
+#include "../../include/managers/quadtree.h"
 #include "../../include/scenes/scene.h"
 
 #include "../../include/rendering/renderertemplates.h"
@@ -14,11 +14,7 @@
  * Initialize the scene components.
  */
 bool init_scene(Scene* scene) {
-    if (!init_entity_manager(&scene->entities)) {
-	    ERROR_LOG("Unable to create entity manager.\n");
-        free_asset_stack(&gameData.assets);
-        return false;
-    }
+    init_quad_tree(&scene->entities, (SDL_Rect) { 0 });
     // No background or cursor by default.
     scene->bg = NULL;
     scene->cursor = NULL;
@@ -31,7 +27,7 @@ bool init_scene(Scene* scene) {
  */
 void free_scene(Scene* scene) {
     // Free all remaining entities.
-    free_entities(&scene->entities);
+    free_quad_tree(&scene->entities);
     INFO_LOG("Freeing entities.\n");
     // Remove event handler pointer.
     scene->event_handler = NULL;

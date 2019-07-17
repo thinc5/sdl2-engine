@@ -44,10 +44,10 @@ void init_debug_scene(void) {
         float x = ((float) (rand() % 2) + ((float) rand() / RAND_MAX)) - 1.0f;
         float y = ((float) (rand() % 2) + ((float) rand() / RAND_MAX)) - 1.0f;
         INFO_LOG("%f %f\n", x, y);
-        add_entity(&gameData.scene->entities, &init_cat,
+        insert_entity(gameData.scene->entities.root, &init_cat,
                 transform_rect(state->bounds, x, y, 0.1f, 0.1f));
     }
-    add_entity(&gameData.scene->entities, &init_cat_state,
+    insert_entity(gameData.scene->entities.root, &init_cat_state,
             transform_rect((SDL_Rect) { 0 }, 0.9f, 0.85f, 0.2f, 0.1f));
     gameData.scene->bg = get_asset_by_ref("debug-bg.png", 0)->pointer.texture;
     gameData.scene->cursor = get_asset_by_ref("cursor.png", 1)->pointer.texture;

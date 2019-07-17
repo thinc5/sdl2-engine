@@ -23,7 +23,6 @@ static void button_left_clicked(void* e) {
  */
 Entity init_button(void) {
     Entity entity;
-    INFO_LOG("Button time\n");
     if (!init_entity(&entity, "click.png", "click1.ogg")) {
         ERROR_LOG("Could not initialize button entity.\n");
         return (Entity) { 0 };
