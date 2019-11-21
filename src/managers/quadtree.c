@@ -1,5 +1,6 @@
 #include <SDL2/SDL.h>
 
+#include <stdlib.h>
 #include <stdbool.h>
 
 #include "../../include/managers/quadtree.h"
