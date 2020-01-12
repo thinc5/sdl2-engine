@@ -31,6 +31,7 @@ void init_main_menu(void) {
     // Add event handler and window type.
     gameData.menu->event_handler = &default_handler;
     gameData.menu->bg = get_asset_by_ref("cat1.jpg", 0)->pointer.texture;
+    gameData.menu->state = NULL;
     gameData.menu->type = MainMenu;
 }
 

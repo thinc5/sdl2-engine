@@ -14,7 +14,14 @@
 enum AssetType {
     Texture,
     Font,
-    Sound
+    Sound,
+    AssetTypes
+};
+
+static const char* const AssetTypeValue[AssetTypes] = {
+    "Texture",
+    "Font",
+    "Sound"
 };
 
 /**

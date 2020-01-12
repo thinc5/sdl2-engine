@@ -22,6 +22,9 @@ bool init_scene(Scene* scene) {
     // No background or cursor by default.
     scene->bg = NULL;
     scene->cursor = NULL;
+
+    // No scene state by default.
+    scene->state = NULL;
     return true;
 }
 
@@ -29,7 +32,11 @@ bool init_scene(Scene* scene) {
  * Free a scene.
  */
 void free_scene(Scene* scene) {
-    // Free all remaining entities.
+    if (scene == NULL) {
+        DEBUG_LOG("Scene already freed.\n");
+        return;
+    }
+
     free_entities(&scene->entities);
     // Remove event handler pointer.
     scene->event_handler = NULL;
@@ -39,7 +46,6 @@ void free_scene(Scene* scene) {
     // Free the scene state.
     free(scene->state);
     scene->state = NULL;
-    INFO_LOG("Freeing scene asset chunk.\n");
     // Free the top chunk of assets.
     pop_asset_chunk(&gameData.assets);
 }
@@ -48,17 +54,27 @@ void free_scene(Scene* scene) {
  * Switch scenes.
  */
 void change_scene(void (*next)(void)) {
+    DEBUG_LOG("Changing scene.\n");
     // Draw loading notification :)
     SDL_Rect pos = transform_rect(0.4f, 0.2f, 1.0f, 1.0f);
     render_texture(get_asset_by_ref("loading.png", 0)->pointer.texture, &pos);
     SDL_RenderPresent(gameData.renderer);
+    
     // Check if we need to free the scene.
     if (gameData.currentScene->type != MainMenu) {
+        DEBUG_LOG("Not main menu, freeing the scene.\n");
         free_scene(gameData.scene);
     }
-    // Load the new scene.
-    next();
-    // Change the pointer to the new scene.
-    gameData.currentScene = gameData.scene;
+    
+    // Are we going to the main menu?
+    if (next != NULL) {
+        // Load the new scene.
+        next();
+        // Change the pointer to the new scene.
+        gameData.currentScene = gameData.scene;
+        return;
+    }
+    // We are returning to the main menu, change the current scene to the main menu.
+    gameData.scene = NULL;
+    gameData.currentScene = gameData.menu;
 }
-

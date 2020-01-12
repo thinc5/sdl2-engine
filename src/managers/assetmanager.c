@@ -27,11 +27,12 @@ bool initAssetManager(AssetRegistry* reg) {
 bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath) {
     // How many textures are we loading?
     int total = 0;
-    char buffer[100];
+    char buffer[200];
+    
     // Open file and count how many lines
     FILE* fp = fopen(filepath, "r");
     if (!fp) {
-        ERROR_LOG("Unable to find specified asset manifest file.\n");
+        ERROR_LOG("Unable to find specified asset manifest file: %s\n", filepath);
         return false;
     }
     while(fgets(buffer, sizeof(buffer), fp)) {
@@ -40,9 +41,11 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
     // Reset the pointer back to the beginning of the file
     fseek(fp, 0, SEEK_SET);
     memset(buffer, '\0', sizeof(buffer));
+    
     // Allocate space for each of the textures.
     reg->totalSize += total;
     reg->registry = (RegisteredAsset*) realloc(reg->registry, sizeof(RegisteredAsset) * reg->totalSize);
+    
     // Loop each line and load the texture.
     while(fgets(buffer, sizeof(buffer), fp)) {
         // If last character of buffer is a newline, strip it
@@ -62,6 +65,7 @@ bool loadAssets(SDL_Renderer* renderer, AssetRegistry* reg, const char* filepath
         reg->currentSize++;
         memset(buffer, '\0', sizeof(buffer));
     }
+    
     fclose(fp);
     INFO_LOG("Loaded %d out of %d assets.\n", reg->currentSize, reg->totalSize);
     return true;

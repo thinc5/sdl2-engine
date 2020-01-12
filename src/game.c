@@ -46,16 +46,19 @@ bool init_game(GameData* gameData) {
  * Free game data.
  */
 void free_game(GameData* game) {
+    DEBUG_LOG("free_game()\n");
     // Free renderer and window.
     SDL_DestroyRenderer(game->renderer);
     SDL_DestroyWindow(game->window);
+    
     // Free scenes.
-    INFO_LOG("Freeing assets...\n");
-    free_scene(game->scene);
-    free(game->scene);
-    INFO_LOG("Freed scene\n");
+    DEBUG_LOG("Freeing assets\n");
+    if (game->scene != NULL) {
+        free_scene(game->scene);
+        free(game->scene);
+        DEBUG_LOG("Freed scene\n");
+    }
     free_scene(game->menu);
     free(game->menu);
-    INFO_LOG("Freed menu\n");
+    DEBUG_LOG("Freed menu\n");
 }
-

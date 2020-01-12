@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+#include "../include/config.h"
 #include "../include/debug.h"
 #include "../include/util/framerate.h"
 #include "../include/managers/assetstack.h"
@@ -70,7 +71,6 @@ static void quit_modules(void) {
  * Handle the user events.
  */
 static void handle_events(void) {
-    //INFO_LOG("Polling Events\n");
     while (SDL_PollEvent(&gameData.event)) {
         if (gameData.event.type == SDL_QUIT) {
             gameData.status = false;
@@ -78,14 +78,12 @@ static void handle_events(void) {
         }
         gameData.currentScene->event_handler();
     }
-    //INFO_LOG("Events Polled\n");
 }
 
 /**
   * Update game state.
   */
 static void update_state(void) {
-    //INFO_LOG("Updating State\n");
     for (int i = 0; i < gameData.currentScene->entities.current; i++) {
         if (has_component(&gameData.currentScene->entities.entities[i],
                 OnTick)) {
@@ -95,7 +93,6 @@ static void update_state(void) {
     }
     // Remove all entities marked for deletion.
     clean_entities(&gameData.currentScene->entities);
-    //INFO_LOG("State Updated\n");
 }
 
 /**
@@ -111,20 +108,21 @@ static void render_state(void) {
     mouse_dbg(get_asset_by_ref("ssp-regular.otf", 0)->pointer.font);
     #endif
     SDL_RenderPresent(gameData.renderer);
-    //INFO_LOG("Rendered\n");
 }
 
 /**
  * Entry point for the engine.
  */
 int main(int argc, char** argv) {
+    INFO_LOG("Launching: \"%s\"\n", WINDOW_TITLE);
     // Start all SDL components and load the game.
     if (!init_modules() || !init_game(&gameData)) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
+    
     // Main game loop.
-    INFO_LOG("Game Loop\n");
+    DEBUG_LOG("Beginning game loop\n");
     while (gameData.status) {
         // ---------------- Handle user events.
         handle_events();
@@ -132,12 +130,13 @@ int main(int argc, char** argv) {
         update_state();
         // --------------- Render state.
         render_state();
-        // --------------- Wait if we have finished too soon.
+        // --------------- Wait if we have finished too soon (capping fps).
         cap_fps(&gameData.fps);
     }
+    
     // Clean up.
     free_game(&gameData);
     quit_modules();
+    INFO_LOG("Game Quit Successfully.\n");
     return 0;
 }
-

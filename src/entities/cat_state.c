@@ -41,7 +41,7 @@ static void cat_state_on_tick(void) {
     // INFO_LOG("Remaining time: %d\n", remaining);
     if (remaining < 0) {
         // Load main menu.
-        change_scene(&init_main_menu);
+        change_scene(NULL);
     }
     // Decrease timer.
     state->remaining_time -= SDL_GetTicks() - state->last_time;

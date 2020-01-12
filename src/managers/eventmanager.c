@@ -18,10 +18,10 @@ static void click_handler(GameData* gameData) {
     // Check if an entity was left clicked.
     int x, y;
     SDL_GetMouseState(&x, &y);
-    INFO_LOG("Cick at x: %d, y:%d\n", x, y);
+    DEBUG_LOG("Click at x: %d, y:%d\n", x, y);
     if (gameData->event.button.button == SDL_BUTTON_LEFT) {
         if (gameData->event.type == SDL_MOUSEMOTION) {
-            INFO_LOG("Mouse left clicked and dragged!\n");
+            DEBUG_LOG("Mouse left clicked and dragged!\n");
             // Being dragged
             for (int i = 0; i < gameData->currentScene->entities.current; i++) {
                 Entity* e = &gameData->currentScene->entities.entities[i];
