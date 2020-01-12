@@ -17,7 +17,7 @@ bool init_asset_stack(AssetStack* stack) {
 }
 
 /**
- * Push and asset onto the stack.
+ * Push an asset onto the stack.
  */
 static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* asset_path) {
     if (stack->heads[stack->allocations] == NULL) {
@@ -35,7 +35,7 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
     AssetNode* node = stack->tail;
     node->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
 
-    // Set the texture's reference string and check the asset type.
+    // Set the texture's reference string and check the asset type (using file name for now, not header of file itself).
     if (!type_asset(node->asset, asset_path)) {
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
@@ -67,28 +67,25 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
 }
 
 /**
- * Push a chunk of assets onto the asset stack as per provided asset manifest.
+ * Push a chunk of assets onto the asset stack as per asset manifest.
  */
 bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* manifest) {
     // Check if the file can be opened.
-    char asset_path[100];   // Maximum size of provided filename.
+    char asset_path[200];   // Maximum size of provided filename.
     FILE* fp = fopen(manifest, "r");
     if (fp == NULL) {
         return false;
     }
-
     // Is this the first allocation for the stack?
     if (stack->allocations == -1) {
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
-    // Increase the size of the head array.
     } else {
+        // Increase the size of the head array.
         stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*) * (stack->allocations + 1));
     }
-
     stack->allocations++;
     stack->heads[stack->allocations] = NULL;
     INFO_LOG("Stack allocations: %d\n", stack->allocations);
-
     // Read each line of the file and add a new node for each loaded asset.
     while(fgets(asset_path, sizeof(asset_path), fp)) {
         int blen = strlen(asset_path);
@@ -101,19 +98,27 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
         }
         memset(asset_path, '\0', sizeof(asset_path));
     }
-
     // Close file.
     fclose(fp);
     return true;
 }
 
 /**
- * Pop a chunk of the assets from the stack.
+ * Pop (free) a chunk of the assets from the stack.
  */
 bool pop_asset_chunk(AssetStack* stack) {
+    // Is there anything left to free?
+    INFO_LOG("Remaining chunks: %d\n", stack->allocations);
+    if (stack->allocations < 0) {
+        ERROR_LOG("Tried to free a chunk when there were none remaining.\n");
+        return false;
+    }
+    
+    INFO_LOG("Problemo?\n");
     // Free all assets from the top most chunk.
     AssetNode* current = stack->heads[stack->allocations];
     while(current != NULL && current->asset != NULL) {
+        INFO_LOG("Attempting to free asset: \"%s\" from chunk %d\n", current->asset->reference, stack->allocations);
         free_asset(current->asset);
 	    free(current->asset);
         AssetNode* temp = current->next;
@@ -123,10 +128,10 @@ bool pop_asset_chunk(AssetStack* stack) {
             break;
         }
     }
+
     // Re-allocate the list of heads.
-    INFO_LOG("Stack allocations: %d\n", stack->allocations);
-    if (stack->allocations > 1) {
-        stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(RegisteredAsset*));
+    if (stack->allocations > 0) {
+        stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(AssetNode*));
         // Set the tail pointer.
         AssetNode* tail = stack->heads[stack->allocations];
         while(tail->next != NULL) {
@@ -136,8 +141,8 @@ bool pop_asset_chunk(AssetStack* stack) {
         // Free all data.
         free(stack->heads);
     }
+
     stack->allocations--;
-    INFO_LOG("Stack allocations: %d\n", stack->allocations);
     return true;
 }
 
@@ -169,6 +174,7 @@ RegisteredAsset* get_asset_by_ref(const char* reference, int chunk) {
     return NULL;
 }
 
+#ifdef DEBUG_H
 /**
  * Linearly traverse the stack for debug purposes.
  */
@@ -186,4 +192,5 @@ void debug_asset_stack(AssetStack stack) {
         start = start->next;
     }
 }
+#endif
 
