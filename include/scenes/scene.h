@@ -3,6 +3,8 @@
 
 #include <SDL2/SDL.h>
 
+#include <stdbool.h>
+
 #include "../managers/assetstack.h"
 #include "../managers/entitymanager.h"
 #include "../entities/entity.h"
@@ -26,10 +28,13 @@ typedef struct Scene {
     SceneType type;
     // Entities present in scene.
     EntityManager entities;
-    // Need to cast as GameData
+    // The scene specific event handler.
     void (*event_handler)();
+    // Optional components of the scene.
     SDL_Texture* bg;
     SDL_Texture* cursor;
+    // Scene specific state.
+    void* state;
 } Scene;
 
 /**

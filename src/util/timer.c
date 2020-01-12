@@ -45,7 +45,7 @@ void pause_timer(Timer* t) {
 }
 
 /**
- * Unpasue the timer.
+ * Unpauses the timer.
  */
 void unpause_timer(Timer* t) {
     if (t->paused) {

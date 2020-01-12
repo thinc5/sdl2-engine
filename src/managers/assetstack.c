@@ -29,7 +29,6 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
         stack->tail->next = (AssetNode*) malloc(sizeof(AssetNode));
         stack->tail = stack->tail->next;
     }
-
     // Set the tail's next node to NULL.
     stack->tail->next = NULL;
     AssetNode* node = stack->tail;
@@ -40,7 +39,6 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
     }
-
     switch (node->asset->type) {
         case Texture:
             node->asset->pointer.texture = IMG_LoadTexture(renderer, asset_path);
@@ -79,11 +77,12 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
     // Is this the first allocation for the stack?
     if (stack->allocations == -1) {
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
-    } else {
-        // Increase the size of the head array.
+    // Increase the size of the head array.
+    } else if  (stack->allocations >= 0) {
         stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*) * (stack->allocations + 1));
     }
     stack->allocations++;
+    // We dont have a head for the most recent 
     stack->heads[stack->allocations] = NULL;
     INFO_LOG("Stack allocations: %d\n", stack->allocations);
     // Read each line of the file and add a new node for each loaded asset.
