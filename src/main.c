@@ -10,6 +10,7 @@
 #include "../include/config.h"
 #include "../include/debug.h"
 #include "../include/util/framerate.h"
+#include "../include/managers/asset.h"
 #include "../include/managers/assetstack.h"
 #include "../include/managers/eventmanager.h"
 #include "../include/rendering/renderer.h"
@@ -21,6 +22,9 @@
 #include "../include/scenes/debugscene.h"
 
 #ifdef DEBUG
+// Font to be used to render debug messages.
+static RegisteredAsset* fnt;
+
 /**
  * Debug function to show location of mouse.
  */
@@ -105,7 +109,7 @@ static void render_state(void) {
     render_entities(gameData.currentScene);
     render_cursor(gameData.currentScene);
     #ifdef DEBUG
-    mouse_dbg(get_asset_by_ref("ssp-regular.otf", 0)->pointer.font);
+    mouse_dbg(fnt->pointer.font);
     #endif
     SDL_RenderPresent(gameData.renderer);
 }
@@ -121,6 +125,10 @@ int main(int argc, char** argv) {
         return 1;
     }
     
+    #ifdef DEBUG
+    fnt = get_asset_by_ref("ssp-regular.otf", 0);
+    #endif
+
     // Main game loop.
     DEBUG_LOG("Beginning game loop\n");
     while (gameData.status) {
