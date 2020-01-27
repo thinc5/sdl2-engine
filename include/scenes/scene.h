@@ -24,6 +24,8 @@ typedef enum SceneType {
  * Scene abstraction, each game "view" is considered a scene.
  */
 typedef struct Scene {
+    // Scene title.
+    char title[200];
     // Type of scene.
     SceneType type;
     // Entities present in scene.

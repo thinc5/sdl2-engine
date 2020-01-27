@@ -53,6 +53,7 @@ bool type_asset(RegisteredAsset* asset, const char* path) {
     // Parse filename to get extention.
     char copy[strlen(path)];
     strcpy(copy, path);
+    // Get the filename from the path.
     char* filename = strtok(copy, "/");
     while (1) {
         char* test = strtok(NULL, "/");
@@ -86,7 +87,7 @@ bool type_asset(RegisteredAsset* asset, const char* path) {
 }
 
 /**
- * Free an entry in the texture registry.
+ * Free an asset.
  */
 bool free_asset(RegisteredAsset* asset) {
     if (asset->pointer.texture == NULL) {

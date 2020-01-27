@@ -7,6 +7,11 @@
 
 #include "util/framerate.h"
 #include "scenes/scene.h"
+typedef enum GameStatus {
+    RUNNING,
+    LOADING,
+    CLOSING
+} GameStatus;
 
 /**
  * GameData struct, holds all data such as current scene,
@@ -14,7 +19,7 @@
  */
 typedef struct GameData {
     // Is the game still running?
-    bool status;
+    GameStatus status;
 
     // SDL window, renderer and event.
     SDL_Window* window;
@@ -24,7 +29,7 @@ typedef struct GameData {
     // Assets required for scene.
     AssetStack assets;
 
-    // Frame rate manager.
+    // Framerate manager.
     FrameRateManager fps;
 
     // Resources required for the main/escape menu and debugging.

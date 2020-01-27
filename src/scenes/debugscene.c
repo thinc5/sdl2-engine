@@ -2,6 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "../../include/debug.h"
 #include "../../include/game.h"
@@ -23,6 +24,7 @@ void init_debug_scene(void) {
         gameData.scene = NULL;
         return;
     }
+    memcpy(&gameData.scene->title, "Debug Scene", 12);
 
     // Load assets for the debug scene.
     if (!push_asset_chunk(gameData.renderer, &gameData.assets,

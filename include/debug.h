@@ -10,7 +10,7 @@
  */
 #ifdef DEBUG
 
-#define DEBUG_LOG(...) fprintf(stdout, "DEBUG: "__VA_ARGS__)
+#define DEBUG_LOG(...) fprintf(stdout, "(DEBUG) "__VA_ARGS__)
 
 #else
 
@@ -26,8 +26,8 @@
 
 #else
 
-#define INFO_LOG(...) fprintf(stdout, "INFO: "__VA_ARGS__)
-#define ERROR_LOG(...) fprintf(stderr, "ERROR: "__VA_ARGS__)
+#define INFO_LOG(...) fprintf(stdout, "(INFO) "__VA_ARGS__)
+#define ERROR_LOG(...) fprintf(stderr, "(ERROR) "__VA_ARGS__)
 
 #endif
 

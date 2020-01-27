@@ -77,7 +77,7 @@ static void quit_modules(void) {
 static void handle_events(void) {
     while (SDL_PollEvent(&gameData.event)) {
         if (gameData.event.type == SDL_QUIT) {
-            gameData.status = false;
+            gameData.status = CLOSING;
             break;
         }
         gameData.currentScene->event_handler();
@@ -88,6 +88,10 @@ static void handle_events(void) {
   * Update game state.
   */
 static void update_state(void) {
+    // Do not process any entities whilst we are loading scenes.
+    if (gameData.status == LOADING) {
+        return;
+    }
     for (int i = 0; i < gameData.currentScene->entities.current; i++) {
         if (has_component(&gameData.currentScene->entities.entities[i],
                 OnTick)) {
@@ -131,15 +135,23 @@ int main(int argc, char** argv) {
 
     // Main game loop.
     DEBUG_LOG("Beginning game loop\n");
-    while (gameData.status) {
-        // ---------------- Handle user events.
-        handle_events();
-        //----------------- Update state.
-        update_state();
-        // --------------- Render state.
-        render_state();
-        // --------------- Wait if we have finished too soon (capping fps).
-        cap_fps(&gameData.fps);
+    while (gameData.status != CLOSING) {
+        switch (gameData.status) {
+            case RUNNING:
+                // Handle user events.
+                handle_events();
+                // Update state.
+                update_state();
+                // Render state.
+                render_state();
+                // Wait if we have finished too soon (capping fps).
+                cap_fps(&gameData.fps);
+                break;
+            case LOADING:
+                break;
+            default:
+                break;
+        }
     }
     
     // Clean up.

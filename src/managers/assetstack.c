@@ -1,10 +1,39 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../include/config.h"
 #include "../../include/debug.h"
 #include "../../include/managers/asset.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/game.h"
+
+/****************************************************************************
+ * A stack based implementation for loading assets that uses a linked list. *
+ ****************************************************************************/
+
+#ifdef DEBUG
+/**
+ * Linearly traverse the stack for debug purposes.
+ */
+static void debug_asset_stack(AssetStack* stack) {
+    DEBUG_LOG("-- Debugging stack --\n");
+    DEBUG_LOG("Allocations: %d\n", stack->allocations);
+    if (stack->allocations < 0 && stack && stack->heads) {
+        DEBUG_LOG("We don't have a head..\n");
+	    return;
+    }
+    DEBUG_LOG("We have a head at: %lu\n", (unsigned long) stack->heads[0]);
+    AssetNode* start = stack->heads[0];
+    int assets = 0;
+    while (start) {
+	    DEBUG_LOG("Asset: %s\n", start->asset->reference);
+        start = start->next;
+        assets++;
+    }
+    DEBUG_LOG("Assets found: %d\n", assets);
+    DEBUG_LOG("-- Debugged stack --\n");
+}
+#endif
 
 /**
  * Initialize the asset stack.
@@ -20,22 +49,10 @@ bool init_asset_stack(AssetStack* stack) {
  * Push an asset onto the stack.
  */
 static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* asset_path) {
-    if (stack->heads[stack->allocations] == NULL) {
-        // If we dont have a node at our current head make one.
-        stack->heads[stack->allocations] = (AssetNode*) malloc(sizeof(AssetNode));
-        stack->tail = stack->heads[stack->allocations];
-    } else {
-        // We need to allocate memory for the current head->next.
-        stack->tail->next = (AssetNode*) malloc(sizeof(AssetNode));
-        stack->tail = stack->tail->next;
-    }
-    // Set the tail's next node to NULL.
-    stack->tail->next = NULL;
     AssetNode* node = stack->tail;
-    node->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
 
-    // Set the texture's reference string and check the asset type (using file
-    // name for now, not header of file itself).
+    // Set the texture's reference string and check the asset type (using filename for
+    // now, not header of file itself. Also copies the filename into AssetNode).
     if (!type_asset(node->asset, asset_path)) {
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
@@ -62,6 +79,8 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
         default:
             return false;
     }
+    DEBUG_LOG("Loaded asset (%s): %s.\n", AssetTypeValue[node->asset->type],
+            node->asset->reference);
     return true;
 }
 
@@ -69,8 +88,8 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
  * Push a chunk of assets onto the asset stack as per asset manifest.
  */
 bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* manifest) {
+    DEBUG_LOG("Pushing asset stack from manifest: %s\n", manifest);
     // Check if the file can be opened.
-    char asset_path[200];   // Maximum size of provided filename.
     FILE* fp = fopen(manifest, "r");
     if (fp == NULL) {
         return false;
@@ -78,31 +97,60 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
 
     // Is this the first allocation for the stack?
     if (stack->allocations == -1) {
+        // Create the head array.
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
-    // Increase the size of the head array.
     } else if  (stack->allocations >= 0) {
+        // Expand the head array.
         stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*)
                 * (stack->allocations + 1));
     }
     stack->allocations++;
-    // We dont have a head for the most recent 
-    stack->heads[stack->allocations] = NULL;
+    // Set the tail (the starting location!)
+    stack->tail = NULL;
     
+    bool first = true;
     DEBUG_LOG("Stack allocations: %d\n", stack->allocations + 1);
+    char asset_path[FILENAME_MAX_SIZE]; // Maximum size of provided filename.
     // Read each line of the file and add a new node for each loaded asset.
     while(fgets(asset_path, sizeof(asset_path), fp)) {
+        // Prepare filepath.
         int blen = strlen(asset_path);
         if (asset_path[blen - 1] == '\n') {
             asset_path[strlen(asset_path) - 1] = '\0';
         }
+        AssetNode* new_node = (AssetNode*) malloc(sizeof(AssetNode));
+        // Set the head value.
+        if (first) {
+            stack->heads[stack->allocations] = new_node;
+            DEBUG_LOG("New head at: %lu\n", (unsigned long) new_node);
+            first = false;
+        }
+        // We need to allocate memory for the current head.
+        if (stack->tail != NULL) {
+            stack->tail->next = (void*) new_node;
+        }
+        stack->tail = new_node;
+        stack->tail->next = NULL;        
+        
+        // Load and register asset.
+        stack->tail->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
         if (!push_asset(renderer, stack, asset_path)) {
             // Unable to load?
             ERROR_LOG("Could not load file: %s\n", asset_path);
+            free(stack->tail->asset->reference);
+            free(stack->tail->asset);
+            free(stack->tail);
         }
+
+        // Clean buffer for next run.
         memset(asset_path, '\0', sizeof(asset_path));
     }
+
     // Close file.
     fclose(fp);
+    //#ifdef DEBUG
+    //debug_asset_stack(stack);
+    //#endif
     return true;
 }
 
@@ -121,7 +169,8 @@ bool pop_asset_chunk(AssetStack* stack) {
     // Free all assets from the top most chunk.
     AssetNode* current = stack->heads[stack->allocations];
     while(current != NULL && current->asset != NULL) {
-        DEBUG_LOG("Freeing asset (%s): \"%s\" from chunk %d (%lu)\n", AssetTypeValue[current->asset->type],
+        DEBUG_LOG("Freeing asset (%s): \"%s\" from chunk %d (%lu)\n",
+                AssetTypeValue[current->asset->type],
                 current->asset->reference, stack->allocations + 1,
                 (unsigned long) current->asset->pointer.texture);
         free_asset(current->asset);
@@ -179,24 +228,4 @@ RegisteredAsset* get_asset_by_ref(const char* reference, int chunk) {
     }
     return NULL;
 }
-
-#ifdef DEBUG_H
-/**
- * Linearly traverse the stack for debug purposes.
- */
-void debug_asset_stack(AssetStack stack) {
-    DEBUG_LOG("Debugging stack.\n");
-    DEBUG_LOG("Allocations: %d\n", stack.allocations);
-    if (stack.heads[0] == NULL) {
-        DEBUG_LOG("We don't have a head..\n");
-	return;
-    }
-    DEBUG_LOG("We have a head!\n");
-    AssetNode* start = stack.heads[0];
-    while (start != NULL) {
-	DEBUG_LOG("Texture: %s\n", start->asset->reference);
-        start = start->next;
-    }
-}
-#endif
 

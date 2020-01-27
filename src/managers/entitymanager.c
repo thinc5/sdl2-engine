@@ -62,11 +62,9 @@ void clean_entities(EntityManager* entityManager) {
  */
 void free_entities(EntityManager* entityManager) {
     DEBUG_LOG("Freeing entities.\n");
-    if (entityManager != NULL && entityManager->current) {
+    if (entityManager->entities != NULL) {
         DEBUG_LOG("Clearing %d entities.\n", entityManager->current);
+        free(entityManager->entities);
+        entityManager->entities = NULL;
     }
-    // if (entityManager->entities != NULL) {
-    //     free(entityManager->entities);
-    //     entityManager->entities = NULL;
-    // }
 }

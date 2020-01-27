@@ -16,7 +16,7 @@
  */
 bool init_game(GameData* gameData) {
     // Game is running?
-    gameData->status = true;
+    gameData->status = RUNNING;
     // Create the window.
     gameData->window = SDL_CreateWindow(WINDOW_TITLE,
             SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
@@ -38,27 +38,38 @@ bool init_game(GameData* gameData) {
     init_main_menu();
     gameData->currentScene = gameData->menu;
     // Allocate space for the other scenes.
-    gameData->scene = (Scene*) malloc(sizeof(Scene));
+    gameData->scene = NULL;
     return true;
 }
 
 /**
  * Free game data.
  */
-void free_game(GameData* game) {
+void free_game(GameData* gameData) {
     DEBUG_LOG("free_game()\n");
     // Free renderer and window.
-    SDL_DestroyRenderer(game->renderer);
-    SDL_DestroyWindow(game->window);
+    SDL_DestroyRenderer(gameData->renderer);
+    SDL_DestroyWindow(gameData->window);
     
     // Free scenes.
-    DEBUG_LOG("Freeing assets\n");
-    if (game->scene != NULL) {
-        free_scene(game->scene);
-        free(game->scene);
+    if (gameData->scene != NULL) {
+        // Freeing scene.
+        if (gameData->scene->title[0] != '\0') {
+            DEBUG_LOG("Freeing scene: \"%s\"\n", gameData->scene->title);
+        }
+        free_scene(gameData->scene);
+        free(gameData->scene);
+        gameData->scene = NULL;
         DEBUG_LOG("Freed scene\n");
     }
-    free_scene(game->menu);
-    free(game->menu);
-    DEBUG_LOG("Freed menu\n");
+    if (gameData->menu != NULL) {
+        if (gameData->menu->title[0] != '\0') {
+            DEBUG_LOG("Freeing scene: \"%s\"\n", gameData->menu->title);
+        }
+        free_scene(gameData->menu);
+        free(gameData->menu);
+        gameData->menu = NULL;
+        DEBUG_LOG("Freed menu\n");
+    }
+    gameData->currentScene = NULL;
 }

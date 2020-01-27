@@ -10,4 +10,6 @@
 
 #define FPS_CAPPED true
 #define FRAME_CAP 75
+
+#define FILENAME_MAX_SIZE 200
 #endif

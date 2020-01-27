@@ -18,6 +18,8 @@ void init_main_menu(void) {
         gameData.menu = NULL;
         return;
     }
+    memcpy(&gameData.menu->title, "Main Menu", 10);
+
     // Load assets for the main menu.
     if (!push_asset_chunk(gameData.renderer, &gameData.assets,
                 "./res/mainmenu.manifest")) {

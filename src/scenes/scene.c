@@ -55,6 +55,7 @@ void free_scene(Scene* scene) {
  */
 void change_scene(void (*next)(void)) {
     DEBUG_LOG("Changing scene.\n");
+    gameData.status = LOADING;
     // Draw loading notification :)
     SDL_Rect pos = transform_rect(0.4f, 0.2f, 1.0f, 1.0f);
     render_texture(get_asset_by_ref("loading.png", 0)->pointer.texture, &pos);
@@ -64,17 +65,24 @@ void change_scene(void (*next)(void)) {
     if (gameData.currentScene->type != MainMenu) {
         DEBUG_LOG("Not main menu, freeing the scene.\n");
         free_scene(gameData.scene);
+        free(gameData.scene);
+        gameData.scene = NULL;
     }
     
     // Are we going to the main menu?
     if (next != NULL) {
         // Load the new scene.
+        if (gameData.scene == NULL) {
+            gameData.scene = (Scene*) malloc(sizeof(Scene));
+        }
         next();
         // Change the pointer to the new scene.
         gameData.currentScene = gameData.scene;
+        gameData.status = RUNNING;
         return;
     }
     // We are returning to the main menu, change the current scene to the main menu.
     gameData.scene = NULL;
     gameData.currentScene = gameData.menu;
+    gameData.status = RUNNING;
 }

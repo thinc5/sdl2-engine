@@ -106,7 +106,7 @@ void default_handler(void) {
     // Default behaviour.
     if (gameData.event.key.keysym.sym == SDLK_ESCAPE) {
 	// INFO_LOG("ESC pressed.\n");
-        gameData.status = false;
+        gameData.status = CLOSING;
         return;
     }
     switch (gameData.event.type) {
