@@ -19,6 +19,7 @@ static void render_cat_state(void* e) {
     Entity* entity = (Entity*) e;
     SDL_Color c = {255, 255, 255};
     SDL_Rect pos = entity->position;
+    // Cast as CatState.
     CatState* state = gameData.scene->state;
     char time[15];
     uint32_t remaining_time = (int) (state->remaining_time / 1000);
@@ -35,6 +36,7 @@ static void render_cat_state(void* e) {
  * Update game state timer.
  */
 static void cat_state_on_tick(void) {
+    // Cast as CatState.
     CatState* state = (CatState*) gameData.scene->state;
     // Have we run out of time?
     int32_t remaining = state->remaining_time - (SDL_GetTicks() - state->last_time);
@@ -42,6 +44,7 @@ static void cat_state_on_tick(void) {
     if (remaining < 0) {
         // Load main menu.
         change_scene(NULL);
+        return;
     }
     // Decrease timer.
     state->remaining_time -= SDL_GetTicks() - state->last_time;
