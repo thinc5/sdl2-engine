@@ -10,6 +10,11 @@
 #include "../scenes/scene.h"
 
 /**
+ * Simple function to draw and fill a rectangle.
+ */
+bool render_rectangle(SDL_Rect* pos, SDL_Color colour, bool fill);
+
+/**
  * Simple function to draw a message to the screen using a font.
  */
 bool render_font(TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text);

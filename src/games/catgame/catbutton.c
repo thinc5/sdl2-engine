@@ -2,14 +2,14 @@
 
 #include <stdio.h>
 
-#include "../../include/debug.h"
-#include "../../include/game.h"
-#include "../../include/scenes/scene.h"
-#include "../../include/scenes/debugscene.h"
-#include "../../include/entities/entity.h"
-#include "../../include/components/component.h"
-#include "../../include/entities/button.h"
-#include "../../include/rendering/renderertemplates.h"
+#include "../../../include/debug.h"
+#include "../../../include/game.h"
+#include "../../../include/scenes/scene.h"
+#include "../../../include/scenes/debugscene.h"
+#include "../../../include/entities/entity.h"
+#include "../../../include/components/component.h"
+#include "../../../include/rendering/renderertemplates.h"
+#include "../../../include/games/catgame/catbutton.h"
 
 /**
  * Behaviour of button when left clicked.
@@ -37,9 +37,10 @@ Entity init_button(void) {
  * Override the render function to show the label.
  */
 static void play_button_render(void* e) {
-    render(e);
     Entity* entity = (Entity*) e;
-    SDL_Color c = {255, 0, 0};
+    SDL_Color c = {255, 255, 0};
+    render_rectangle(&entity->position, c, true);
+    c = (SDL_Color) { .r = 255,  .g = 255, .b = 255};
     render_font(get_asset_by_ref("ssp-regular.otf", 0)->pointer.font, &entity->position, c, "Play Game!");
 }
 
@@ -51,4 +52,3 @@ Entity init_play_button(void) {
     entity.components[Render].call = &play_button_render;
     return entity;
 }
-

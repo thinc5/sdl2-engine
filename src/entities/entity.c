@@ -69,4 +69,3 @@ bool init_entity(Entity* e, const char* texture, const char* sound) {
 bool has_component(Entity* e, ComponentType c) {
     return !(e->components[c].call == NULL);
 }
-

@@ -12,6 +12,18 @@
 #include "../../include/util/camera.h"
 
 /**
+ * Simple function to draw and fill a rectangle.
+ */
+bool render_rectangle(SDL_Rect* pos, SDL_Color colour, bool fill) {
+    SDL_SetRenderDrawColor(gameData.renderer, colour.r, colour.g, colour.b, colour.a);
+    SDL_RenderDrawRect(gameData.renderer, pos);
+    if (fill) {
+        SDL_RenderFillRect(gameData.renderer, pos);
+    }
+    return true;
+}
+
+/**
  * Simple function to draw a message to the screen using a font.
  */
 bool render_font(TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text) {

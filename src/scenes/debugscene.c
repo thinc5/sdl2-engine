@@ -11,10 +11,10 @@
 #include "../../include/managers/eventmanager.h"
 #include "../../include/scenes/scene.h"
 #include "../../include/scenes/debugscene.h"
-#include "../../include/entities/cat.h"
-#include "../../include/entities/button.h"
 #include "../../include/util/camera.h"
-#include "../../include/entities/cat_state.h"
+#include "../../include/games/catgame/cat.h"
+#include "../../include/games/catgame/catbutton.h"
+#include "../../include/games/catgame/state.h"
 
 /**
  * Constructor for the debug testing scene.

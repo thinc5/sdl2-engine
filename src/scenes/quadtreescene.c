@@ -10,9 +10,9 @@
 #include "../../include/managers/eventmanager.h"
 #include "../../include/scenes/scene.h"
 #include "../../include/scenes/quadtreescene.h"
-#include "../../include/entities/cat.h"
-#include "../../include/entities/button.h"
 #include "../../include/util/camera.h"
+#include "../../include/games/catgame/cat.h"
+#include "../../include/games/catgame/catbutton.h"
 
 /**
  * Constructor for the quadtree testing scene.

@@ -2,12 +2,11 @@
 #include <stdbool.h>
 
 #include "../../include/debug.h"
-#include "../../include/game.h"
 #include "../../include/util/camera.h"
+#include "../../include/game.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/scenes/scene.h"
-
 #include "../../include/rendering/renderertemplates.h"
 
 /**

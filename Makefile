@@ -58,7 +58,7 @@ INCLUDES 		:= $(shell $(findh))
 OBJECTS  		:= $(SOURCES:$(SRCDIR)/%.c=$(OBJDIR)/%.o)
 
 # make subfolders if they do not already exist.
-XTRADIR  := $(shell ls -d $(INCDIR)/*/ | sed 's/$(INCDIR)/$(OBJDIR)/g')
+XTRADIR  := $(shell ls -d $(INCDIR)/*/** | sed 's/$(INCDIR)/$(OBJDIR)/g')
 $(shell $(mkdir) $(OBJDIR) $(XTRADIR))
 
 

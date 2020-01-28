@@ -15,11 +15,11 @@
 #include "../include/managers/eventmanager.h"
 #include "../include/rendering/renderer.h"
 #include "../include/rendering/renderertemplates.h"
-#include "../include/entities/cat.h"
-#include "../include/entities/button.h"
 #include "../include/game.h"
 #include "../include/scenes/scene.h"
 #include "../include/scenes/debugscene.h"
+#include "../include/games/catgame/cat.h"
+#include "../include/games/catgame/catbutton.h"
 
 #ifdef DEBUG
 // Font to be used to render debug messages.

@@ -3,12 +3,12 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "../../include/debug.h"
-#include "../../include/game.h"
-#include "../../include/rendering/renderertemplates.h"
-#include "../../include/scenes/mainmenu.h"
-#include "../../include/entities/entity.h"
-#include "../../include/entities/cat_state.h"
+#include "../../../include/debug.h"
+#include "../../../include/game.h"
+#include "../../../include/rendering/renderertemplates.h"
+#include "../../../include/scenes/mainmenu.h"
+#include "../../../include/entities/entity.h"
+#include "../../../include/games/catgame/state.h"
 
 /**
  * Render the state of the cat debug scene.
