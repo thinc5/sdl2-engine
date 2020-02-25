@@ -17,7 +17,7 @@ bool init_asset_stack(AssetStack* stack) {
 }
 
 /**
- * Push and asset onto the stack.
+ * Push an asset onto the stack.
  */
 static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* asset_path) {
     // If we dont have a node at our current head make one.
@@ -34,7 +34,8 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
     AssetNode* node = stack->tail;
     // Allocate space for the asset.
     node->asset = (RegisteredAsset*) malloc(sizeof(RegisteredAsset));
-    // Attempt to load the asset.
+
+    // Set the texture's reference string and check the asset type (using file name for now, not header of file itself).
     if (!type_asset(node->asset, asset_path)) {
         ERROR_LOG("Unable to type asset %s.\n", asset_path);
         return false;
@@ -65,11 +66,11 @@ static bool push_asset(SDL_Renderer* renderer, AssetStack* stack, const char* as
 }
 
 /**
- * Push a chunk of assets onto the asset stack as per provided asset manifest.
+ * Push a chunk of assets onto the asset stack as per asset manifest.
  */
 bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* manifest) {
     // Check if the file can be opened.
-    char asset_path[100];   // Maximum size of provided filename.
+    char asset_path[200];   // Maximum size of provided filename.
     FILE* fp = fopen(manifest, "r");
     if (fp == NULL) {
         return false;
@@ -78,8 +79,8 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
     if (stack->allocations == -1) {
         stack->heads = (AssetNode**) malloc(sizeof(AssetNode*));
     // Increase the size of the head array.
-    } else if  (stack->allocations < 0) {
-        stack->heads = (AssetNode**) realloc(stack->heads, (stack->allocations + 1) * sizeof(AssetNode*));
+    } else if  (stack->allocations >= 0) {
+        stack->heads = (AssetNode**) realloc(stack->heads, sizeof(AssetNode*) * (stack->allocations + 1));
     }
     stack->allocations++;
     // We dont have a head for the most recent 
@@ -107,15 +108,22 @@ bool push_asset_chunk(SDL_Renderer* renderer, AssetStack* stack, const char* man
 }
 
 /**
- * Pop a chunk of the assets from the stack.
+ * Pop (free) a chunk of the assets from the stack.
  */
 bool pop_asset_chunk(AssetStack* stack) {
+    // Is there anything left to free?
+    INFO_LOG("Remaining chunks: %d\n", stack->allocations);
+    if (stack->allocations < 0) {
+        ERROR_LOG("Tried to free a chunk when there were none remaining.\n");
+        return false;
+    }
+    
+    INFO_LOG("Problemo?\n");
     // Free all assets from the top most chunk.
     INFO_LOG("Free head: %lu\n", (unsigned long) stack->heads[stack->allocations]);
     AssetNode* current = stack->heads[stack->allocations];
-    while(current != NULL) {
-        // INFO_LOG("Freeing %s\n", current->asset->reference);
-        // Free the asset within the RegisteredAsset.
+    while(current != NULL && current->asset != NULL) {
+        INFO_LOG("Attempting to free asset: \"%s\" from chunk %d\n", current->asset->reference, stack->allocations);
         free_asset(current->asset);
         // Free the RegisteredAsset.
 	    free(current->asset);
@@ -175,7 +183,7 @@ RegisteredAsset* get_asset_by_ref(const char* reference, int chunk) {
     return NULL;
 }
 
-#ifdef DEBUG
+#ifdef DEBUG_H
 /**
  * Linearly traverse the stack for debug purposes.
  */

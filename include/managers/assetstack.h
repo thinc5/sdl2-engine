@@ -21,7 +21,7 @@ typedef struct AssetNode {
  * The stack holding our assets.
  */
 typedef struct AssetStack {
-    int8_t allocations;
+    int16_t allocations;
     AssetNode** heads;
     AssetNode* tail;
 } AssetStack;

@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "eventmanager.h": "c",
+        "entitymanager.h": "c"
+    }
+}
