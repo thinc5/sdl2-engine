@@ -50,6 +50,9 @@ bool render_texture(SDL_Texture* texture, SDL_Rect* dpos) {
  * Simple wrapper function for rendering textures to the screen.
  */
 bool render_background(Scene* currentScene) {
+    if (currentScene->bg == NULL) {
+        return false;
+    }
     if (SDL_RenderCopy(gameData.renderer, currentScene->bg,
             NULL, NULL) != 0) {
         return false;
@@ -126,4 +129,3 @@ bool render_cursor(Scene* currentScene) {
         }
         return true;
 }
-

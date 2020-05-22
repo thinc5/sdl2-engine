@@ -6,23 +6,29 @@
 #include "../../../include/game.h"
 #include "../../../include/rendering/renderertemplates.h"
 #include "../../../include/entities/entity.h"
+#include "../../../include/util/camera.h"
+
 #include "../../../include/games/snake/state.h"
 
 /**
- * Render the state of the cat debug scene.
+ * Render the snake game ui.
  */
-static void render_snake_state(void* e) {
+static void render_ui(void* e) {
     // Get font and the UI entity.
     TTF_Font* font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     Entity* entity = (Entity*) e;
-    SDL_Color c = {255, 255, 255};
+    SDL_Color c = {0, 255, 255};
     SDL_Rect pos = entity->position;
-    // Cast as SnakeStateS.
+
+    // Cast as SnakeState.
     SnakeState* state = gameData.scene->state;
+    
+    // Show elapsed time.
     char time[15];
-    uint32_t remaining_time = (int) (state->remaining_time / 1000);
-    sprintf(time, "Time: %4u", remaining_time);
+    sprintf(time, "Time: %4u", state->duration);
     render_font(font, &pos, c, time);
+    
+    // Show player score.
     pos.y += 50;
     char score[15];
     uint32_t current_score = state->score;
@@ -31,28 +37,19 @@ static void render_snake_state(void* e) {
 }
 
 /**
- * Update game state timer.
+ * Update game state.
  */
-static void snake_state_on_tick(void) {
+static void state_on_tick(void) {
     // Cast as SnakeState.
     SnakeState* state = (SnakeState*) gameData.scene->state;
-    // Have we run out of time?
-    int32_t remaining = state->remaining_time - (SDL_GetTicks() - state->last_time);
-    // INFO_LOG("Remaining time: %d\n", remaining);
-    if (remaining < 0) {
-        // Load main menu.
-        change_scene(NULL);
-        return;
-    }
-    // Decrease timer.
-    state->remaining_time -= SDL_GetTicks() - state->last_time;
-    state->last_time = SDL_GetTicks();
+    // Calculate duration.
+    state->duration = (uint32_t) (SDL_GetTicks() - state->starting_time) / 1000;
 }
 
 /**
  * Initialize the game of Snake.
  */
-Entity init_snake_state(void) {
+Entity init_snake_ui(void) {
     Entity snake_state;
     // Load cat assets make more flexable and specific later.
     if (!init_entity(&snake_state, NULL, NULL)) {
@@ -60,7 +57,7 @@ Entity init_snake_state(void) {
         return (Entity) { 0 };
     }
     // Load cat components.
-    snake_state.components[OnTick].call = &snake_state_on_tick;
-    snake_state.components[Render].call = &render_snake_state;
+    snake_state.components[OnTick].call = &state_on_tick;
+    snake_state.components[Render].call = &render_ui;
     return snake_state;
 }

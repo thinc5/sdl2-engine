@@ -6,23 +6,25 @@
 #include "../../components/move.h"
 #include "../../entities/entity.h"
 
+#include "grid.h"
+#include "snake.h"
+
 /**
  * The snake game's state struct.
  */
 typedef struct SnakeState {
     // Player score.
     uint32_t score;
-    // Remaining time.
-    uint32_t remaining_time;
-    uint32_t last_time;
-    // Snake length
-    uint32_t snake_size;
-    Direction snake_dir;
-    // Game speed.
+    // Game starting time.
+    uint32_t starting_time;
+    uint32_t duration;
+    // Game speed factor.
     uint32_t game_speed;
+    // Game grid
+    Grid grid;
+    // Snake instance.
+    Snake snake;
 } SnakeState;
-
-Entity init_snake_state(void);
 
 #endif
 

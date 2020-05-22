@@ -106,6 +106,7 @@ static void update_state(void) {
  * Render game state.
  */
 static void render_state(void) {
+    SDL_SetRenderDrawColor(gameData.renderer, 255, 0, 0, 255);
     SDL_RenderClear(gameData.renderer);
 	render_background(gameData.currentScene);
     render_entities(gameData.currentScene);

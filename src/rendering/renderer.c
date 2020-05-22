@@ -22,4 +22,3 @@ void render_entities(Scene* currentScene) {
         }
     }
 }
-
