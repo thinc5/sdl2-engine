@@ -12,7 +12,7 @@
 bool init_entity_manager(EntityManager* entityManager) {
     entityManager->current = 0;
     entityManager->maximum = 5;
-    entityManager->entities = (Entity*) malloc(sizeof(Entity) * 5);
+    entityManager->entities = (Entity*) malloc(sizeof(Entity) * entityManager->maximum);
     return true;
 }
 
@@ -53,14 +53,18 @@ void clean_entities(EntityManager* entityManager) {
     if (entityManager->current < (entityManager->maximum / 2) - 1) {
         entityManager->maximum /= 2;
         entityManager->entities = (Entity*) realloc(entityManager->entities, sizeof(Entity) * entityManager->maximum);
-        // DEBUG INFO_LOG("Current entities = %d, Maximum = %d\n", entityManager->current, entityManager->maximum);
     }
 }
 
 /**
  * Free entity manager.
+ * TODO: Figure out why this causes a segfault,
  */
 void free_entities(EntityManager* entityManager) {
-    free(entityManager->entities);
+    DEBUG_LOG("Freeing entities.\n");
+    if (entityManager->entities != NULL) {
+        DEBUG_LOG("Clearing %d entities.\n", entityManager->current);
+        free(entityManager->entities);
+        entityManager->entities = NULL;
+    }
 }
-

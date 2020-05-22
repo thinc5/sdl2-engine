@@ -12,7 +12,7 @@
 #include "../../include/scenes/scene.h"
 
 /**
- * Render all renderable entities.
+ * Render all renderable entities (Super basic and inefficient).
  */
 void render_entities(Scene* currentScene) {
     for (int i = 0; i < currentScene->entities.current; i++) {

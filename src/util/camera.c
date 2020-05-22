@@ -23,7 +23,7 @@ SDL_Rect transform_rect(SDL_Rect within, float x, float y, float width, float he
     // Ensure that the scale will center the rectangle at the desired location.
     SDL_Rect new = { .x = ((x + 1.0f) * centre.x) - (w / 2), .y = ((y + 1.0f) * centre.y) - (h / 2),
             .w = w, .h = h};
-    INFO_LOG("%d %d %d %d\n", new.x, new.y, new.w, new.h);
+    DEBUG_LOG("%d %d %d %d\n", new.x, new.y, new.w, new.h);
     return new;
 }
 
@@ -71,4 +71,3 @@ bool is_point_inside(SDL_Rect within, SDL_Point point) {
     return point.x > within.x && point.x < within.x + within.w &&
             point.y > within.y && point.y < within.y + within.h;
 }
-

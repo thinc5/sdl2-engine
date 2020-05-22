@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-#include "../../include/entities/entity.h"
+#include "../../entities/entity.h"
 
 /**
  * The debug scene's state struct.

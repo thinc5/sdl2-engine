@@ -3,16 +3,15 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "../../include/debug.h"
-#include "../../include/game.h"
-#include "../../include/entities/entity.h"
-#include "../../include/components/component.h"
-#include "../../include/util/timer.h"
-#include "../../include/util/camera.h"
-#include "../../include/entities/cat_state.h"
-#include "../../include/entities/cat.h"
-#include "../../include/components/move.h"
-#include "../../include/game.h"
+#include "../../../include/debug.h"
+#include "../../../include/game.h"
+#include "../../../include/entities/entity.h"
+#include "../../../include/components/component.h"
+#include "../../../include/util/timer.h"
+#include "../../../include/util/camera.h"
+#include "../../../include/components/move.h"
+#include "../../../include/games/catgame/state.h"
+#include "../../../include/games/catgame/cat.h"
 
 /**
  * Add score to the counter.

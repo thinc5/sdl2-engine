@@ -1,6 +1,8 @@
 {
     "files.associations": {
         "eventmanager.h": "c",
-        "entitymanager.h": "c"
+        "entitymanager.h": "c",
+        "renderertemplates.h": "c",
+        "entity.h": "c"
     }
 }

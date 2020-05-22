@@ -14,7 +14,14 @@
 enum AssetType {
     Texture,
     Font,
-    Sound
+    Sound,
+    AssetTypes
+};
+
+static const char* const AssetTypeValue[AssetTypes] = {
+    "Texture",
+    "Font",
+    "Sound"
 };
 
 /**
@@ -24,6 +31,7 @@ typedef union AssetPointer {
     SDL_Texture* texture;
     TTF_Font* font;
     Mix_Chunk* sound;
+    void* pointer;
 } AssetPointer;
 
 /**

@@ -28,13 +28,14 @@
  * A simple entity, with a position, texture and movement function.
  */
 typedef struct Entity {
-    int stats[NUMBER_OF_STATS];
     SDL_Texture* textures[4];
     Mix_Chunk* sounds[4];
+    TTF_Font* font;
     SDL_Rect position;
     Component components[COMPONENT_TOTAL];
     Timer timers[4];
     bool remove;
+    int stats[NUMBER_OF_STATS];
 } Entity;
 
 /**
@@ -46,11 +47,6 @@ bool init_entity(Entity* e, const char* texture, const char* sound);
  * Returns true if the entity has queried component.
  */
 bool has_component(Entity* e, ComponentType c);
-
-/**
- * Default render call for all entities.
- */
-void render(void* e);
 
 #endif
 

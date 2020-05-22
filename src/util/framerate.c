@@ -41,6 +41,6 @@ void cap_fps(FrameRateManager* f) {
  * Show the current average fps.
  */
 int show_fps(FrameRateManager* f) {
-    INFO_LOG("FPS: %d\n", f->currentFPS);
+    DEBUG_LOG("FPS: %d\n", f->currentFPS);
     return f->currentFPS;
 }

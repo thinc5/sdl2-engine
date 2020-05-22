@@ -3,12 +3,12 @@
 #include <string.h>
 #include <stdint.h>
 
-#include "../../include/debug.h"
-#include "../../include/game.h"
-#include "../../include/rendering/renderertemplates.h"
-#include "../../include/scenes/mainmenu.h"
-#include "../../include/entities/entity.h"
-#include "../../include/entities/cat_state.h"
+#include "../../../include/debug.h"
+#include "../../../include/game.h"
+#include "../../../include/rendering/renderertemplates.h"
+#include "../../../include/scenes/mainmenu.h"
+#include "../../../include/entities/entity.h"
+#include "../../../include/games/catgame/state.h"
 
 /**
  * Render the state of the cat debug scene.
@@ -19,6 +19,7 @@ static void render_cat_state(void* e) {
     Entity* entity = (Entity*) e;
     SDL_Color c = {0, 0, 0};
     SDL_Rect pos = entity->position;
+    // Cast as CatState.
     CatState* state = gameData.scene->state;
     SDL_RenderDrawRect(gameData.renderer, &state->bounds);
     char time[15];
@@ -36,10 +37,10 @@ static void render_cat_state(void* e) {
  * Update game state timer.
  */
 static void cat_state_on_tick(void) {
+    // Cast as CatState.
     CatState* state = (CatState*) gameData.scene->state;
     // Have we run out of time?
     int32_t remaining = state->remaining_time - (SDL_GetTicks() - state->last_time);
-    // INFO_LOG("Remaining time: %d\n", remaining);
     if (remaining < 0) {
         // Load main menu.
         change_scene(NULL);

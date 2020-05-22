@@ -5,9 +5,9 @@
 
 #include "asset.h"
 
-/**********************************************************************
- * A stack based implementation for loading assets that uses a linked list.
- *********************************************************************/
+/****************************************************************************
+ * A stack based implementation for loading assets that uses a linked list. *
+ ****************************************************************************/
 
 /**
  * The node containing an asset.
@@ -50,11 +50,6 @@ bool free_asset_stack(AssetStack* stack);
  * If an asset is found with provided reference, return pointer to asset, else return NULL.
  */
 RegisteredAsset* get_asset_by_ref(const char* reference, int chunk);
-
-/**
- * Linearly traverse the stack for debug purposes.
- */
-void debug_asset_stack(AssetStack stack);
 
 #endif
 

@@ -2,12 +2,11 @@
 #include <stdbool.h>
 
 #include "../../include/debug.h"
-#include "../../include/game.h"
 #include "../../include/util/camera.h"
+#include "../../include/game.h"
 #include "../../include/managers/assetstack.h"
 #include "../../include/managers/entitymanager.h"
 #include "../../include/scenes/scene.h"
-
 #include "../../include/rendering/renderertemplates.h"
 
 /**
@@ -22,6 +21,7 @@ bool init_scene(Scene* scene) {
     // No background or cursor by default.
     scene->bg = NULL;
     scene->cursor = NULL;
+    // No scene state by default.
     scene->state = NULL;
     return true;
 }
@@ -30,21 +30,25 @@ bool init_scene(Scene* scene) {
  * Free a scene.
  */
 void free_scene(Scene* scene) {
-    // Free all remaining entities.
+    if (scene == NULL) {
+        DEBUG_LOG("Scene already freed.\n");
+        return;
+    }
+
     free_entities(&scene->entities);
-    INFO_LOG("Freeing entities.\n");
+    DEBUG_LOG("Freeing entities.\n");
     // Remove event handler pointer.
     scene->event_handler = NULL;
     // Remove references to bg and cursor.
     scene->bg = NULL;
     scene->cursor = NULL;
     // Free the scene state.
-    INFO_LOG("Freeing scene state.\n");
+    DEBUG_LOG("Freeing scene state.\n");
     if (scene->state != NULL) {
         free(scene->state);
         scene->state = NULL;
     }
-    INFO_LOG("Freeing scene asset chunk.\n");
+    DEBUG_LOG("Freeing scene asset chunk.\n");
     // Free the top chunk of assets.
     pop_asset_chunk(&gameData.assets);
 }
@@ -53,25 +57,36 @@ void free_scene(Scene* scene) {
  * Switch scenes.
  */
 void change_scene(void (*next)(void)) {
+    gameData.status = LOADING;
     // Draw loading notification :)
     SDL_Rect pos = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 0.4f, 0.2f);
     render_texture(get_asset_by_ref("loading.png", 0)->pointer.texture, &pos);
     SDL_RenderPresent(gameData.renderer);
+    
     // Check if we need to free the scene.
     if (gameData.currentScene->type != MainMenu) {
+        INFO_LOG("Freeing scene '%s'\n", gameData.currentScene->title);
         free_scene(gameData.scene);
         free(gameData.scene);
         gameData.scene = NULL;
-        // Dont do this, we keep the scene allocated; gameData.scene = NULL;
     }
-    // Check if we are returning to main menu (already loaded);
+    
+    // Are we going to the main menu?
     if (next != NULL) {
-        gameData.scene = (Scene*) malloc(sizeof(Scene));
+        // Load the new scene.
+        if (gameData.scene == NULL) {
+            gameData.scene = (Scene*) malloc(sizeof(Scene));
+        }
         next();
         // Change the pointer to the new scene.
         gameData.currentScene = gameData.scene;
-    } else {
-        gameData.currentScene = gameData.menu;
+        gameData.status = RUNNING;
+        INFO_LOG("Loaded scene '%s'\n", gameData.currentScene->title);
+        return;
     }
+    // We are returning to the main menu, change the current scene to the main menu.
+    gameData.scene = NULL;
+    gameData.currentScene = gameData.menu;
+    gameData.status = RUNNING;
+    INFO_LOG("Returned to '%s'\n", gameData.menu->title);
 }
-
