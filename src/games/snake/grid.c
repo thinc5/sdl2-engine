@@ -14,12 +14,13 @@
  * Render the game board.
  */
 static void render_grid(void* e) {
+    Entity* grid = e;
     SDL_Color colour = (SDL_Color) { 0, 0, 0 };
     SnakeState* state = (SnakeState*) gameData.scene->state;
     SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
     float gridWidth = board.w / state->grid.x;
     float gridHeight = board.h / state->grid.y;
-    // render_rectangle(&board, (SDL_Color) { 0, 0, 0 }, false);
+    render_texture(grid->textures[0], &board);
     for (int x = 0; x < state->grid.x; x++) {
         for (int y = 0; y < state->grid.y; y++) {
             SDL_Rect target = {
@@ -31,7 +32,6 @@ static void render_grid(void* e) {
             render_rectangle(&target, colour, false);
         }
     }
-    
 }
 
 /**
@@ -40,7 +40,7 @@ static void render_grid(void* e) {
 Entity init_snake_grid(void) {
     Entity grid;
     // Load cat assets make more flexable and specific later.
-    if (!init_entity(&grid, NULL, NULL)) {
+    if (!init_entity(&grid, "grass.jpg", NULL)) {
         ERROR_LOG("Could not initialize cat state entity.\n");
         return (Entity) { 0 };
     }

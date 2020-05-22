@@ -246,17 +246,22 @@ bool free_asset_stack(AssetStack* stack) {
  * else, return NULL.
  */
 RegisteredAsset* get_asset_by_ref(const char* reference, int chunk) {
+    DEBUG_LOG("Looking for %s in chunk %d\n", reference, chunk);
     // If the provided chunk is out of our range we return NULL.
-    if (chunk < 0 || chunk > gameData.assets.allocations) {
+    if (chunk < 0 || chunk > gameData.assets.allocations + 1) {
+        ERROR_LOG("Provided chunk is outside of range: %d\n", chunk);
         return NULL;
     }
     AssetNode* node = gameData.assets.heads[chunk];
     while (node != NULL) {
         if (strcmp(node->asset->reference, reference) == 0) {
+            DEBUG_LOG("Found %s\n", reference);
             return (RegisteredAsset*) node->asset;
 	    }
         node = node->next;
     }
+    ERROR_LOG("Unable to find specified asset: %s in chunk %d\n",
+            reference, chunk);
     return NULL;
 }
 

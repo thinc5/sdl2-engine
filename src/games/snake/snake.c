@@ -25,10 +25,53 @@ static void render_snake(void* e) {
         SDL_Rect target = {
             .w = gridWidth,
             .h = gridHeight,
-            .x = board.x + (gridWidth * state->snake.x),
-            .y = board.y + (gridHeight * state->snake.y)
+            .x = board.x + (gridWidth * state->snake.sections[section].x),
+            .y = board.y + (gridHeight * state->snake.sections[section].y)
         };
         render_rectangle(&target, colour, true);
+    }
+}
+
+/**
+ * Actually move the snake.
+ */
+static void move_snake(void* e) {
+    // Entity* entity = (Entity*) e;
+    SnakeState* state = (SnakeState*) gameData.scene->state;
+    // Move other parts.
+    for (int section = 0; section < state->snake.size - 1; section++) {
+        state->snake.sections[section + 1].x = state->snake.sections[section].x;
+        state->snake.sections[section + 1].y = state->snake.sections[section].y;
+    }
+    switch (state->snake.dir) {
+        case LEFT:
+            if (state->snake.sections[0].x - 1 >= 0) {
+                state->snake.sections[0].x = state->snake.sections[0].x - 1;
+            } else {
+                state->snake.sections[0].x = state->grid.x - 1;
+            }
+            break;
+        case RIGHT:
+            if (state->snake.sections[0].x + 1 < state->grid.x) {
+                state->snake.sections[0].x = state->snake.sections[0].x + 1;
+            } else {
+                state->snake.sections[0].x = 0;
+            }
+            break;
+        case UP:
+            if (state->snake.sections[0].y - 1 >= 0) {
+                state->snake.sections[0].y = state->snake.sections[0].y - 1;
+            } else {
+                state->snake.sections[0].y = state->grid.y - 1;
+            }
+            break;
+        case DOWN:
+            if (state->snake.sections[0].y + 1 < state->grid.y) {
+                state->snake.sections[0].y = state->snake.sections[0].y + 1;
+            } else {
+                state->snake.sections[0].y = 0;
+            }
+            break;
     }
 }
 
@@ -44,42 +87,9 @@ static void snake_on_tick(void* e) {
     }
     if (time_elapsed(&snake->timers[0], state->game_speed)) {
         // Pick which direction we are moving.
-        snake->components[Moved].call(snake);
-    }
-}
-
-static void move_snake(void* e) {
-    // Entity* entity = (Entity*) e;
-    SnakeState* state = (SnakeState*) gameData.scene->state;
-    switch (state->snake.dir) {
-        case LEFT:
-            if (state->snake.x - 1 >= 0) {
-                state->snake.x = state->snake.x - 1;
-            } else {
-                state->snake.x = state->grid.x;
-            }
-            break;
-        case RIGHT:
-            if (state->snake.x + 1 < state->grid.x) {
-                state->snake.x = state->snake.x + 1;
-            } else {
-                state->snake.x = 0;
-            }
-            break;
-        case UP:
-            if (state->snake.y + 1 < state->grid.y) {
-                state->snake.y = state->snake.y + 1;
-            } else {
-                state->snake.y = 0;
-            }
-            break;
-        case DOWN:
-            if (state->snake.y - 1 < 0) {
-                state->snake.y = state->snake.y - 1;
-            } else {
-                state->snake.y = state->grid.y;
-            }
-            break;
+        move_snake(snake);
+        // Reset the timer.
+        snake->timers[0].startTime = SDL_GetTicks();
     }
 }
 

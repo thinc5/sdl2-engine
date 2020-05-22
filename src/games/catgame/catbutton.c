@@ -29,6 +29,7 @@ Entity init_button(void) {
         return (Entity) { 0 };
     }
     entity.textures[1] = get_asset_by_ref("unclick.png", 0)->pointer.texture;
+    entity.font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     // Load custom components.
     entity.components[LeftClicked].call = &button_left_clicked;
     return entity;
@@ -42,7 +43,7 @@ static void play_button_render(void* e) {
     SDL_Color c = {255, 255, 0};
     render_rectangle(&entity->position, c, true);
     c = (SDL_Color) { .r = 255,  .g = 255, .b = 255};
-    render_font(get_asset_by_ref("ssp-regular.otf", 0)->pointer.font, &entity->position, c, "Play Game!");
+    render_font(entity->font, &entity->position, c, "Play Game!");
 }
 
 /**

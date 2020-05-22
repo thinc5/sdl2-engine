@@ -6,6 +6,8 @@
 #include "../../entities/entity.h"
 #include "../../components/move.h"
 
+#define MAX_SNAKE_SIZE 100
+
 /**
  * Information about the Snake.
  */
@@ -15,8 +17,7 @@ typedef struct Snake {
     // Snake direction
     Direction dir;
     // Snake location
-    uint16_t x;
-    uint16_t y;
+    SDL_Point sections[MAX_SNAKE_SIZE];
 } Snake;
 
 /**

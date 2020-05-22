@@ -15,7 +15,6 @@
  */
 static void render_ui(void* e) {
     // Get font and the UI entity.
-    TTF_Font* font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     Entity* entity = (Entity*) e;
     SDL_Color c = {0, 255, 255};
     SDL_Rect pos = entity->position;
@@ -26,14 +25,14 @@ static void render_ui(void* e) {
     // Show elapsed time.
     char time[15];
     sprintf(time, "Time: %4u", state->duration);
-    render_font(font, &pos, c, time);
+    render_font(entity->font, &pos, c, time);
     
     // Show player score.
     pos.y += 50;
     char score[15];
     uint32_t current_score = state->score;
     sprintf(score, "Score: %4u", current_score);
-    render_font(font, &pos, c, score);
+    render_font(entity->font, &pos, c, score);
 }
 
 /**
@@ -56,6 +55,7 @@ Entity init_snake_ui(void) {
         ERROR_LOG("Could not initialize cat state entity.\n");
         return (Entity) { 0 };
     }
+    snake_state.font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     // Load cat components.
     snake_state.components[OnTick].call = &state_on_tick;
     snake_state.components[Render].call = &render_ui;

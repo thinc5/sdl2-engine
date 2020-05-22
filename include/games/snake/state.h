@@ -7,7 +7,10 @@
 #include "../../entities/entity.h"
 
 #include "grid.h"
+#include "food.h"
 #include "snake.h"
+
+#define MAX_FOOD 5
 
 /**
  * The snake game's state struct.
@@ -24,7 +27,7 @@ typedef struct SnakeState {
     Grid grid;
     // Snake instance.
     Snake snake;
+    Food food[MAX_FOOD];
 } SnakeState;
 
 #endif
-
