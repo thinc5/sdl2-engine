@@ -4,27 +4,27 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../include/debug.h"
-#include "../../include/game.h"
-#include "../../include/managers/assetstack.h"
-#include "../../include/managers/entitymanager.h"
-#include "../../include/managers/eventmanager.h"
-#include "../../include/scenes/scene.h"
-#include "../../include/scenes/debugscene.h"
-#include "../../include/util/camera.h"
-#include "../../include/games/catgame/cat.h"
-#include "../../include/games/catgame/catbutton.h"
-#include "../../include/games/catgame/state.h"
+#include "../../../include/debug.h"
+#include "../../../include/game.h"
+#include "../../../include/managers/assetstack.h"
+#include "../../../include/managers/entitymanager.h"
+#include "../../../include/managers/eventmanager.h"
+#include "../../../include/scenes/scene.h"
+#include "../../../include/util/camera.h"
+#include "../../../include/games/catgame/scene.h"
+#include "../../../include/games/catgame/cat.h"
+#include "../../../include/games/catgame/catbutton.h"
+#include "../../../include/games/catgame/state.h"
 
 /**
  * Constructor for the debug testing scene.
  */
-void init_debug_scene(void) {
+void init_cat_scene(void) {
     if (!init_scene(gameData.scene)) {
         gameData.scene = NULL;
         return;
     }
-    memcpy(&gameData.scene->title, "Debug Scene", 12);
+    memcpy(&gameData.scene->title, "Cat Game", 12);
 
     // Load assets for the debug scene.
     if (!push_asset_chunk(gameData.renderer, &gameData.assets,

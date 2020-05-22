@@ -7,12 +7,10 @@
 #include "../../include/debug.h"
 #include "../../include/game.h"
 #include "../../include/scenes/scene.h"
-#include "../../include/scenes/debugscene.h"
 #include "../../include/entities/entity.h"
 #include "../../include/components/component.h"
 #include "../../include/rendering/renderertemplates.h"
 #include "../../include/entities/quitbutton.h"
-#include "../../include/games/catgame/catbutton.h"
 
 /**
  * Behaviour of button when left clicked.

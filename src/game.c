@@ -9,7 +9,6 @@
 #include "../include/util/framerate.h"
 #include "../include/scenes/scene.h"
 #include "../include/scenes/mainmenu.h"
-#include "../include/scenes/debugscene.h"
 
 /**
  * Initialize game and it's required components.

@@ -7,7 +7,7 @@ TARGET			:= output.out
 # compiler to use
 CC				:= gcc
 # compiler flags
-CFLAGS   		:= -std=c99 -Wall -pedantic
+CFLAGS   		:= -std=gnu11 -Wall -pedantic
 # linker to use
 LINKER   		:= gcc
 # linking flags
@@ -37,6 +37,9 @@ else
 $(info "Operating system: $(UNAME) not supported at this point in time.")
 exit 0
 endif
+
+CFLAGS += -D${OS}
+
 
 # override if on windows
 ifeq ($(OS), WIN)

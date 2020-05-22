@@ -7,34 +7,7 @@
 
 #include <stdbool.h>
 
-/**
- * Enumeration of each asset type.
- * How we know what type each registry asset is.
- */
-enum AssetType {
-    Texture,
-    Font,
-    Sound
-};
-
-/**
- * Each possible asset type.
- */
-typedef union AssetPointer {
-    SDL_Texture* texture;
-    TTF_Font* font;
-    Mix_Chunk* sound;
-} AssetPointer;
-
-/**
- * Each texture to be registered.
- */
-typedef struct RegisteredAsset {
-    int uniqueID;
-    enum AssetType type;
-    char* reference;
-    AssetPointer pointer;
-} RegisteredAsset;
+#include "./asset.h"
 
 /**
  * The Registry of all loaded textures.

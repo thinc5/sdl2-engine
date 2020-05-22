@@ -9,6 +9,7 @@
 
 #include "../include/config.h"
 #include "../include/debug.h"
+#include "../include/util/os.h"
 #include "../include/util/framerate.h"
 #include "../include/managers/asset.h"
 #include "../include/managers/assetstack.h"
@@ -17,8 +18,6 @@
 #include "../include/rendering/renderertemplates.h"
 #include "../include/game.h"
 #include "../include/scenes/scene.h"
-#include "../include/scenes/debugscene.h"
-#include "../include/games/catgame/cat.h"
 #include "../include/games/catgame/catbutton.h"
 
 #ifdef DEBUG
@@ -122,6 +121,9 @@ static void render_state(void) {
  * Entry point for the engine.
  */
 int main(int argc, char** argv) {
+    // Change working directory to the directory of the executable
+    // (allows exe to be used from any path).
+    set_dir();
     INFO_LOG("Launching: \"%s\"\n", WINDOW_TITLE);
     // Start all SDL components and load the game.
     if (!init_modules() || !init_game(&gameData)) {

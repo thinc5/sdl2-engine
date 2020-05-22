@@ -9,6 +9,7 @@
 #include "../../include/entities/quitbutton.h"
 #include "../../include/games/catgame/cat.h"
 #include "../../include/games/catgame/catbutton.h"
+#include "../../include/games/snake/snakebutton.h"
 
 /**
  * Constructor for the main menu.
@@ -31,8 +32,10 @@ void init_main_menu(void) {
     }
     
     // Add entities.
-    add_entity(&gameData.menu->entities, &init_play_button,
+    add_entity(&gameData.menu->entities, &init_cat_button,
             transform_rect(0.4f, 0.2f, 1.0f, 0.6f));
+    add_entity(&gameData.menu->entities, &init_snake_button,
+            transform_rect(0.4f, 0.2f, 1.0f, 1.2f));
     add_entity(&gameData.menu->entities, &init_quit_button,
             transform_rect(0.4f, 0.4f, 1.0f, 1.6f));
 

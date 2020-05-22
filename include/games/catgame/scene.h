@@ -1,12 +1,9 @@
-#ifndef DEBUGSCENE_H
-#define DEBUGSCENE_H
-
-#include "../scenes/scene.h"
+#ifndef CATSCENE_H
+#define CATSCENE_H
 
 /**
  * Initialize the debug scene.
  */
-void init_debug_scene(void);
+void init_cat_scene(void);
 
 #endif
-

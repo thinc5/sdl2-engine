@@ -5,17 +5,18 @@
 #include "../../../include/debug.h"
 #include "../../../include/game.h"
 #include "../../../include/scenes/scene.h"
-#include "../../../include/scenes/debugscene.h"
 #include "../../../include/entities/entity.h"
 #include "../../../include/components/component.h"
 #include "../../../include/rendering/renderertemplates.h"
+
 #include "../../../include/games/catgame/catbutton.h"
+#include "../../../include/games/catgame/scene.h"
 
 /**
  * Behaviour of button when left clicked.
  */
 static void button_left_clicked(void* e) {
-    change_scene(&init_debug_scene);
+    change_scene(&init_cat_scene);
 }
 
 /**
@@ -47,7 +48,7 @@ static void play_button_render(void* e) {
 /**
  * Initializes the cat entity and its components.
  */
-Entity init_play_button(void) {
+Entity init_cat_button(void) {
     Entity entity = init_button();
     entity.components[Render].call = &play_button_render;
     return entity;
