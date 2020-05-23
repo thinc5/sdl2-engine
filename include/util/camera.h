@@ -11,6 +11,8 @@
  */
 SDL_Rect transform_rect(SDL_Rect within, float x, float y, float width, float height);
 
+SDL_Rect transform_right_angle_rect(SDL_Rect within, float x, float y, float width);
+
 /**
  * Check if provided x and y coordinates are inside of provided rectangle.
  */

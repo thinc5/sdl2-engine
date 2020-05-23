@@ -26,20 +26,27 @@ static void snake_handler() {
     switch (gameData.event.key.keysym.sym) {
         case SDLK_LEFT:
         case SDLK_a:
-            // Implement after we have selection.
-            state->snake.dir = LEFT;
+            if (state->snake.dir != RIGHT) {
+                state->snake.next_dir = LEFT;
+            }
             break;
         case SDLK_RIGHT:
         case SDLK_d:
-            state->snake.dir = RIGHT;
+            if (state->snake.dir != LEFT) {
+                state->snake.next_dir = RIGHT;
+            }
             break;
         case SDLK_UP:
         case SDLK_w:
-            state->snake.dir = UP;
+            if (state->snake.dir != DOWN) {
+                state->snake.next_dir = UP;
+            }
             break;
         case SDLK_DOWN:
         case SDLK_s:
-            state->snake.dir = DOWN;
+            if (state->snake.dir != UP) {
+                state->snake.next_dir = DOWN;
+            }
             break;
         default:
             default_handler();
@@ -71,13 +78,14 @@ void init_snake_scene(void) {
     // Init state.
     gameData.scene->state = (void*) malloc(sizeof(SnakeState));
     SnakeState* state = (SnakeState*) gameData.scene->state;
+    state->status = SNAKE_ALIVE;
     state->score = 0;
     state->starting_time = SDL_GetTicks();
     state->duration = 0;
-    state->game_speed = 1000;
+    state->game_speed = 750;
     // Init grid
-    state->grid.x = 20;
-    state->grid.y = 20;
+    state->grid.x = 10;
+    state->grid.y = 10;
     // Init snake
     state->snake.size = 1;
     state->snake.sections[0].x = 0;
@@ -88,6 +96,8 @@ void init_snake_scene(void) {
     add_entity(&gameData.scene->entities, &init_snake_grid, (SDL_Rect) { 0 });
     // Create snake.
     add_entity(&gameData.scene->entities, &init_snake, (SDL_Rect) { 0 });
+    // Create food pool.
+    add_entity(&gameData.scene->entities, &init_food, (SDL_Rect) { 0 });
     // Create UI.
     add_entity(&gameData.scene->entities, &init_snake_ui,
             transform_rect((SDL_Rect) { 0 }, 0.9f, 0.9f, 0.2f, 0.1f)); 

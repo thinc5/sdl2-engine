@@ -6,7 +6,6 @@
 #include "../../include/util/os.h"
 
 #ifdef UNIX
-
 #include <libgen.h>
 
 /**
@@ -29,9 +28,7 @@ void set_dir() {
 #endif
 
 #ifdef WIN
-
 #include <windows.h>
-// #include <libloaderapi.h>
 #include <Shlwapi.h>
 
 /**

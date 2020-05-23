@@ -21,13 +21,10 @@ static void render_snake(void* e) {
     SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
     float gridWidth = board.w / state->grid.x;
     float gridHeight = board.h / state->grid.y;
+    SDL_Rect target = { .w = gridWidth, .h = gridHeight };
     for (int section = 0; section < state->snake.size; section++) {
-        SDL_Rect target = {
-            .w = gridWidth,
-            .h = gridHeight,
-            .x = board.x + (gridWidth * state->snake.sections[section].x),
-            .y = board.y + (gridHeight * state->snake.sections[section].y)
-        };
+        target.x = board.x + (gridWidth * state->snake.sections[section].x);
+        target.y = board.y + (gridHeight * state->snake.sections[section].y);
         render_rectangle(&target, colour, true);
     }
 }
@@ -35,15 +32,30 @@ static void render_snake(void* e) {
 /**
  * Actually move the snake.
  */
-static void move_snake(void* e) {
-    // Entity* entity = (Entity*) e;
-    SnakeState* state = (SnakeState*) gameData.scene->state;
-    // Move other parts.
-    for (int section = 0; section < state->snake.size - 1; section++) {
-        state->snake.sections[section + 1].x = state->snake.sections[section].x;
-        state->snake.sections[section + 1].y = state->snake.sections[section].y;
+static void dead_snake(SnakeState* state) {
+    // Has the head collided with any other part of the snake?
+    for (int section = 1; section < state->snake.size - 1; section++) {
+        if (state->snake.sections[0].x == state->snake.sections[section].x &&
+                state->snake.sections[0].y == state->snake.sections[section].y) {
+            // Collision.
+            state->status = SNAKE_DEAD;
+            return;
+        }
     }
-    switch (state->snake.dir) {
+}
+
+/**
+ * Actually move the snake.
+ */
+static void move_snake(SnakeState* state) {
+    // Move other segments.
+    for (int section = state->snake.size - 1; section > 0; section--) {
+        // They are equal to their predecessors' location.
+        state->snake.sections[section].x = state->snake.sections[section - 1].x;
+        state->snake.sections[section].y = state->snake.sections[section - 1].y;
+    }
+    // Move head.
+    switch (state->snake.next_dir) {
         case LEFT:
             if (state->snake.sections[0].x - 1 >= 0) {
                 state->snake.sections[0].x = state->snake.sections[0].x - 1;
@@ -73,6 +85,28 @@ static void move_snake(void* e) {
             }
             break;
     }
+    state->snake.dir = state->snake.next_dir;
+}
+
+/**
+ * Check if the snake gets a snack.
+ */
+static void eat_food(SnakeState* state) {
+    // Snake can only eat from the head :)
+    int x = state->snake.sections[0].x;
+    int y = state->snake.sections[0].y;
+    // Check all the food.
+    for (int i = 0; i < MAX_FOOD; i++) {
+        if (x == state->food[i].x && y == state->food[i].y) {
+            // Add the score.
+            state->score = state->score + state->food[i].score;
+            // Remove the food.
+            state->food[i] = (Food) { 0 };
+            // Grow the snake by 1.
+            state->snake.sections[state->snake.size] = state->snake.sections[state->snake.size - 1];
+            state->snake.size++;
+        }
+    }      
 }
 
 /**
@@ -86,8 +120,12 @@ static void snake_on_tick(void* e) {
         start_timer(&snake->timers[0]);
     }
     if (time_elapsed(&snake->timers[0], state->game_speed)) {
-        // Pick which direction we are moving.
-        move_snake(snake);
+        // Move the snake.
+        move_snake(state);
+        // Do we eat food?
+        eat_food(state);
+        // Do we have game over?
+        dead_snake(state);
         // Reset the timer.
         snake->timers[0].startTime = SDL_GetTicks();
     }
@@ -105,7 +143,6 @@ Entity init_snake(void) {
     }
     // Load cat components.
     snake.timers[0] = init_timer();
-    snake.components[Moved].call = &move_snake;
     snake.components[OnTick].call = &snake_on_tick;
     snake.components[Render].call = &render_snake;
     return snake;

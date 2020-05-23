@@ -2,6 +2,7 @@
 #include <SDL2/SDL_image.h>
 
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "../../../include/config.h"
 #include "../../../include/debug.h"
@@ -14,20 +15,64 @@
 
 #include "../../../include/games/snake/food.h"
 
+#define SPAWN_DELAY 5000 // Spawn a piece of food every 5 seconds.
+
+#define FOOD_LIFETIME 10000 // Food lasts 10 seconds.
+
 /**
  * Spawn a piece of food.
  */
 void spawn_food(uint32_t lifetime, uint16_t score) {
     SnakeState* state = (SnakeState*) gameData.scene->state;
+    int freePos = -1;
+    Food food = { 0 };
     for (int pos = 0; pos < MAX_FOOD; pos++) {
         Food food = state->food[pos];
         if (food.lifetime == 0) {
-            // Generate random food location
+            freePos = pos;
+            break;
+        }
+    }
+    if (freePos == -1) {
+        // We were unable to find a free slot, ignore call and return.
+        return;
+    }
 
-            food.lifetime = lifetime;
-            food.score = score;
-            // Insert into the array.
-            state->food[pos] = food;
+    // Generate random food location
+    while (1) {
+        food.x = rand() % state->grid.x;
+        food.y = rand() % state->grid.x;
+        // Check we have not spawned on top of any other food.
+        for (int i = 0; i < MAX_FOOD; i++) {
+            if (food.x == state->food[i].x && food.y == state->food[i].y) {
+                continue;
+            }
+        }
+        // Check we have not spawned on top of the snake.
+        for (int i = 0; i < state->snake.size; i++) {
+            if (food.x == state->snake.sections[i].x && food.y == state->snake.sections[i].y) {
+                continue;
+            }
+        }
+        break;
+    }
+    // Create the expiry time.
+    food.lifetime = lifetime + SDL_GetTicks();
+    food.score = score;
+    // Insert into the array.
+    state->food[freePos] = food;
+}
+
+/**
+ * Remove old expired food YUCK!
+ */
+void remove_expired_food() {
+    SnakeState* state = (SnakeState*) gameData.scene->state;
+    // Check we have not spawned on top of any other food.
+    uint32_t currentTime = SDL_GetTicks();
+    for (int i = 0; i < MAX_FOOD; i++) {
+        if (state->food[i].lifetime < currentTime) {
+            state->food[i] = (Food) { 0 };
         }
     }
 }
@@ -37,7 +82,7 @@ void spawn_food(uint32_t lifetime, uint16_t score) {
  */
 void render_food() {
     SnakeState* state = (SnakeState*) gameData.scene->state;
-    SDL_Colour colour = { 0, 0, 255 };
+    SDL_Colour colour = { 150, 0, 150 };
     SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
     float gridWidth = board.w / state->grid.x;
     float gridHeight = board.h / state->grid.y;
@@ -58,6 +103,24 @@ void render_food() {
 }
 
 /**
+ * 
+ */
+void food_on_tick(void* e) {
+    Entity* food = e;
+    if (!food->timers[0].started) {
+        start_timer(&food->timers[0]);
+    }
+    if (time_elapsed(&food->timers[0], SPAWN_DELAY)) {
+        // Spawn a new piece of food.
+        spawn_food(FOOD_LIFETIME, 5);
+        // Expire old food.
+
+        // Reset the timer.
+        food->timers[0].startTime = SDL_GetTicks();
+    }
+}
+
+/**
  * Initializes the snake food.
  */
 Entity init_food(void) {
@@ -70,5 +133,6 @@ Entity init_food(void) {
     // Load cat components.
     food.timers[0] = init_timer();
     food.components[Render].call = &render_food;
+    food.components[OnTick].call = &food_on_tick;
     return food;
 }

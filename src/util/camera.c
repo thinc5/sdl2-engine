@@ -28,6 +28,28 @@ SDL_Rect transform_rect(SDL_Rect within, float x, float y, float width, float he
 }
 
 /**
+ * Given an SDL_Rect and the desired scaling (0.0f is the centre, 1.0f the edge) modify
+ * the x and y coords to match the desired location.
+ */
+SDL_Rect transform_right_angle_rect(SDL_Rect within, float x, float y, float width) {
+    // Are we using the screen size?
+    if (within.w == 0 && within.h == 0) {
+        // Get the size of the window.
+        SDL_GetRendererOutputSize(gameData.renderer, &within.w, &within.h);
+    }
+    SDL_Point centre = get_rect_centre(within);
+    x = x * -1;
+    y = y * -1;
+    // Calculate width and height.
+    int w = (width * centre.x);
+    // Ensure that the scale will center the rectangle at the desired location.
+    SDL_Rect new = { .x = ((x + 1.0f) * centre.x) - (w / 2), .y = ((y + 1.0f) * centre.y) - (w / 2),
+            .w = w, .h = w};
+    // DEBUG_LOG("%d %d %d %d\n", new.x, new.y, new.w, new.h);
+    return new;
+}
+
+/**
  * Check if provided x and y coordinates are inside of provided rectangle.
  */
 bool is_collision(int x, int y, SDL_Rect position) {

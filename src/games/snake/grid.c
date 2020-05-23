@@ -17,6 +17,7 @@ static void render_grid(void* e) {
     Entity* grid = e;
     SDL_Color colour = (SDL_Color) { 0, 0, 0 };
     SnakeState* state = (SnakeState*) gameData.scene->state;
+    // Place the board.
     SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
     float gridWidth = board.w / state->grid.x;
     float gridHeight = board.h / state->grid.y;
@@ -35,7 +36,7 @@ static void render_grid(void* e) {
 }
 
 /**
- * Initialize the game of Snake.
+ * Initialize a generic grid.
  */
 Entity init_snake_grid(void) {
     Entity grid;

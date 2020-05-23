@@ -16,6 +16,8 @@ typedef struct Snake {
     uint32_t size;
     // Snake direction
     Direction dir;
+    // Snake next dir
+    Direction next_dir;
     // Snake location
     SDL_Point sections[MAX_SNAKE_SIZE];
 } Snake;

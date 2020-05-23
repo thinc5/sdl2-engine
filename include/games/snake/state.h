@@ -13,9 +13,19 @@
 #define MAX_FOOD 5
 
 /**
+ * Different states of the game.
+ */
+typedef enum SnakeGameStatus {
+    SNAKE_ALIVE,
+    SNAKE_DEAD
+} SnakeGameStatus;
+
+/**
  * The snake game's state struct.
  */
 typedef struct SnakeState {
+    // Game status.
+    SnakeGameStatus status;
     // Player score.
     uint32_t score;
     // Game starting time.
