@@ -1,3 +1,5 @@
+#include <string.h>
+
 #include "../../include/debug.h"
 #include "../../include/util/camera.h"
 #include "../../include/game.h"

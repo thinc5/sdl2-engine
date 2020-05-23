@@ -1,11 +1,9 @@
 {
-    // See https://go.microsoft.com/fwlink/?LinkId=733558 
-    // for the documentation about the tasks.json format
     "version": "2.0.0",
     "tasks": [
         {
             "type": "shell",
-            "label": "gcc build active file",
+            "label": "build",
             "command": "make",
             "args": [
                 "-j",
@@ -13,7 +11,7 @@
                 "debug",
             ],
             "options": {
-                "cwd": "/usr/bin"
+                "cwd": "."
             },
             "problemMatcher": [
                 "$gcc"
@@ -22,6 +20,36 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "type": "shell",
+            "label": "clean",
+            "command": "make",
+            "args": [
+                "clean"
+            ],
+            "options": {
+                "cwd": "."
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "run",
+            "command": "",
+            "args": [
+                "sh -c 'cd ./bin/ && ./output.exe'"
+            ],
+            "options": {
+                "cwd": "."
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
         }
     ]
 }

@@ -47,7 +47,7 @@ ifeq ($(OS), WIN)
 # SHELL 		:= powershell
 TARGET			:= output.exe
 # where is the find command located on your windows machine?
-LFLAGS			:= -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -Isrc/include
+LFLAGS			:= -lmingw32 -lSDL2main -lSDL2 -lSDL2_image -lSDL2_ttf -lSDL2_mixer -lshlwapi -Isrc/include
 endif
 
 $(info Environment: $(OS))

@@ -1,12 +1,13 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
-#include <libgen.h>
 
 #include "../../include/debug.h"
 #include "../../include/util/os.h"
 
 #ifdef UNIX
+
+#include <libgen.h>
 
 /**
  * Change working directory to the same one as the binary on unix systems with access to /proc.
@@ -29,13 +30,23 @@ void set_dir() {
 
 #ifdef WIN
 
-#include "windows.h"
+#include <windows.h>
+// #include <libloaderapi.h>
+#include <Shlwapi.h>
 
 /**
  * Change working directory to the same one as the binary on windows.
  */
 void set_dir() {
-    // GetModuleFileNameA(HMODULE hModule, LPSTR   lpFilename, DWORD   nSize);
+    // Read exe complete path.
+    char buff[1000];
+    memset(buff, '\0', 1000);
+    GetModuleFileNameA(NULL, buff, 1000);
+    // Find and remove the executable name.
+    PathRemoveFileSpecA(buff);
+    // Change directory to the executable's directory.
+    INFO_LOG("%s\n", buff);
+    chdir(buff);
 }
 
 #endif
