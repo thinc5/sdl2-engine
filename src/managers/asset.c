@@ -29,7 +29,7 @@ bool load_asset(SDL_Renderer* renderer, const char* path, RegisteredAsset* asset
             }
             break;
         case Font:
-            asset->pointer.font = TTF_OpenFont(path, 20);
+            asset->pointer.font = TTF_OpenFont(path, 30);
             if (asset->pointer.font == NULL) {
                 return false;
             }

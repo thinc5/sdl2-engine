@@ -10,7 +10,8 @@ typedef enum Direction {
     UP,
     DOWN,
     LEFT,
-    RIGHT
+    RIGHT,
+    DIRECTIONS
 } Direction;
 
 void move(void* e, Direction d, int pixels, SDL_Rect bounds);

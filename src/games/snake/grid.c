@@ -18,17 +18,17 @@ static void render_grid(void* e) {
     SDL_Color colour = (SDL_Color) { 0, 0, 0 };
     SnakeState* state = (SnakeState*) gameData.scene->state;
     // Place the board.
-    SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
-    float gridWidth = board.w / state->grid.x;
-    float gridHeight = board.h / state->grid.y;
-    render_texture(grid->textures[0], &board);
+    
+    float gridWidth = state->grid.pos.w / state->grid.x;
+    float gridHeight = state->grid.pos.h / state->grid.y;
+    render_texture(grid->textures[0], &state->grid.pos);
     for (int x = 0; x < state->grid.x; x++) {
         for (int y = 0; y < state->grid.y; y++) {
             SDL_Rect target = {
                 .w = gridWidth,
                 .h = gridHeight,
-                .x = board.x + (gridWidth * x),
-                .y = board.y + (gridHeight * y)
+                .x = state->grid.pos.x + (gridWidth * x),
+                .y = state->grid.pos.y + (gridHeight * y)
             };
             render_rectangle(&target, colour, false);
         }

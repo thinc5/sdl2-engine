@@ -41,7 +41,7 @@ void spawn_food(uint32_t lifetime, uint16_t score) {
     // Generate random food location
     while (1) {
         food.x = rand() % state->grid.x;
-        food.y = rand() % state->grid.x;
+        food.y = rand() % state->grid.y;
         // Check we have not spawned on top of any other food.
         for (int i = 0; i < MAX_FOOD; i++) {
             if (food.x == state->food[i].x && food.y == state->food[i].y) {
@@ -66,7 +66,7 @@ void spawn_food(uint32_t lifetime, uint16_t score) {
 /**
  * Remove old expired food YUCK!
  */
-void remove_expired_food() {
+void expire_food() {
     SnakeState* state = (SnakeState*) gameData.scene->state;
     // Check we have not spawned on top of any other food.
     uint32_t currentTime = SDL_GetTicks();
@@ -83,9 +83,8 @@ void remove_expired_food() {
 void render_food() {
     SnakeState* state = (SnakeState*) gameData.scene->state;
     SDL_Colour colour = { 150, 0, 150 };
-    SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
-    float gridWidth = board.w / state->grid.x;
-    float gridHeight = board.h / state->grid.y;
+    float gridWidth = state->grid.pos.w / state->grid.x;
+    float gridHeight = state->grid.pos.h / state->grid.y;
     // Get the first food piece.
     for (int pos = 0; pos < MAX_FOOD; pos++) {
         Food food = state->food[pos];
@@ -95,8 +94,8 @@ void render_food() {
         SDL_Rect target = {
             .w = gridWidth,
             .h = gridHeight,
-            .x = board.x + (gridWidth * food.x),
-            .y = board.y + (gridHeight * food.y)
+            .x = state->grid.pos.x + (gridWidth * food.x),
+            .y = state->grid.pos.y + (gridHeight * food.y)
         };
         render_rectangle(&target, colour, true);
     }
@@ -114,7 +113,7 @@ void food_on_tick(void* e) {
         // Spawn a new piece of food.
         spawn_food(FOOD_LIFETIME, 5);
         // Expire old food.
-
+        expire_food();
         // Reset the timer.
         food->timers[0].startTime = SDL_GetTicks();
     }

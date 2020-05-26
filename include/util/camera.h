@@ -11,7 +11,19 @@
  */
 SDL_Rect transform_rect(SDL_Rect within, float x, float y, float width, float height);
 
-SDL_Rect transform_right_angle_rect(SDL_Rect within, float x, float y, float width);
+/**
+ * Given an SDL_Rect and the desired scaling (0.0f is the centre, 1.0f the edge) modify
+ * the x and y coords to match the desired location while ensuring that you end up with a
+ * square that fits within the bounds provided..
+ */
+SDL_Rect transform_right_angle_square(SDL_Rect within, float x, float y, float width, float height);
+
+/**
+ * Given an SDL_Rect and the desired scaling (0.0f is the centre, 1.0f the edge) modify
+ * the x and y coords to create a right angled rectangle.
+ */
+SDL_Rect transform_right_angle_rect(SDL_Rect within, float x, float y, float width, float height,
+        int unitX, int unitY);
 
 /**
  * Check if provided x and y coordinates are inside of provided rectangle.

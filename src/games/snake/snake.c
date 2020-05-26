@@ -18,13 +18,12 @@
 static void render_snake(void* e) {
     SnakeState* state = (SnakeState*) gameData.scene->state;
     SDL_Colour colour = { 0, 0, 255 };
-    SDL_Rect board = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.6f, 1.6f);
-    float gridWidth = board.w / state->grid.x;
-    float gridHeight = board.h / state->grid.y;
+    float gridWidth = state->grid.pos.w / state->grid.x;
+    float gridHeight = state->grid.pos.h / state->grid.y;
     SDL_Rect target = { .w = gridWidth, .h = gridHeight };
     for (int section = 0; section < state->snake.size; section++) {
-        target.x = board.x + (gridWidth * state->snake.sections[section].x);
-        target.y = board.y + (gridHeight * state->snake.sections[section].y);
+        target.x = state->grid.pos.x + (gridWidth * state->snake.sections[section].x);
+        target.y = state->grid.pos.y + (gridHeight * state->snake.sections[section].y);
         render_rectangle(&target, colour, true);
     }
 }
@@ -83,6 +82,9 @@ static void move_snake(SnakeState* state) {
             } else {
                 state->snake.sections[0].y = 0;
             }
+            break;
+        case DIRECTIONS:
+        default:
             break;
     }
     state->snake.dir = state->snake.next_dir;

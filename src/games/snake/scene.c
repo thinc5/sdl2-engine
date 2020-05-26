@@ -84,12 +84,14 @@ void init_snake_scene(void) {
     state->duration = 0;
     state->game_speed = 750;
     // Init grid
-    state->grid.x = 10;
+    state->grid.x = 15;
     state->grid.y = 10;
+    state->grid.pos = transform_right_angle_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 1.7f, 1.7f, state->grid.x, state->grid.y);
     // Init snake
     state->snake.size = 1;
-    state->snake.sections[0].x = 0;
-    state->snake.sections[0].y = 0;
+    state->snake.sections[0].x = rand() % state->grid.x;
+    state->snake.sections[0].y = rand() % state->grid.y;
+    state->snake.next_dir = rand() % DIRECTIONS;
 
     // Add entities.
     // Create grid.
@@ -100,5 +102,5 @@ void init_snake_scene(void) {
     add_entity(&gameData.scene->entities, &init_food, (SDL_Rect) { 0 });
     // Create UI.
     add_entity(&gameData.scene->entities, &init_snake_ui,
-            transform_rect((SDL_Rect) { 0 }, 0.9f, 0.9f, 0.2f, 0.1f)); 
+            transform_rect((SDL_Rect) { 0 }, 0.85f, 0.9f, 0.25f, 0.15f)); 
 }

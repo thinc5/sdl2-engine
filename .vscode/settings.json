@@ -3,6 +3,10 @@
         "eventmanager.h": "c",
         "entitymanager.h": "c",
         "renderertemplates.h": "c",
-        "entity.h": "c"
+        "entity.h": "c",
+        "chrono": "c",
+        "random": "c",
+        "limits": "c",
+        "valarray": "c"
     }
 }

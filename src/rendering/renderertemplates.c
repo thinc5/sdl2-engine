@@ -27,7 +27,7 @@ bool render_rectangle(SDL_Rect* pos, SDL_Color colour, bool fill) {
  * Simple function to draw a message to the screen using a font.
  */
 bool render_font(TTF_Font* font, SDL_Rect* pos, SDL_Color colour, char* text) {
-    SDL_Surface* surface = TTF_RenderText_Solid(font, text, colour);
+    SDL_Surface* surface = TTF_RenderText_Blended(font, text, colour);
     SDL_Texture* texture = SDL_CreateTextureFromSurface(gameData.renderer, surface);
     SDL_FreeSurface(surface);
     // Draw to renderer
