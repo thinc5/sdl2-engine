@@ -40,9 +40,9 @@ Entity init_button(void) {
  */
 static void play_button_render(void* e) {
     Entity* entity = (Entity*) e;
-    SDL_Color c = {255, 255, 0};
+    SDL_Color c = { 255, 255, 0, 255 };
     render_rectangle(&entity->position, c, true);
-    c = (SDL_Color) { .r = 255,  .g = 255, .b = 255};
+    c = (SDL_Color) { 255, 255, 255, 255 };
     render_font(entity->font, &entity->position, c, "Play Game!");
 }
 

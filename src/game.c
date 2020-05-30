@@ -28,6 +28,7 @@ bool init_game(GameData* gameData) {
     // Setting render mode.
     SDL_RenderSetLogicalSize(gameData->renderer, WINDOW_WIDTH,
             WINDOW_HEIGHT);
+    SDL_SetRenderDrawBlendMode(gameData->renderer, SDL_BLENDMODE_BLEND);
     // Framerate manager.
     gameData->fps = init_fps();
     // Create the asset stack

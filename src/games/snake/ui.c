@@ -16,7 +16,7 @@
 static void render_ui(void* e) {
     // Get font and the UI entity.
     Entity* entity = (Entity*) e;
-    SDL_Color c = {0, 255, 255};
+    SDL_Color c = {0, 255, 255, 255};
     SDL_Rect pos = entity->position;
 
     // Cast as SnakeState.

@@ -82,7 +82,6 @@ void expire_food() {
  */
 void render_food() {
     SnakeState* state = (SnakeState*) gameData.scene->state;
-    SDL_Colour colour = { 150, 0, 150 };
     float gridWidth = state->grid.pos.w / state->grid.x;
     float gridHeight = state->grid.pos.h / state->grid.y;
     // Get the first food piece.
@@ -97,6 +96,14 @@ void render_food() {
             .x = state->grid.pos.x + (gridWidth * food.x),
             .y = state->grid.pos.y + (gridHeight * food.y)
         };
+        SDL_Colour colour = { 150, 0, 150, 255 };
+        // We fade out as we get expired.
+        // How expired are we?
+        int32_t remainingTime = food.lifetime - SDL_GetTicks();
+        float opacityPercent =  ((float) remainingTime / (float) FOOD_LIFETIME);
+        float opacity = (opacityPercent * 255);
+         colour.a = (int) opacity;
+        //DEBUG_LOG("Remaining time: %d Food opacity: %f %% %d\n", remainingTime, opacityPercent, colour.a);
         render_rectangle(&target, colour, true);
     }
 }

@@ -17,7 +17,7 @@ static void render_cat_state(void* e) {
     // Get font and the UI entity.
     TTF_Font* font = get_asset_by_ref("ssp-regular.otf", 0)->pointer.font;
     Entity* entity = (Entity*) e;
-    SDL_Color c = {0, 0, 0};
+    SDL_Color c = {0, 0, 0, 255};
     SDL_Rect pos = entity->position;
     // Cast as CatState.
     CatState* state = gameData.scene->state;

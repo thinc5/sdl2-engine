@@ -73,7 +73,7 @@ bool render_debug_message(TTF_Font* font, char* text) {
         .w = font_width * text_size,
         .h = font_height
     };
-    SDL_Color c = {255, 0, 0};
+    SDL_Color c = { 255, 0, 0, 255 };
     return render_font(font, &pos, c, text);
 }
 
@@ -92,7 +92,7 @@ bool render_fps(TTF_Font* font, int fps) {
         .w = font_size * 2,
         .h = font_size
     };
-    SDL_Color c = {0, 0, 0};
+    SDL_Color c = { 0, 0, 0, 255 };
     return render_font(font, &pos, c, text);
 }
 
@@ -104,7 +104,7 @@ bool render_loading_box(TTF_Font* font) {
     int height, width;
     SDL_GetRendererOutputSize(gameData.renderer, &width, &height);
     SDL_Rect pos = transform_rect((SDL_Rect) { 0 }, 0.0f, 0.0f, 0.2f, 0.2f);
-    SDL_Color c = {0, 0, 0};
+    SDL_Color c = { 0, 0, 0, 255 };
     return render_font(font, &pos, c, "Loading...");
 }
 

@@ -147,7 +147,6 @@ int main(int argc, char **argv) {
                 deletePeer(peer);
         }
         memset(peer, 0, sizeof(Peer));
-        printf("Peer created\n");
 
         // Create peer connection
         peer->pc = rtcCreatePeerConnection(&config);
@@ -162,7 +161,6 @@ int main(int argc, char **argv) {
         bool exit = false;
         while (!exit) {
                 printf("\n");
-                printf("***************************************************************************************\n");
                 // << endl
                 printf("* 0: Exit /"
                        " 1: Enter remote description /"

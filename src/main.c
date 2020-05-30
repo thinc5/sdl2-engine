@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include <unistd.h>
 #include <stdbool.h>
+#include <time.h>
 
 #include "../include/config.h"
 #include "../include/debug.h"
@@ -130,6 +131,9 @@ int main(int argc, char** argv) {
         ERROR_LOG("Unable to initialize game modules.\n");
         return 1;
     }
+
+    // Seed rand() to make it seem actually random.
+    srand(time(NULL));
     
     #ifdef DEBUG
     fnt = get_asset_by_ref("ssp-regular.otf", 0);

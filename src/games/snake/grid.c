@@ -15,7 +15,7 @@
  */
 static void render_grid(void* e) {
     Entity* grid = e;
-    SDL_Color colour = (SDL_Color) { 0, 0, 0 };
+    SDL_Color colour = (SDL_Color) { 0, 0, 0, 255 };
     SnakeState* state = (SnakeState*) gameData.scene->state;
     // Place the board.
     

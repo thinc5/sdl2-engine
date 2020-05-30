@@ -17,7 +17,7 @@
  */
 static void render_snake(void* e) {
     SnakeState* state = (SnakeState*) gameData.scene->state;
-    SDL_Colour colour = { 0, 0, 255 };
+    SDL_Colour colour = { 0, 0, 255, 255 };
     float gridWidth = state->grid.pos.w / state->grid.x;
     float gridHeight = state->grid.pos.h / state->grid.y;
     SDL_Rect target = { .w = gridWidth, .h = gridHeight };

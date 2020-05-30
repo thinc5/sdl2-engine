@@ -4,7 +4,7 @@ CLIENT_TARGET			:= client.out
 # compiler to use
 CC						:= gcc
 # compiler flags
-CFLAGS   				:= --verbose -Wall -pedantic -O2
+CFLAGS   				:= --std=gnu11 -Wall -pedantic -O2
 # linker to use
 LINKER   				:= gcc
 # linking flags
@@ -15,11 +15,7 @@ rm						:= rm -rf
 
 #-------------- Rules
 # default rules
-all: c c++
-
-c: server client
-
-c++: cppserver cppclient
+all: server client
 
 # compile and link
 server:
@@ -31,16 +27,6 @@ client:
 	@$(CC) $(CFLAGS) -c client.c -o client.o
 	@$(CC) $(LFLAGS) client.o -o ${CLIENT_TARGET}
 	@$(rm) client.o
-
-cppserver:
-	@g++ $(CFLAGS) -c server.cpp -o cppserver.o
-	@g++ $(LFLAGS) cppserver.o -o cppserver.out
-	@$(rm) cppserver.o
-
-cppclient:
-	@g++ $(CFLAGS) -c client.cpp -o cppclient.o
-	@g++ $(LFLAGS) cppclient.o -o cppclient.out
-	@$(rm) cppclient.o
 
 clean:
 	@$(rm) *.o
