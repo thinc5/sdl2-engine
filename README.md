@@ -3,7 +3,8 @@
 ## About
 I've always been interested in video games and I figured it was time to attempt to write my own (engine).
 I chose SDL2 as my starting point as it was written in C, is cross platform and has lots of documentation.
-C was my first choice of language due to performance, flexibility and in all honesty, just to improve my skills with it and have fun in the process.
+C was my first choice of language for its potential, performance and flexibility in code structure.
+In all honesty, I just want to improve my skills with the language, make a few silly games and have fun in the process!
 
 ## Compilation
 
@@ -19,5 +20,8 @@ C was my first choice of language due to performance, flexibility and in all hon
 Run - `make` to build the game normally, - `make -j` for compiling on multiple cores and optionally add `debug` to enable the `-g` flag and include the debug prints/features in the executable.
 
 ## Running
-Currently only runs when executed from the bin directory. This is because it currently relies on its working environment being its the same directory as its assets.
-For example; executing it with `./bin/output.exe` would prevent it from finding its assets but `./output.exe` works.
+Just click on the binary (graphical) or run from the terminal from anywhere on your system.
+
+## Status
+I occasionally find time to work on it, and there are many design decisions which I am not happy with (In retrospect).
+An implementation of snake is almost complete, so that would probably take precident over any further engine changes.
