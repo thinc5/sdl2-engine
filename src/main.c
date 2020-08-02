@@ -20,6 +20,8 @@
 #include "../include/scenes/scene.h"
 #include "../include/games/catgame/catbutton.h"
 
+GameData gameData;
+
 #ifdef DEBUG
 // Font to be used to render debug messages.
 static RegisteredAsset* fnt;
