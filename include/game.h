@@ -7,6 +7,7 @@
 
 #include "util/framerate.h"
 #include "scenes/scene.h"
+
 typedef enum GameStatus {
     RUNNING,
     LOADING,
@@ -52,6 +53,6 @@ bool init_game(GameData* gameData);
  */
 void free_game(GameData* game);
 
-GameData gameData;
+extern GameData gameData;
 
 #endif
