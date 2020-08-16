@@ -7,7 +7,7 @@ TARGET			:= output.out
 # compiler to use
 CC				:= gcc
 # compiler flags
-CFLAGS   		:= -std=gnu11 -Wall -pedantic
+CFLAGS   		:= -std=gnu11 -Wall -pedantic -MD
 # linker to use
 LINKER   		:= gcc
 # linking flags
